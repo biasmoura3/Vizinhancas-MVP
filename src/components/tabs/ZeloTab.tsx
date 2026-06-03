@@ -18,6 +18,7 @@ import {
   Bookmark,
   Plus
 } from 'lucide-react';
+import FragmentViewer from '../../components/FragmentViewer';
 
 interface ZeloTabProps {
   fragments: WorldFragment[];
@@ -232,12 +233,7 @@ export default function ZeloTab({
 
                     {f.imageUrl && (
                       <div className="relative w-full h-28 rounded-lg overflow-hidden border border-[#dac2b8]/10">
-                        <img 
-                          src={f.imageUrl} 
-                          alt={f.title} 
-                          className="w-full h-full object-cover" 
-                          referrerPolicy="no-referrer"
-                        />
+                        <FragmentViewer url={f.imageUrl} alt={f.title} className="w-full h-full object-cover" />
                       </div>
                     )}
 

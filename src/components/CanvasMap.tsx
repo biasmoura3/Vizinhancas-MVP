@@ -12,6 +12,7 @@ import {
   X,
   Bookmark
 } from 'lucide-react';
+import FragmentViewer from './FragmentViewer';
 
 interface CanvasMapProps {
   fragments: WorldFragment[];
@@ -552,12 +553,7 @@ export default function CanvasMap({
               {/* Image Frame if image is available */}
               {activeFragment.imageUrl && (
                 <div className="relative w-full h-36 rounded-lg overflow-hidden border border-[#dac2b8]/10 group">
-                  <img 
-                    src={activeFragment.imageUrl} 
-                    alt={activeFragment.title} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    referrerPolicy="no-referrer"
-                  />
+                  <FragmentViewer url={activeFragment.imageUrl} alt={activeFragment.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0a1120] to-transparent opacity-65 pointer-events-none" />
                 </div>
               )}

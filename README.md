@@ -62,6 +62,37 @@ O projeto será implantado no Vercel. Para publicar:
 - ajuste variáveis de ambiente no painel do Vercel, se necessário;
 - use o build padrão do Vite: `npm run build`.
 
+## Política de mídia — sem armazenamento
+
+- O sistema **não armazena** arquivos de mídia (imagens, áudios, vídeos) no nosso servidor ou em buckets gerenciados pelo projeto.
+- Contribuintes devem fornecer **links de visualização** hospedados por serviços terceiros (por exemplo: YouTube, Vimeo, SoundCloud, Imgur, ou provedores que ofereçam URLs de visualização pública).
+- O app **incorpora** esses links para visualização inline dentro da interface; o arquivo NÃO é transferido para armazenamento nosso nem disponibilizado para download.
+
+Padrões e exemplos aceitos:
+
+- Imagem direta: https://i.imgur.com/exemplo.jpg
+- Áudio (embed): SoundCloud ou URL direta para mp3/ogg com CORS habilitado
+- Vídeo: https://www.youtube.com/watch?v=... ou https://vimeo.com/...
+- Texto/Documento: links para páginas públicas que possam ser embedadas em iframe
+
+Orientações de implementação (dev notes):
+
+- Preferir uso de protocolos de embed padronizados (oEmbed) quando disponível.
+- Validar e sanitizar URLs recebidas; aplicar uma whitelist de domínios confiáveis.
+- Renderizar mídia inline sem proxiar o arquivo. Para iframes, usar atributos de `sandbox` restritivos e políticas de Content Security Policy (CSP) no deploy.
+- Para imagens e áudio, usar elementos nativos (`<img>`, `<audio>`) com controles limitados e sem links de download explícitos.
+- Evitar `allow-scripts` em iframes quando possível; quando necessário, restringir a origem e auditar o provedor.
+
+Motivação e efeitos UX:
+
+- Essa política evita custos de armazenamento e reduz responsabilidade sobre conteúdos sensíveis.
+- Garante também que a experiência do usuário permaneça dentro da página (visualização inline), reforçando a ideia de presença e testemunho sem extração.
+
+Notas de segurança e governança:
+
+- Documentar claramente na interface que os conteúdos são hospedados por terceiros e não permanecem sob controle do projeto.
+- Manter logs de referência (metadados) sobre quem forneceu o link e sob que condição de conexão foi ofertado, sem gravar o arquivo em si.
+
 ## Propósito
 
 Vizinhanças propõe um lugar para cuidar de relações e narrativas, não apenas para indexar informação. Aqui, a tecnologia é uma superfície para a escuta, o cuidado e a construção de presença coletiva.
