@@ -1,0 +1,6 @@
+{
+  "name": "Vizinhanças",
+  "description": "Um espaço colaborativo para registrar, conectar e cuidar de memórias locais, histórias e relatos de nossa comunidade.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
