@@ -12,8 +12,6 @@ export interface WorldFragment {
   imageUrl?: string;
   audioDuration?: string;
   audioWaveform?: number[];
-  connections: string[]; // Connected fragment IDs
-  openToConnections: boolean;
   createdAt: string;
   authorEmail?: string;
   isUserCreated?: boolean;

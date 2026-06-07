@@ -10,13 +10,6 @@ import ZeloTab from './components/tabs/ZeloTab';
 
 import { ActiveTab, WorldFragment, StewardshipStatus } from './types';
 import { INITIAL_FRAGMENTS } from './data';
-import { 
-  Sprout, 
-  Compass, 
-  Volume2,
-  FileText,
-  Image as ImageIcon
-} from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('nexo'); // Defaulting to the map step
@@ -25,11 +18,6 @@ export default function App() {
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [fragmentToEdit, setFragmentToEdit] = useState<WorldFragment | null>(null);
-  
-  // Link weaving states
-  const [isConnectingMode, setIsConnectingMode] = useState(false);
-  const [connectingNodeId, setConnectingNodeId] = useState<string | null>(null);
-
   // Fragments reactive state
   const [fragments, setFragments] = useState<WorldFragment[]>(() => {
     const saved = localStorage.getItem('situated_memories');
@@ -64,13 +52,12 @@ export default function App() {
     );
   };
 
-  const handleAddFragment = (newFragData: Omit<WorldFragment, 'id' | 'createdAt' | 'status' | 'connections'>) => {
+  const handleAddFragment = (newFragData: Omit<WorldFragment, 'id' | 'createdAt' | 'status'>) => {
     const uniqueId = `frag-${Date.now()}`;
     const newFragment: WorldFragment = {
       ...newFragData,
       id: uniqueId,
       status: 'Zelo Concedido', // Proposto e integrado imediatamente sem barreira de aprovação
-      connections: [],
       createdAt: new Date().toISOString(),
       isUserCreated: true
     };
@@ -80,7 +67,7 @@ export default function App() {
     setActiveTab('nexo'); // Takes them to view it on the map!
   };
 
-  const handleEditFragment = (id: string, updatedData: Partial<Omit<WorldFragment, 'id' | 'createdAt' | 'status' | 'connections'>>) => {
+  const handleEditFragment = (id: string, updatedData: Partial<Omit<WorldFragment, 'id' | 'createdAt' | 'status'>>) => {
     setFragments(prev => prev.map(f => 
       f.id === id ? { ...f, ...updatedData } : f
     ));
@@ -106,30 +93,6 @@ export default function App() {
     setCurrentTerritory(territoryId);
   };
 
-  // Weave connector threads between two cards in state
-  const handleWeaveConnection = (id1: string, id2: string) => {
-    if (id1 === id2) return;
-    
-    setFragments(prev => prev.map(f => {
-      if (f.id === id1 && !f.connections.includes(id2)) {
-        return { ...f, connections: [...f.connections, id2] };
-      }
-      if (f.id === id2 && !f.connections.includes(id1)) {
-        return { ...f, connections: [...f.connections, id1] };
-      }
-      return f;
-    }));
-
-    setIsConnectingMode(false);
-    setConnectingNodeId(null);
-  };
-
-  const handleConnectClick = (id: string) => {
-    setIsConnectingMode(true);
-    setConnectingNodeId(id);
-    setActiveTab('nexo'); // Opens connection map so they can wire it!
-  };
-
   const handleDeleteFragment = (id: string) => {
     // Only allow deletion if user created it
     const fragmentToDelete = fragments.find(f => f.id === id);
@@ -151,9 +114,6 @@ export default function App() {
       setActiveTab('nexo');
     }
   };
-
-  // Active selected fragment helper
-  const activeFragment = fragments.find(f => f.id === selectedFragmentId) || null;
 
   return (
     <div className="w-screen h-screen flex flex-col bg-background text-on-surface font-sans overflow-hidden antialiased relative">
@@ -178,7 +138,7 @@ export default function App() {
         {/* Content Panel Area */}
         <main className="flex-1 h-full overflow-y-auto relative flex flex-col bg-surface-container-lowest/15">
           
-          {/* TAB 1: CONNECTION MAP (Nexo) */}
+          {/* TAB 1: CONSTELLATION MAP (Nexo) */}
           {activeTab === 'nexo' && (
             <div className="w-full h-full flex flex-col animate-in fade-in duration-300 relative">
               {/* Map Canvas Component */}
@@ -187,11 +147,6 @@ export default function App() {
                   fragments={fragments} 
                   selectedId={selectedFragmentId}
                   onSelectNode={setSelectedFragmentId}
-                  onWeaveConnection={handleWeaveConnection}
-                  isConnectingMode={isConnectingMode}
-                  connectingNodeId={connectingNodeId}
-                  setConnectingNodeId={setConnectingNodeId}
-                  onUpdateStatus={handleUpdateStatus}
                   savedFragmentIds={savedFragmentIds}
                   onToggleSaveFragment={handleToggleSaveFragment}
                 />

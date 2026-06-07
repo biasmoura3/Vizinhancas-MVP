@@ -1,13 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { WorldFragment, FragmentType, StewardshipStatus } from '../types';
+﻿import React, { useState, useRef, useEffect } from 'react';
+import { WorldFragment } from '../types';
 import { 
   Sprout, 
   Map, 
   Volume2, 
   FileText, 
   Image as ImageIcon, 
-  Sparkles, 
-  Zap, 
   Locate,
   X,
   Bookmark
@@ -18,11 +16,6 @@ interface CanvasMapProps {
   fragments: WorldFragment[];
   selectedId: string | null;
   onSelectNode: (id: string | null) => void;
-  onWeaveConnection: (id1: string, id2: string) => void;
-  isConnectingMode: boolean;
-  connectingNodeId: string | null;
-  setConnectingNodeId: (id: string | null) => void;
-  onUpdateStatus?: (id: string, newStatus: StewardshipStatus) => void;
   savedFragmentIds?: string[];
   onToggleSaveFragment?: (id: string) => void;
 }
@@ -37,11 +30,6 @@ export default function CanvasMap({
   fragments,
   selectedId,
   onSelectNode,
-  onWeaveConnection,
-  isConnectingMode,
-  connectingNodeId,
-  setConnectingNodeId,
-  onUpdateStatus,
   savedFragmentIds = [],
   onToggleSaveFragment
 }: CanvasMapProps) {
@@ -189,14 +177,7 @@ export default function CanvasMap({
 
   const handleNodeClick = (id: string) => {
     if (hasDragged) return; // Prevent action if user was dragging
-    if (isConnectingMode && connectingNodeId) {
-      if (connectingNodeId !== id) {
-        onWeaveConnection(connectingNodeId, id);
-      }
-      setConnectingNodeId(null);
-    } else {
-      onSelectNode(id);
-    }
+    onSelectNode(id);
   };
 
   // Helper to find a node's physical position
@@ -275,27 +256,6 @@ export default function CanvasMap({
     });
   };
 
-  // Quadratic Bezier Curve drawer
-  const drawVerticalBezier = (p1: NodePosition, p2: NodePosition) => {
-    // Math to construct curved coordinates curving organically (Peircean Vines)
-    const mx = (p1.x + p2.x) / 2;
-    const my = (p1.y + p2.y) / 2;
-    // Offset the control point based on connection length to create a pleasant vine bend
-    const dx = p2.x - p1.x;
-    const dy = p2.y - p1.y;
-    const xc = mx + dy * 0.12; 
-    const yc = my - dx * 0.15;
-    
-    return `M ${p1.x}% ${p1.y}% Q ${xc}% ${yc}% ${p2.x}% ${p2.y}%`;
-  };
-
-  // Check if a connection line is currently highlighted/hovered
-  const isConnectionActive = (id1: string, id2: string) => {
-    const isSelected = selectedId === id1 || selectedId === id2;
-    const isHovered = hoveredNodeId === id1 || hoveredNodeId === id2;
-    return isSelected || isHovered;
-  };
-
   // Find currently active details info
   const activeFragment = fragments.find(f => f.id === selectedId) || null;
   const activePos = activeFragment ? getPos(activeFragment.id) : null;
@@ -327,18 +287,10 @@ export default function CanvasMap({
                 : 'bg-surface-container/85 border-[#dac2b8]/15 hover:border-[#dac2b8]/40 text-on-surface-variant'
             }`}
           >
-            {ter === 'todos' ? 'Teia Geral' : ter}
+            {ter === 'todos' ? 'Todos' : ter}
           </button>
         ))}
       </div>
-
-      {/* Guide label when connecting nodes */}
-      {isConnectingMode && connectingNodeId && (
-        <div className="absolute top-4 right-6 z-30 bg-accent/90 border border-accent/40 text-surface font-sans font-semibold text-xs px-4 py-2.5 rounded-full flex items-center gap-2 shadow-2xl animate-pulse">
-          <Zap className="w-3.5 h-3.5 fill-current" />
-          <span>Fio de Conexão Ativo: Clique em outro fragmento para acoplar</span>
-        </div>
-      )}
 
       {/* Map Interactive Canvas Container */}
       <div 
@@ -362,62 +314,6 @@ export default function CanvasMap({
           }}
           className="absolute inset-0 select-none transition-transform duration-75 ease-out"
         >
-          {/* BACKGROUND SVGS: DRAWING ALL LUMINOUS CURVING THREADS */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
-            <defs>
-              <linearGradient id="linkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#4fd1c5" stopOpacity="0.8" />
-                <stop offset="100%" stopColor="#ffb596" stopOpacity="0.8" />
-              </linearGradient>
-              <linearGradient id="activeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#f6be3b" stopOpacity="1" />
-                <stop offset="100%" stopColor="#ffb596" stopOpacity="1" />
-              </linearGradient>
-              <filter id="activeGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="8" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                   <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            {/* Render lines for connections in state */}
-            {fragments.map((frag) => {
-              if (filterTerritory !== 'todos' && frag.territory !== filterTerritory) return null;
-
-              return frag.connections.map((targetId) => {
-                // Ensure we only draw line once by ordering IDs lexicographically
-                if (frag.id > targetId) return null;
-                
-                // Find target fragment, make sure it exists
-                const targetFrag = fragments.find(f => f.id === targetId);
-                if (!targetFrag) return null;
-                if (filterTerritory !== 'todos' && targetFrag.territory !== filterTerritory) return null;
-
-                const pos1 = getPos(frag.id);
-                const pos2 = getPos(targetId);
-                const isActive = isConnectionActive(frag.id, targetId);
-
-                return (
-                  <path
-                    key={`${frag.id}-${targetId}`}
-                    d={drawVerticalBezier(pos1, pos2)}
-                    fill="none"
-                    stroke={isActive ? 'url(#activeGradient)' : 'rgba(255, 181, 150, 0.2)'}
-                    strokeWidth={isActive ? 3.5 : 1.25}
-                    strokeDasharray={isActive ? 'none' : '3, 4'}
-                    filter={isActive ? 'url(#activeGlow)' : 'none'}
-                    className="transition-all duration-300"
-                    style={{
-                      animation: isActive ? 'slow-pulse-kf 4s infinite' : 'none'
-                    }}
-                  />
-                );
-              });
-            })}
-          </svg>
-
           {/* FLOATING TEXTURED NODES (Sleek Obsidian view) */}
           {fragments.map((frag) => {
             const isFilterMatch = filterTerritory === 'todos' || frag.territory === filterTerritory;
@@ -586,7 +482,7 @@ export default function CanvasMap({
                     
                     <div className="flex-1 ml-3">
                       <div className="flex items-center justify-between text-[9px] font-mono opacity-60">
-                        <span>{isPlayingAudio ? 'PRODUZINDO TIMBRE...' : 'SINTETIZADOR DISPONÍVEL'}</span>
+                        <span>{isPlayingAudio ? 'PRODUZINDO TIMBRE...' : 'SINTETIZADOR DISPONÃVEL'}</span>
                         <span>{activeFragment.audioDuration || '00:15'}</span>
                       </div>
                       <div className="w-full bg-surface-container/40 rounded-full h-1 mt-1 overflow-hidden">
@@ -633,7 +529,7 @@ export default function CanvasMap({
                   <span className="text-on-surface block font-sans font-medium mt-0.5">{activeFragment.source}</span>
                 </div>
                 <div>
-                  <span className="opacity-55 block uppercase font-bold text-[8px]">Região</span>
+                  <span className="opacity-55 block uppercase font-bold text-[8px]">RegiÃ£o</span>
                   <span className="text-on-surface block font-sans font-semibold mt-0.5">{activeFragment.territory}</span>
                 </div>
               </div>
@@ -666,37 +562,6 @@ export default function CanvasMap({
                 </div>
               )}
 
-              {/* Clickable links to other related fragments */}
-              {fragments.filter(f => activeFragment.connections.includes(f.id)).length > 0 && (
-                <div className="border-t border-[#dac2b8]/10 pt-3 space-y-1.5 select-none">
-                  <span className="text-[9px] font-mono uppercase tracking-wider text-primary block font-bold">
-                    Conexões com Outros Fragmentos:
-                  </span>
-                  <div className="flex flex-col gap-1">
-                    {fragments
-                      .filter(f => activeFragment.connections.includes(f.id))
-                      .map((related) => {
-                        const cleanRelTitle = related.title.replace(/^"/, '').replace(/"$/, '');
-                        const displayRelTitle = cleanRelTitle.length > 25 
-                          ? `${cleanRelTitle.substring(0, 23)}...` 
-                          : cleanRelTitle;
-                        return (
-                          <button
-                            key={related.id}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onSelectNode(related.id);
-                            }}
-                            className="text-[10.5px] font-sans text-left px-2.5 py-1.5 bg-[#0b1326]/50 border border-[#dac2b8]/10 hover:border-primary/40 hover:bg-[#0b1326] text-on-surface-variant hover:text-primary transition-all rounded duration-150 cursor-pointer flex items-center gap-1.5 group"
-                          >
-                            <span className="opacity-40 group-hover:opacity-100 transition-opacity text-[9px]">🔗</span>
-                            <span className="truncate">{displayRelTitle}</span>
-                          </button>
-                        );
-                      })}
-                  </div>
-                </div>
-              )}
             </div>
           )}
         </div>
@@ -705,7 +570,7 @@ export default function CanvasMap({
         <div className="absolute bottom-4 left-6 right-6 z-30 flex items-center justify-between pointer-events-none">
           <div className="bg-[#0b1326]/85 border border-[#dac2b8]/15 text-on-surface-variant text-[10px] font-mono px-4 py-2.5 rounded-full flex items-center gap-2.5 backdrop-blur shadow-xl pointer-events-auto select-none">
             <Locate className="w-3.5 h-3.5 text-primary animate-pulse" />
-            <span>Constelação • Arraste o fundo para navegar • Clique para detalhes</span>
+            <span>ConstelaÃ§Ã£o â€¢ Arraste o fundo para navegar â€¢ Clique para detalhes</span>
           </div>
 
           {(offset.x !== 0 || offset.y !== 0) && (
