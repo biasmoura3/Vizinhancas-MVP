@@ -139,12 +139,16 @@ export default function ProposalModal({
               {/* LEFT COLUMN: Metadata inputs */}
               <div className="md:col-span-5 space-y-5">
                 <div className="space-y-2">
-                  <label className="font-mono text-[10px] uppercase text-on-surface-variant/80 tracking-wider block font-semibold">
-                    Título do Fragmento
-                  </label>
+                  <div className="flex items-center justify-between">
+                    <label className="font-mono text-[10px] uppercase text-on-surface-variant/80 tracking-wider block font-semibold">
+                      Título do Fragmento
+                    </label>
+                    <span className="font-mono text-[9px] text-on-surface-variant/60">{title.length}/50</span>
+                  </div>
                   <input 
                     type="text"
                     required
+                    maxLength={50}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     className="w-full bg-transparent border-0 border-b border-[#dac2b8]/30 focus:border-primary focus:ring-0 text-lg font-sans text-on-surface py-2 px-0 transition-all placeholder:text-on-surface-variant/30"
@@ -203,11 +207,15 @@ export default function ProposalModal({
                 
                 {/* Narrated description text */}
                 <div className="space-y-2">
-                  <label className="font-mono text-[10px] uppercase text-on-surface-variant/80 tracking-wider block font-semibold">
-                    Conteúdo do Fragmento de Mundo
-                  </label>
+                  <div className="flex items-center justify-between">
+                    <label className="font-mono text-[10px] uppercase text-on-surface-variant/80 tracking-wider block font-semibold">
+                      Conteúdo do Fragmento de Mundo
+                    </label>
+                    <span className="font-mono text-[9px] text-on-surface-variant/60">{content.length}/300</span>
+                  </div>
                   <textarea 
                     rows={4}
+                    maxLength={300}
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     className="w-full bg-surface-container-low/40 rounded-lg border border-[#dac2b8]/15 focus:border-[#ffb596] focus:ring-1 focus:ring-[#ffb596]/10 text-sm font-sans text-on-surface p-4 transition-all placeholder:italic placeholder:text-on-surface-variant/30 leading-relaxed"
