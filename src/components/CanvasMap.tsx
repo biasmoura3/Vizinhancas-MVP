@@ -482,7 +482,7 @@ export default function CanvasMap({
                     
                     <div className="flex-1 ml-3">
                       <div className="flex items-center justify-between text-[9px] font-mono opacity-60">
-                        <span>{isPlayingAudio ? 'PRODUZINDO TIMBRE...' : 'SINTETIZADOR DISPONÃVEL'}</span>
+                        <span>{isPlayingAudio ? 'PRODUZINDO TIMBRE...' : 'SINTETIZADOR DISPONÍVEL'}</span>
                         <span>{activeFragment.audioDuration || '00:15'}</span>
                       </div>
                       <div className="w-full bg-surface-container/40 rounded-full h-1 mt-1 overflow-hidden">
@@ -529,7 +529,7 @@ export default function CanvasMap({
                   <span className="text-on-surface block font-sans font-medium mt-0.5">{activeFragment.source}</span>
                 </div>
                 <div>
-                  <span className="opacity-55 block uppercase font-bold text-[8px]">RegiÃ£o</span>
+                  <span className="opacity-55 block uppercase font-bold text-[8px]">Região</span>
                   <span className="text-on-surface block font-sans font-semibold mt-0.5">{activeFragment.territory}</span>
                 </div>
               </div>
@@ -570,7 +570,7 @@ export default function CanvasMap({
         <div className="absolute bottom-4 left-6 right-6 z-30 flex items-center justify-between pointer-events-none">
           <div className="bg-[#0b1326]/85 border border-[#dac2b8]/15 text-on-surface-variant text-[10px] font-mono px-4 py-2.5 rounded-full flex items-center gap-2.5 backdrop-blur shadow-xl pointer-events-auto select-none">
             <Locate className="w-3.5 h-3.5 text-primary animate-pulse" />
-            <span>ConstelaÃ§Ã£o â€¢ Arraste o fundo para navegar â€¢ Clique para detalhes</span>
+            <span>Constelação • Arraste o fundo para navegar • Clique para detalhes</span>
           </div>
 
           {(offset.x !== 0 || offset.y !== 0) && (
