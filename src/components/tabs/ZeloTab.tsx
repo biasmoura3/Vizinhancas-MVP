@@ -17,7 +17,8 @@ import {
   ArrowUpRight,
   Bookmark,
   Plus,
-  Edit
+  Edit,
+  Trash2
 } from 'lucide-react';
 import FragmentViewer from '../../components/FragmentViewer';
 
@@ -31,6 +32,7 @@ interface ZeloTabProps {
   savedFragmentIds?: string[];
   onToggleSaveFragment?: (id: string) => void;
   onOpenEditModal?: (fragment: WorldFragment) => void;
+  onDeleteFragment?: (id: string) => void;
 }
 
 export default function ZeloTab({ 
@@ -42,7 +44,8 @@ export default function ZeloTab({
   setActiveTab,
   savedFragmentIds = [],
   onToggleSaveFragment,
-  onOpenEditModal
+  onOpenEditModal,
+  onDeleteFragment
 }: ZeloTabProps) {
   
   const [zeloSubTab, setZeloSubTab] = useState<'indice' | 'meus-fragmentos' | 'salvos'>('indice');
@@ -374,6 +377,15 @@ export default function ZeloTab({
                         >
                           <Edit className="w-3 h-3" />
                           Editar
+                        </button>
+                      )}
+                      {onDeleteFragment && (
+                        <button 
+                          onClick={() => onDeleteFragment(f.id)}
+                          className="px-4 py-1.5 bg-error/10 border border-error/25 hover:bg-error/20 text-error hover:text-error-bright text-xs font-semibold rounded-full flex items-center gap-1 cursor-pointer transition-all font-sans"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                          Excluir
                         </button>
                       )}
                       {onSelectFragment && setActiveTab && (

@@ -130,6 +130,19 @@ export default function App() {
     setActiveTab('nexo'); // Opens connection map so they can wire it!
   };
 
+  const handleDeleteFragment = (id: string) => {
+    // Only allow deletion if user created it
+    const fragmentToDelete = fragments.find(f => f.id === id);
+    if (fragmentToDelete && fragmentToDelete.isUserCreated) {
+      if (confirm(`Tem certeza que deseja excluir "${fragmentToDelete.title}"?`)) {
+        setFragments(prev => prev.filter(f => f.id !== id));
+        if (selectedFragmentId === id) {
+          setSelectedFragmentId(null);
+        }
+      }
+    }
+  };
+
   const handleResetData = () => {
     if (confirm('Tem certeza que deseja restaurar os fragmentos originais do Altiplano?')) {
       localStorage.removeItem('situated_memories');
@@ -198,6 +211,7 @@ export default function App() {
               savedFragmentIds={savedFragmentIds}
               onToggleSaveFragment={handleToggleSaveFragment}
               onOpenEditModal={handleOpenEditModal}
+              onDeleteFragment={handleDeleteFragment}
             />
           )}
 
