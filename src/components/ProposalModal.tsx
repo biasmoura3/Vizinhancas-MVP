@@ -42,7 +42,9 @@ export default function ProposalModal({
   if (!isOpen) return null;
 
   const handleAddMediaLink = () => {
-    setMediaLinks((prev) => [...prev, '']);
+    if (mediaLinks.length < 3) {
+      setMediaLinks((prev) => [...prev, '']);
+    }
   };
 
   const handleUpdateMediaLink = (index: number, value: string) => {
@@ -244,13 +246,20 @@ export default function ProposalModal({
                         </div>
                       ))}
                     </div>
-                    <button
-                      type="button"
-                      onClick={handleAddMediaLink}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 text-primary text-sm hover:bg-primary/5 transition-all"
-                    >
-                      + Adicionar mais links
-                    </button>
+                    {mediaLinks.length < 3 && (
+                      <button
+                        type="button"
+                        onClick={handleAddMediaLink}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 text-primary text-sm hover:bg-primary/5 transition-all"
+                      >
+                        + Adicionar mais links
+                      </button>
+                    )}
+                    {mediaLinks.length >= 3 && (
+                      <p className="text-[10px] text-on-surface-variant/60 italic font-mono">
+                        Limite máximo de 3 links atingido
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
