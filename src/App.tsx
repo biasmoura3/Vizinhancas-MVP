@@ -20,7 +20,7 @@ import {
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('nexo'); // Defaulting to the map step
   const [currentTerritory, setCurrentTerritory] = useState<string>('Setor 7G');
-  const [selectedFragmentId, setSelectedFragmentId] = useState<string | null>('alti-1');
+  const [selectedFragmentId, setSelectedFragmentId] = useState<string | null>(null);
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
   
   // Link weaving states
@@ -115,7 +115,7 @@ export default function App() {
     if (confirm('Tem certeza que deseja restaurar os fragmentos originais do Altiplano?')) {
       localStorage.removeItem('situated_memories');
       setFragments(INITIAL_FRAGMENTS);
-      setSelectedFragmentId('alti-1');
+      setSelectedFragmentId(null);
       setActiveTab('nexo');
     }
   };
