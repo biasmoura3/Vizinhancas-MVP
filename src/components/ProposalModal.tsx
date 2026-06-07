@@ -1,14 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { WorldFragment, FragmentType, StewardshipStatus } from '../types';
-import { PRESET_IMAGES } from '../data';
+import React, { useState, useEffect } from 'react';
+import { WorldFragment, FragmentType } from '../types';
 import { 
   X, 
-  Camera, 
-  Mic, 
-  Square, 
   Sprout, 
   ChevronRight,
-  Sparkles,
   Music,
   FileText,
   Image as ImageIcon,
@@ -35,15 +30,7 @@ export default function ProposalModal({
   const [territory, setTerritory] = useState(currentTerritory);
   const [content, setContent] = useState('');
   const [openToConnections, setOpenToConnections] = useState(true);
-  
-  // Visual files state
-  const [attachedImages, setAttachedImages] = useState<string[]>([]);
-  
-  // Audio recording state
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordSeconds, setRecordSeconds] = useState(0);
-  const [hasRecordedAudio, setHasRecordedAudio] = useState(false);
-  const recordingInterval = useRef<NodeJS.Timeout | null>(null);
+  const [mediaLinks, setMediaLinks] = useState<string[]>(['']);
 
   useEffect(() => {
     if (isOpen) {
@@ -51,61 +38,30 @@ export default function ProposalModal({
     }
   }, [isOpen, currentTerritory]);
 
-  // Audio Recording simulator
-  useEffect(() => {
-    if (isRecording) {
-      recordingInterval.current = setInterval(() => {
-        setRecordSeconds(prev => prev + 1);
-      }, 1000);
-    } else {
-      if (recordingInterval.current) {
-        clearInterval(recordingInterval.current);
-      }
-    }
-    return () => {
-      if (recordingInterval.current) clearInterval(recordingInterval.current);
-    };
-  }, [isRecording]);
 
   if (!isOpen) return null;
 
-  const handleStartRecording = () => {
-    setIsRecording(true);
-    setRecordSeconds(0);
-    setHasRecordedAudio(false);
+  const handleAddMediaLink = () => {
+    setMediaLinks((prev) => [...prev, '']);
   };
 
-  const handleStopRecording = () => {
-    setIsRecording(false);
-    setHasRecordedAudio(true);
+  const handleUpdateMediaLink = (index: number, value: string) => {
+    setMediaLinks((prev) => prev.map((link, i) => i === index ? value : link));
   };
 
-  const handleAddVisualRegistry = () => {
-    // Cycles through preset high quality lichen images
-    const nextIndex = attachedImages.length % PRESET_IMAGES.length;
-    const randomUri = PRESET_IMAGES[nextIndex];
-    setAttachedImages(prev => [...prev, randomUri]);
+  const handleRemoveMediaLink = (index: number) => {
+    setMediaLinks((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleRemoveVisualRegistry = (index: number) => {
-    setAttachedImages(prev => prev.filter((_, i) => i !== index));
-  };
-
-  const formatSeconds = (sec: number) => {
-    const mins = Math.floor(sec / 60);
-    const secs = sec % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
 
-    // Build newly submitted payload
-    // Set a default image context if it's visual and none are chosen, or use chosen visual
-    const chosenImageUrl = type === 'visual' && attachedImages.length > 0 
-      ? attachedImages[0] 
-      : 'https://images.unsplash.com/photo-1545231027-63b39f612acf?q=80&w=600&auto=format&fit=crop';
+    const chosenMediaUrl = mediaLinks.find((link) => link.trim() !== '');
+    const previewUrl = type === 'visual'
+      ? chosenMediaUrl ?? 'https://images.unsplash.com/photo-1545231027-63b39f612acf?q=80&w=600&auto=format&fit=crop'
+      : chosenMediaUrl ?? undefined;
 
     onSubmit({
       title,
@@ -114,18 +70,16 @@ export default function ProposalModal({
       territory: territory || 'Setor 7G',
       content: content || 'Nenhuma narração tecida.',
       openToConnections,
-      imageUrl: type === 'visual' ? chosenImageUrl : undefined,
-      audioDuration: type === 'audio' ? formatSeconds(recordSeconds || 12) : undefined,
-      audioWaveform: type === 'audio' ? Array.from({length: 20}, () => Math.floor(Math.random() * 20) + 5) : undefined
+      imageUrl: previewUrl,
+      audioDuration: undefined,
+      audioWaveform: undefined
     });
 
     // Reset Form state
     setTitle('');
     setSource('');
     setContent('');
-    setAttachedImages([]);
-    setRecordSeconds(0);
-    setHasRecordedAudio(false);
+    setMediaLinks(['']);
     onClose();
   };
 
@@ -259,119 +213,44 @@ export default function ProposalModal({
                   />
                 </div>
 
-                {/* AUDIO FORM OPTION CONTENT: Sussurros e Cantos */}
-                {type === 'audio' && (
+                {(type === 'audio' || type === 'visual') && (
                   <div className="space-y-3">
                     <label className="font-mono text-[10px] uppercase text-on-surface-variant/80 tracking-wider block font-semibold">
-                      Gravar Áudio ou Depoimento
+                      Links de visualização
                     </label>
-                    <div className="flex items-center gap-4 bg-surface-container-low/60 p-4 border border-[#dac2b8]/10 rounded-xl relative overflow-hidden">
-                      {isRecording && (
-                        <div className="absolute top-0 bottom-0 left-0 w-1.5 bg-error animate-pulse" />
-                      )}
-                      
-                      {!isRecording ? (
-                        <button 
-                          type="button"
-                          onClick={handleStartRecording}
-                          className="w-11 h-11 rounded-full bg-primary hover:scale-105 active:scale-95 text-on-primary flex items-center justify-center transition-all cursor-pointer shadow-lg shadow-primary/20"
-                        >
-                          <Mic className="w-5 h-5" />
-                        </button>
-                      ) : (
-                        <button 
-                          type="button"
-                          onClick={handleStopRecording}
-                          className="w-11 h-11 rounded-full bg-error text-white hover:scale-105 active:scale-95 flex items-center justify-center transition-all cursor-pointer shadow-lg shadow-error/10 animate-pulse"
-                        >
-                          <Square className="w-4 h-4 fill-current" />
-                        </button>
-                      )}
-
-                      <div className="flex-1">
-                        {isRecording ? (
-                          <>
-                            {/* Animated wave simulator */}
-                            <div className="flex items-end gap-1 mb-2 h-4 justify-start">
-                              {Array.from({ length: 15 }).map((_, i) => (
-                                <div 
-                                  key={i} 
-                                  className="w-[3px] bg-primary rounded-full transition-all"
-                                  style={{ 
-                                    height: `${Math.floor(Math.random() * 14) + 2}px`,
-                                    animation: `slow-pulse-kf ${0.5 + (i % 4) * 0.2}s ease-in-out infinite` 
-                                  }}
-                                />
-                              ))}
-                            </div>
-                            <div className="flex justify-between items-center text-[10px] font-mono text-on-surface-variant">
-                              <span className="text-primary tracking-wide uppercase animate-pulse">Gravando som...</span>
-                              <span>{formatSeconds(recordSeconds)} / --:--</span>
-                            </div>
-                          </>
-                        ) : (
-                          <div>
-                            <p className="text-xs font-sans text-on-surface select-none">
-                              {hasRecordedAudio ? '✓ Áudio gravado com sucesso' : 'Clique no microfone para gravar sua fala.'}
-                            </p>
-                            <span className="block text-[10px] text-on-surface-variant/60 font-mono mt-1">
-                              {hasRecordedAudio ? `${formatSeconds(recordSeconds)} pronto para enviar.` : 'Gravador de áudio pronto'}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* GRAPHIC ATTACHMENTS OPTION: Registros Visuais */}
-                {type === 'visual' && (
-                  <div className="space-y-3">
-                    <label className="font-mono text-[10px] uppercase text-on-surface-variant/80 tracking-wider block font-semibold">
-                      Imagens ou Fotos Ilustrativas
-                    </label>
-                    <div className="grid grid-cols-4 gap-3">
-                      {/* Attach triggers */}
-                      <button 
-                        type="button"
-                        onClick={handleAddVisualRegistry}
-                        className="aspect-square rounded-full border border-dashed border-[#dac2b8]/20 flex flex-col items-center justify-center hover:border-primary/50 hover:bg-primary/5 transition-all group cursor-pointer bg-surface-container/30"
-                      >
-                        <Camera className="w-5 h-5 text-on-surface-variant group-hover:text-primary mb-1.5 transition-colors" />
-                        <span className="text-[9px] font-mono uppercase tracking-wider text-on-surface-variant/60 font-semibold">Anexar</span>
-                      </button>
-
-                      {/* Display attached image states */}
-                      {attachedImages.map((imgUrl, i) => (
-                        <div key={i} className="aspect-square rounded-full overflow-hidden relative group border border-[#dac2b8]/10 bg-surface-container-lowest">
-                          <img 
-                            src={imgUrl} 
-                            alt={`Visual registro ${i}`}
-                            referrerPolicy="no-referrer"
-                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+                    <p className="text-[11px] text-on-surface-variant leading-relaxed">
+                      Cole URLs de serviços de visualização ou arquivos diretos para reproduzir sem sair da página.
+                    </p>
+                    <div className="space-y-3">
+                      {mediaLinks.map((link, index) => (
+                        <div key={index} className="flex items-center gap-3">
+                          <input
+                            type="url"
+                            value={link}
+                            onChange={(e) => handleUpdateMediaLink(index, e.target.value)}
+                            placeholder={`Link de visualização ${index + 1}`}
+                            className="flex-1 bg-surface-container-low/60 rounded-lg border border-[#dac2b8]/20 px-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
                           />
-                          <button 
-                            type="button"
-                            onClick={() => handleRemoveVisualRegistry(i)}
-                            className="absolute inset-0 bg-error/80 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all cursor-pointer text-white rounded-full"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          {mediaLinks.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveMediaLink(index)}
+                              className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-error/20 text-error hover:bg-error/10 transition-colors"
+                              aria-label="Remover link"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
                         </div>
                       ))}
-
-                      {/* Fallbacks showing templates exactly like mockup when empty */}
-                      {attachedImages.length === 0 && (
-                        <>
-                          <div className="aspect-square rounded-full overflow-hidden opacity-30 border border-[#dac2b8]/10 bg-gradient-to-br from-surface-container-high via-surface-container to-surface-container-low flex items-center justify-center text-[10px] font-mono text-on-surface-variant select-none">
-                            Fio 01
-                          </div>
-                          <div className="aspect-square rounded-full overflow-hidden opacity-30 border border-[#dac2b8]/10 bg-gradient-to-br from-surface-container-high via-surface-container to-surface-container-low flex items-center justify-center text-[10px] font-mono text-on-surface-variant select-none">
-                            Fio 02
-                          </div>
-                        </>
-                      )}
                     </div>
+                    <button
+                      type="button"
+                      onClick={handleAddMediaLink}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 text-primary text-sm hover:bg-primary/5 transition-all"
+                    >
+                      + Adicionar mais links
+                    </button>
                   </div>
                 )}
               </div>
