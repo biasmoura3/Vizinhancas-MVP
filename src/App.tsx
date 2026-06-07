@@ -3,6 +3,7 @@ import Sidebar from './components/Sidebar';
 import HeaderBar from './components/HeaderBar';
 import CanvasMap from './components/CanvasMap';
 import ProposalModal from './components/ProposalModal';
+import EditFragmentModal from './components/EditFragmentModal';
 
 import ManifestoTab from './components/tabs/ManifestoTab';
 import ZeloTab from './components/tabs/ZeloTab';
@@ -22,6 +23,8 @@ export default function App() {
   const [currentTerritory, setCurrentTerritory] = useState<string>('Setor 7G');
   const [selectedFragmentId, setSelectedFragmentId] = useState<string | null>(null);
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [fragmentToEdit, setFragmentToEdit] = useState<WorldFragment | null>(null);
   
   // Link weaving states
   const [isConnectingMode, setIsConnectingMode] = useState(false);
@@ -75,6 +78,22 @@ export default function App() {
     setFragments(prev => [newFragment, ...prev]);
     setSelectedFragmentId(uniqueId);
     setActiveTab('nexo'); // Takes them to view it on the map!
+  };
+
+  const handleEditFragment = (id: string, updatedData: Partial<Omit<WorldFragment, 'id' | 'createdAt' | 'status' | 'connections'>>) => {
+    setFragments(prev => prev.map(f => 
+      f.id === id ? { ...f, ...updatedData } : f
+    ));
+    setIsEditModalOpen(false);
+    setFragmentToEdit(null);
+  };
+
+  const handleOpenEditModal = (fragment: WorldFragment) => {
+    // Only allow editing if user created it
+    if (fragment.isUserCreated) {
+      setFragmentToEdit(fragment);
+      setIsEditModalOpen(true);
+    }
   };
 
   const handleUpdateStatus = (id: string, newStatus: StewardshipStatus) => {
@@ -178,6 +197,7 @@ export default function App() {
               setActiveTab={setActiveTab}
               savedFragmentIds={savedFragmentIds}
               onToggleSaveFragment={handleToggleSaveFragment}
+              onOpenEditModal={handleOpenEditModal}
             />
           )}
 
@@ -265,6 +285,17 @@ export default function App() {
         onClose={() => setIsProposalModalOpen(false)}
         onSubmit={handleAddFragment}
         currentTerritory={currentTerritory}
+      />
+
+      {/* Dynamic edit fragment modal handler */}
+      <EditFragmentModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setFragmentToEdit(null);
+        }}
+        onSubmit={handleEditFragment}
+        fragment={fragmentToEdit}
       />
 
     </div>

@@ -16,7 +16,8 @@ import {
   Image as ImageIcon,
   ArrowUpRight,
   Bookmark,
-  Plus
+  Plus,
+  Edit
 } from 'lucide-react';
 import FragmentViewer from '../../components/FragmentViewer';
 
@@ -29,6 +30,7 @@ interface ZeloTabProps {
   setActiveTab?: (tab: any) => void;
   savedFragmentIds?: string[];
   onToggleSaveFragment?: (id: string) => void;
+  onOpenEditModal?: (fragment: WorldFragment) => void;
 }
 
 export default function ZeloTab({ 
@@ -39,7 +41,8 @@ export default function ZeloTab({
   onSelectFragment,
   setActiveTab,
   savedFragmentIds = [],
-  onToggleSaveFragment
+  onToggleSaveFragment,
+  onOpenEditModal
 }: ZeloTabProps) {
   
   const [zeloSubTab, setZeloSubTab] = useState<'indice' | 'meus-fragmentos' | 'salvos'>('indice');
@@ -363,18 +366,29 @@ export default function ZeloTab({
 
                   <div className="pt-4 mt-2 border-t border-[#dac2b8]/10 flex items-center justify-between">
                     <span className="font-mono text-[9px] text-on-surface-variant/40">Inserido em {new Date(f.createdAt).toLocaleDateString()}</span>
-                    {onSelectFragment && setActiveTab && (
-                      <button 
-                        onClick={() => {
-                          onSelectFragment(f.id);
-                          setActiveTab('nexo');
-                        }}
-                        className="px-4 py-1.5 bg-primary/10 border border-primary/25 hover:bg-primary/20 text-primary hover:text-primary-bright text-xs font-semibold rounded-full flex items-center gap-1 cursor-pointer transition-all font-sans"
-                      >
-                        Navegar Fragmento
-                        <ArrowUpRight className="w-3 h-3" />
-                      </button>
-                    )}
+                    <div className="flex items-center gap-2">
+                      {onOpenEditModal && (
+                        <button 
+                          onClick={() => onOpenEditModal(f)}
+                          className="px-4 py-1.5 bg-secondary/10 border border-secondary/25 hover:bg-secondary/20 text-secondary hover:text-secondary-bright text-xs font-semibold rounded-full flex items-center gap-1 cursor-pointer transition-all font-sans"
+                        >
+                          <Edit className="w-3 h-3" />
+                          Editar
+                        </button>
+                      )}
+                      {onSelectFragment && setActiveTab && (
+                        <button 
+                          onClick={() => {
+                            onSelectFragment(f.id);
+                            setActiveTab('nexo');
+                          }}
+                          className="px-4 py-1.5 bg-primary/10 border border-primary/25 hover:bg-primary/20 text-primary hover:text-primary-bright text-xs font-semibold rounded-full flex items-center gap-1 cursor-pointer transition-all font-sans"
+                        >
+                          Navegar Fragmento
+                          <ArrowUpRight className="w-3 h-3" />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))
