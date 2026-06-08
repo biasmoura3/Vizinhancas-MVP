@@ -207,7 +207,7 @@ export default function EditFragmentModal({
                       Links de visualização
                     </label>
                     <p className="text-[11px] text-on-surface-variant leading-relaxed">
-                      Para fragmentos sonoros, cole links do YouTube. O primeiro aparece como preview; os demais ficam clicáveis no card.
+                      Para fragmentos sonoros, cole links do YouTube. Para fragmentos visuais, informe até 3 imagens para aparecerem no card.
                     </p>
                     <div className="space-y-3">
                       {mediaLinks.map((link, index) => (

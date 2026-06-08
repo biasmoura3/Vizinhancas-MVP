@@ -81,6 +81,7 @@ O projeto será implantado no Vercel. Para publicar:
 - O sistema **não armazena** arquivos de mídia (imagens e vídeos) no nosso servidor ou em buckets gerenciados pelo projeto.
 - Contribuintes devem fornecer **links de visualização** hospedados por serviços terceiros, como YouTube, Vimeo, Imgur ou provedores que ofereçam URLs de visualização pública.
 - O app **incorpora** esses links para visualização inline dentro da interface; o arquivo não é transferido para armazenamento nosso nem disponibilizado para download.
+- Cada fragmento pode ter **no máximo 3 links de visualização**. Essa limitação é parte do desenho da plataforma e deve ser mantida nos formulários, na persistência dos dados e na visualização responsiva dos fragmentos.
 
 Padrões e exemplos aceitos:
 
@@ -94,6 +95,7 @@ Orientações de implementação:
 - Preferir uso de protocolos de embed padronizados, como oEmbed, quando disponível.
 - Validar e sanitizar URLs recebidas; aplicar uma lista de domínios confiáveis.
 - Renderizar mídia inline sem proxiar o arquivo.
+- Manter o limite de 3 links por fragmento ao criar, editar, salvar e exibir mídias.
 - Para iframes, usar atributos de `sandbox` restritivos e políticas de Content Security Policy no deploy.
 - Para imagens, usar elemento nativo (`<img>`) sem links de download explícitos.
 - Evitar `allow-scripts` em iframes quando possível; quando necessário, restringir a origem e auditar o provedor.

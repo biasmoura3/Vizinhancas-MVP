@@ -135,11 +135,20 @@ export default function CanvasMap({
   // Find currently active details info
   const activeFragment = fragments.find(f => f.id === selectedId) || null;
   const activeMediaLinks = activeFragment
-    ? (activeFragment.mediaLinks?.length ? activeFragment.mediaLinks : activeFragment.imageUrl ? [activeFragment.imageUrl] : []).slice(0, 3)
+    ? Array.from(new Set([
+        ...(activeFragment.mediaLinks ?? []),
+        ...(activeFragment.imageUrl ? [activeFragment.imageUrl] : [])
+      ].filter(Boolean))).slice(0, 3)
     : [];
   const activePreviewUrl = activeFragment?.type === 'audio'
     ? activeMediaLinks[0]
-    : activeFragment?.imageUrl;
+    : null;
+  const visualMediaCount = activeFragment?.type === 'visual' ? activeMediaLinks.length : 0;
+  const visualGalleryClassName = visualMediaCount === 1
+    ? 'grid grid-cols-1 gap-3 w-full max-w-[min(32rem,calc(100vw-5rem))]'
+    : visualMediaCount === 2
+      ? 'grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-[min(48rem,calc(100vw-5rem))]'
+      : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full max-w-[min(64rem,calc(100vw-5rem))]';
 
   return (
     <div className="w-full h-full relative flex flex-col overflow-hidden text-on-surface select-none">
@@ -271,7 +280,7 @@ export default function CanvasMap({
                 transform: `translate(calc(-50% - ${offset.x}px), calc(-50% - ${offset.y}px))`
               }}
               onMouseDown={(e) => e.stopPropagation()} // allows text selection/interaction inside card without invoking drag
-              className="absolute z-40 w-[min(27rem,calc(100vw-2rem))] max-h-[min(78vh,42rem)] overflow-y-auto glass-panel border border-[#dac2b8]/30 rounded-2xl shadow-[0_18px_60px_rgba(0,0,0,0.88),0_0_34px_rgba(255,181,150,0.12)] p-6 animate-in zoom-in-95 duration-200 select-text cursor-default space-y-4 bg-[#0a1120]/90 backdrop-blur-md"
+              className="absolute z-40 w-fit min-w-[min(22rem,calc(100vw-2rem))] max-w-[min(64rem,calc(100vw-2rem))] max-h-[min(78vh,42rem)] overflow-y-auto glass-panel border border-[#dac2b8]/30 rounded-2xl shadow-[0_18px_60px_rgba(0,0,0,0.88),0_0_34px_rgba(255,181,150,0.12)] p-6 animate-in zoom-in-95 duration-200 select-text cursor-default space-y-4 bg-[#0a1120]/90 backdrop-blur-md"
             >
               {/* Popover Header */}
               <div className="flex items-center justify-between pb-2.5 border-b border-[#dac2b8]/15 text-xs font-mono text-primary uppercase select-none">
@@ -317,6 +326,23 @@ export default function CanvasMap({
                 <div className="relative w-full h-44 rounded-lg overflow-hidden border border-[#dac2b8]/10 group">
                   <FragmentViewer url={activePreviewUrl} alt={activeFragment.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0a1120] to-transparent opacity-65 pointer-events-none" />
+                </div>
+              )}
+
+              {activeFragment.type === 'visual' && activeMediaLinks.length > 0 && (
+                <div className={visualGalleryClassName}>
+                  {activeMediaLinks.map((link, index) => (
+                    <div
+                      key={`${link}-${index}`}
+                      className="relative min-w-0 rounded-lg overflow-hidden border border-[#dac2b8]/10 bg-surface-container-low/25"
+                    >
+                      <FragmentViewer
+                        url={link}
+                        alt={`${activeFragment.title} ${index + 1}`}
+                        className="block w-full h-auto max-h-[28rem] object-contain"
+                      />
+                    </div>
+                  ))}
                 </div>
               )}
 
