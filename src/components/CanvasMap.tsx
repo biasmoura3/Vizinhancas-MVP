@@ -35,14 +35,14 @@ export default function CanvasMap({
   // States for Obsidian-like background dragging/panning
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
-  const [hasDragged, setHasDragged] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0, offsetX: 0, offsetY: 0 });
+  const dragMovedRef = useRef(false);
 
   // Gets unique territory options
   const territories = ['todos', ...Array.from(new Set(fragments.map(f => f.territory)))];
 
   const handleNodeClick = (id: string) => {
-    if (hasDragged) return; // Prevent action if user was dragging
+    if (dragMovedRef.current) return; // Prevent action if user was dragging
     onSelectNode(id);
   };
 
@@ -61,7 +61,7 @@ export default function CanvasMap({
     }
 
     setIsDragging(true);
-    setHasDragged(false);
+    dragMovedRef.current = false;
     dragStartRef.current = {
       x: e.clientX,
       y: e.clientY,
@@ -76,7 +76,7 @@ export default function CanvasMap({
     const dy = e.clientY - dragStartRef.current.y;
 
     if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
-      setHasDragged(true);
+      dragMovedRef.current = true;
     }
 
     setOffset({
@@ -86,7 +86,16 @@ export default function CanvasMap({
   };
 
   const handleMouseUp = () => {
+    const draggedDuringGesture = dragMovedRef.current;
+
     setIsDragging(false);
+    if (draggedDuringGesture) {
+      window.setTimeout(() => {
+        dragMovedRef.current = false;
+      }, 0);
+    } else {
+      dragMovedRef.current = false;
+    }
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -98,7 +107,7 @@ export default function CanvasMap({
     }
 
     setIsDragging(true);
-    setHasDragged(false);
+    dragMovedRef.current = false;
     dragStartRef.current = {
       x: touch.clientX,
       y: touch.clientY,
@@ -114,7 +123,7 @@ export default function CanvasMap({
     const dy = touch.clientY - dragStartRef.current.y;
 
     if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
-      setHasDragged(true);
+      dragMovedRef.current = true;
     }
 
     setOffset({
