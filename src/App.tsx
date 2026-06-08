@@ -29,6 +29,8 @@ import {
   updateRemoteFragment,
 } from './services/fragmentsRepository';
 
+type AuthMode = 'signIn' | 'signUp';
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('nexo'); // Defaulting to the map step
   const [currentTerritory, setCurrentTerritory] = useState<string>('Setor 7G');
@@ -42,7 +44,10 @@ export default function App() {
   const [savedFragmentIds, setSavedFragmentIds] = useState<string[]>(() => loadLocalSavedFragmentIds());
   const [territories, setTerritories] = useState<Territory[]>(TERRITORIES);
   const [user, setUser] = useState<User | null>(null);
+  const [authMode, setAuthMode] = useState<AuthMode>('signUp');
+  const [authName, setAuthName] = useState('');
   const [authEmail, setAuthEmail] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
   const [isAuthSubmitting, setIsAuthSubmitting] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMessage, setAuthMessage] = useState<string | null>(null);
@@ -50,13 +55,21 @@ export default function App() {
   const [dataStatus, setDataStatus] = useState(isSupabaseConfigured ? 'Conectando ao Supabase...' : 'Modo local');
 
   const isRemoteMode = isSupabaseConfigured && Boolean(supabase);
-  const displayName = user?.email?.split('@')[0] || 'Ouvinte Atento';
+  const displayName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'Ouvinte Atento';
   const getAuthErrorMessage = (error: unknown) => {
     const fallback = 'Tente novamente em alguns instantes.';
     if (!(error instanceof Error)) return fallback;
 
     if (error.message.includes('Invalid path specified in request URL')) {
       return 'Confira se VITE_SUPABASE_URL esta usando a URL raiz do projeto Supabase, sem /auth/v1 ou outros caminhos.';
+    }
+
+    if (error.message.includes('Invalid login credentials')) {
+      return 'E-mail ou senha incorretos.';
+    }
+
+    if (error.message.includes('User already registered')) {
+      return 'Este e-mail ja tem cadastro. Use a aba Entrar.';
     }
 
     return error.message || fallback;
@@ -118,6 +131,7 @@ export default function App() {
         setIsAuthModalOpen(false);
         setAuthMessage(null);
         setAuthError(null);
+        setAuthPassword('');
       }
       window.setTimeout(() => {
         refreshRemoteData(activeUser).catch((error) => {
@@ -148,6 +162,19 @@ export default function App() {
     setAuthMessage(null);
     setAuthError(null);
     setIsAuthModalOpen(true);
+  };
+
+  const handleAuthModeChange = (mode: AuthMode) => {
+    setAuthMode(mode);
+    setAuthMessage(null);
+    setAuthError(null);
+  };
+
+  const closeAuthModal = () => {
+    setIsAuthModalOpen(false);
+    setAuthMessage(null);
+    setAuthError(null);
+    setAuthPassword('');
   };
 
   const handleOpenProposalFlow = () => {
@@ -311,28 +338,50 @@ export default function App() {
     }
   };
 
-  const handleSignIn = async (event: React.FormEvent) => {
+  const handleAuthSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!supabase || !authEmail.trim()) return;
+    if (!supabase || !authEmail.trim() || !authPassword) return;
+
+    if (authMode === 'signUp' && !authName.trim()) {
+      setAuthError('Informe seu nome para criar o cadastro.');
+      return;
+    }
 
     setAuthMessage(null);
     setAuthError(null);
     setIsAuthSubmitting(true);
     try {
-      const { error } = await supabase.auth.signInWithOtp({
+      if (authMode === 'signUp') {
+        const { data, error } = await supabase.auth.signUp({
+          email: authEmail.trim(),
+          password: authPassword,
+          options: {
+            data: {
+              display_name: authName.trim(),
+            },
+          },
+        });
+
+        if (error) throw error;
+        if (data.session) {
+          setAuthMessage('Cadastro criado. Voce ja esta conectado.');
+        } else {
+          setAuthMessage('Cadastro criado. Se a sessao nao abrir automaticamente, desative a confirmacao de e-mail no Supabase para entrada imediata com senha.');
+        }
+        return;
+      }
+
+      const { error } = await supabase.auth.signInWithPassword({
         email: authEmail.trim(),
-        options: {
-          emailRedirectTo: `${window.location.origin}${window.location.pathname}`,
-          shouldCreateUser: true,
-        },
+        password: authPassword,
       });
 
       if (error) throw error;
-      setAuthMessage('Enviamos um link de acesso para seu e-mail. Abra o link nesta mesma janela para concluir a entrada.');
+      setAuthMessage('Entrada realizada.');
     } catch (error) {
       console.error(error);
       const errorMessage = getAuthErrorMessage(error);
-      setAuthError(`Não foi possível enviar o link de acesso. ${errorMessage}`);
+      setAuthError(`Nao foi possivel concluir o acesso. ${errorMessage}`);
     } finally {
       setIsAuthSubmitting(false);
     }
@@ -341,6 +390,7 @@ export default function App() {
   const handleSignOut = async () => {
     if (!supabase) return;
     await supabase.auth.signOut();
+    setAuthPassword('');
   };
 
   return (
@@ -439,22 +489,13 @@ export default function App() {
                       </div>
                     ) : (
                       <div className="space-y-3">
-                        <form onSubmit={handleSignIn} className="flex flex-col sm:flex-row gap-3">
-                          <input
-                            type="email"
-                            value={authEmail}
-                            onChange={(event) => setAuthEmail(event.target.value)}
-                            placeholder="seu-email@exemplo.com"
-                            className="flex-1 bg-surface-container-low/60 rounded-full border border-[#dac2b8]/20 px-4 py-2.5 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
-                          />
-                          <button
-                            type="submit"
-                            disabled={isAuthSubmitting}
-                            className="px-5 py-2.5 bg-primary text-on-primary hover:brightness-105 rounded-full text-xs font-semibold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-wait"
-                          >
-                            {isAuthSubmitting ? 'Enviando...' : 'Entrar por e-mail'}
-                          </button>
-                        </form>
+                        <button
+                          type="button"
+                          onClick={openAuthModal}
+                          className="px-5 py-2.5 bg-primary text-on-primary hover:brightness-105 rounded-full text-xs font-semibold transition-colors cursor-pointer"
+                        >
+                          Criar conta ou entrar com senha
+                        </button>
                         {authMessage && (
                           <p className="text-xs leading-relaxed text-secondary bg-secondary/10 border border-secondary/15 rounded-xl px-4 py-3">
                             {authMessage}
@@ -576,13 +617,19 @@ export default function App() {
 
       <AuthModal
         isOpen={isAuthModalOpen}
+        mode={authMode}
+        name={authName}
         email={authEmail}
+        password={authPassword}
         isSubmitting={isAuthSubmitting}
         message={authMessage}
         error={authError}
+        onModeChange={handleAuthModeChange}
+        onNameChange={setAuthName}
         onEmailChange={setAuthEmail}
-        onClose={() => setIsAuthModalOpen(false)}
-        onSubmit={handleSignIn}
+        onPasswordChange={setAuthPassword}
+        onClose={closeAuthModal}
+        onSubmit={handleAuthSubmit}
       />
 
     </div>

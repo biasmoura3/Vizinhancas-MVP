@@ -25,7 +25,7 @@ const normalizedSupabaseUrl = normalizeSupabaseUrl(supabaseUrl);
 const normalizedAnonKey = supabaseAnonKey?.trim();
 
 export const supabaseConfigError = !supabaseUrl || !normalizedAnonKey
-  ? 'Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY para ativar o envio do link de acesso.'
+  ? 'Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY para ativar cadastro e entrada com senha.'
   : !normalizedSupabaseUrl
     ? 'VITE_SUPABASE_URL precisa ser a URL do projeto Supabase, comecando com https://.'
     : PLACEHOLDER_VALUES.has(normalizedAnonKey)
