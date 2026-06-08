@@ -56,6 +56,8 @@ export default function App() {
 
   const isRemoteMode = isSupabaseConfigured && Boolean(supabase);
   const displayName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'Ouvinte Atento';
+  const getAuthRedirectUrl = () => `${window.location.origin}${window.location.pathname}`;
+
   const getAuthErrorMessage = (error: unknown) => {
     const fallback = 'Tente novamente em alguns instantes.';
     if (!(error instanceof Error)) return fallback;
@@ -70,6 +72,10 @@ export default function App() {
 
     if (error.message.includes('User already registered')) {
       return 'Este e-mail ja tem cadastro. Use a aba Entrar.';
+    }
+
+    if (error.message.includes('Email not confirmed')) {
+      return 'Confirme seu e-mail pelo link enviado antes de entrar.';
     }
 
     return error.message || fallback;
@@ -352,10 +358,12 @@ export default function App() {
     setIsAuthSubmitting(true);
     try {
       if (authMode === 'signUp') {
+        const email = authEmail.trim();
         const { data, error } = await supabase.auth.signUp({
-          email: authEmail.trim(),
+          email,
           password: authPassword,
           options: {
+            emailRedirectTo: getAuthRedirectUrl(),
             data: {
               display_name: authName.trim(),
             },
@@ -365,10 +373,35 @@ export default function App() {
         if (error) throw error;
         if (data.session) {
           setAuthMessage('Cadastro criado. Voce ja esta conectado.');
-        } else {
-          setAuthMessage('Cadastro criado. Se a sessao nao abrir automaticamente, desative a confirmacao de e-mail no Supabase para entrada imediata com senha.');
+          return;
         }
-        return;
+
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password: authPassword,
+        });
+
+        if (!signInError) {
+          setAuthMessage('Cadastro criado. Voce ja esta conectado.');
+          return;
+        }
+
+        if (signInError.message.includes('Email not confirmed')) {
+          const { error: resendError } = await supabase.auth.resend({
+            type: 'signup',
+            email,
+            options: {
+              emailRedirectTo: getAuthRedirectUrl(),
+            },
+          });
+
+          if (resendError) throw resendError;
+          setAuthMode('signIn');
+          setAuthMessage('Cadastro criado. Enviamos um link de confirmacao para seu e-mail; depois de confirmar, volte aqui e entre com sua senha.');
+          return;
+        }
+
+        throw signInError;
       }
 
       const { error } = await supabase.auth.signInWithPassword({
