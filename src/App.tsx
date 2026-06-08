@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { User } from '@supabase/supabase-js';
 import Sidebar from './components/Sidebar';
 import HeaderBar from './components/HeaderBar';
 import CanvasMap from './components/CanvasMap';
@@ -10,9 +11,22 @@ import FragmentDeletedToast from './components/FragmentDeletedToast';
 import ManifestoTab from './components/tabs/ManifestoTab';
 import ZeloTab from './components/tabs/ZeloTab';
 
-import { ActiveTab, WorldFragment } from './types';
-import { INITIAL_FRAGMENTS } from './data';
+import { ActiveTab, Territory, WorldFragment } from './types';
+import { INITIAL_FRAGMENTS, TERRITORIES } from './data';
 import { ensureFixedMapPositions, findOpenMapPosition, getFragmentMapPosition } from './utils/constellationLayout';
+import { isSupabaseConfigured, supabase } from './lib/supabase';
+import {
+  createRemoteFragment,
+  deleteRemoteFragment,
+  loadLocalFragments,
+  loadLocalSavedFragmentIds,
+  loadRemoteFragments,
+  loadRemoteSavedFragmentIds,
+  loadRemoteTerritories,
+  saveRemoteFragment,
+  unsaveRemoteFragment,
+  updateRemoteFragment,
+} from './services/fragmentsRepository';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('nexo'); // Defaulting to the map step
@@ -23,33 +37,80 @@ export default function App() {
   const [fragmentToEdit, setFragmentToEdit] = useState<WorldFragment | null>(null);
   const [fragmentToDelete, setFragmentToDelete] = useState<WorldFragment | null>(null);
   const [deletedFragmentTitle, setDeletedFragmentTitle] = useState<string | null>(null);
-  // Fragments reactive state
-  const [fragments, setFragments] = useState<WorldFragment[]>(() => {
-    const saved = localStorage.getItem('situated_memories');
-    if (saved) {
-      try { return ensureFixedMapPositions(JSON.parse(saved)); } catch (e) { console.error(e); }
-    }
-    return ensureFixedMapPositions(INITIAL_FRAGMENTS);
-  });
+  const [fragments, setFragments] = useState<WorldFragment[]>(() => loadLocalFragments());
+  const [savedFragmentIds, setSavedFragmentIds] = useState<string[]>(() => loadLocalSavedFragmentIds());
+  const [territories, setTerritories] = useState<Territory[]>(TERRITORIES);
+  const [user, setUser] = useState<User | null>(null);
+  const [authEmail, setAuthEmail] = useState('');
+  const [isAuthSubmitting, setIsAuthSubmitting] = useState(false);
+  const [dataStatus, setDataStatus] = useState(isSupabaseConfigured ? 'Conectando ao Supabase...' : 'Modo local');
 
-  // Saved fragments from other communities/authors state
-  const [savedFragmentIds, setSavedFragmentIds] = useState<string[]>(() => {
-    const saved = localStorage.getItem('saved_fragment_ids');
-    if (saved) {
-      try { return JSON.parse(saved); } catch (e) { console.error(e); }
-    }
-    // Pre-save alti-1 and memb-3 for demo context on startup
-    return ['alti-1', 'memb-3'];
-  });
-
-  // Keep local storage synchronized
-  useEffect(() => {
-    localStorage.setItem('situated_memories', JSON.stringify(fragments));
-  }, [fragments]);
+  const isRemoteMode = isSupabaseConfigured && Boolean(supabase);
+  const displayName = user?.email?.split('@')[0] || 'Ouvinte Atento';
 
   useEffect(() => {
-    localStorage.setItem('saved_fragment_ids', JSON.stringify(savedFragmentIds));
-  }, [savedFragmentIds]);
+    if (!isRemoteMode) {
+      localStorage.setItem('situated_memories', JSON.stringify(fragments));
+    }
+  }, [fragments, isRemoteMode]);
+
+  useEffect(() => {
+    if (!isRemoteMode) {
+      localStorage.setItem('saved_fragment_ids', JSON.stringify(savedFragmentIds));
+    }
+  }, [savedFragmentIds, isRemoteMode]);
+
+  const refreshRemoteData = async (activeUser: User | null) => {
+    const [remoteTerritories, remoteFragments, remoteSavedIds] = await Promise.all([
+      loadRemoteTerritories(),
+      loadRemoteFragments(activeUser),
+      loadRemoteSavedFragmentIds(activeUser),
+    ]);
+
+    setTerritories(remoteTerritories);
+    setFragments(remoteFragments);
+    setSavedFragmentIds(remoteSavedIds);
+    setDataStatus(activeUser ? 'Conectado ao Supabase' : 'Supabase conectado: entre para contribuir');
+  };
+
+  useEffect(() => {
+    if (!isRemoteMode || !supabase) return;
+
+    let isMounted = true;
+
+    const bootRemoteData = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        const activeUser = data.session?.user ?? null;
+        if (!isMounted) return;
+        setUser(activeUser);
+        await refreshRemoteData(activeUser);
+      } catch (error) {
+        console.error(error);
+        if (!isMounted) return;
+        setDataStatus('Falha ao carregar Supabase; usando dados locais');
+        setTerritories(TERRITORIES);
+        setFragments(loadLocalFragments());
+        setSavedFragmentIds(loadLocalSavedFragmentIds());
+      }
+    };
+
+    bootRemoteData();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      const activeUser = session?.user ?? null;
+      setUser(activeUser);
+      refreshRemoteData(activeUser).catch((error) => {
+        console.error(error);
+        setDataStatus('Erro ao sincronizar sessão Supabase');
+      });
+    });
+
+    return () => {
+      isMounted = false;
+      authListener.subscription.unsubscribe();
+    };
+  }, [isRemoteMode]);
 
   useEffect(() => {
     if (!deletedFragmentTitle) return;
@@ -61,21 +122,65 @@ export default function App() {
     return () => window.clearTimeout(toastTimeout);
   }, [deletedFragmentTitle]);
 
-  const handleToggleSaveFragment = (id: string) => {
+  const handleToggleSaveFragment = async (id: string) => {
+    if (isRemoteMode) {
+      if (!user) {
+        alert('Entre com seu e-mail para salvar fragmentos no acervo.');
+        return;
+      }
+
+      const isSaved = savedFragmentIds.includes(id);
+      try {
+        if (isSaved) {
+          await unsaveRemoteFragment(id, user);
+          setSavedFragmentIds(prev => prev.filter(x => x !== id));
+        } else {
+          await saveRemoteFragment(id, user);
+          setSavedFragmentIds(prev => [...prev, id]);
+        }
+      } catch (error) {
+        console.error(error);
+        alert('Não foi possível atualizar o acervo salvo agora.');
+      }
+      return;
+    }
+
     setSavedFragmentIds(prev => 
       prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
     );
   };
 
-  const handleAddFragment = (newFragData: Omit<WorldFragment, 'id' | 'createdAt'>) => {
+  const handleAddFragment = async (newFragData: Omit<WorldFragment, 'id' | 'createdAt'>) => {
+    if (isRemoteMode && !user) {
+      alert('Entre com seu e-mail para propor um fragmento.');
+      return;
+    }
+
     const uniqueId = `frag-${Date.now()}`;
+    const mapPosition = findOpenMapPosition(fragments.map(getFragmentMapPosition));
+    const preparedFragment = {
+      ...newFragData,
+      mediaLinks: newFragData.mediaLinks?.slice(0, 3) ?? [],
+      mapPosition,
+    };
+
+    if (isRemoteMode && user) {
+      try {
+        const createdFragment = await createRemoteFragment(preparedFragment, uniqueId, user);
+        setFragments(prev => ensureFixedMapPositions([createdFragment, ...prev]));
+        setSelectedFragmentId(createdFragment.id);
+        setActiveTab('nexo');
+      } catch (error) {
+        console.error(error);
+        alert('Não foi possível publicar o fragmento no Supabase.');
+      }
+      return;
+    }
 
     setFragments(prev => {
-      const mapPosition = findOpenMapPosition(prev.map(getFragmentMapPosition));
       const newFragment: WorldFragment = {
-        ...newFragData,
+        ...preparedFragment,
         id: uniqueId,
-        mapPosition,
         createdAt: new Date().toISOString(),
         isUserCreated: true
       };
@@ -86,9 +191,29 @@ export default function App() {
     setActiveTab('nexo'); // Takes them to view it on the map!
   };
 
-  const handleEditFragment = (id: string, updatedData: Partial<Omit<WorldFragment, 'id' | 'createdAt'>>) => {
+  const handleEditFragment = async (id: string, updatedData: Partial<Omit<WorldFragment, 'id' | 'createdAt'>>) => {
+    const preparedData = {
+      ...updatedData,
+      mediaLinks: updatedData.mediaLinks?.slice(0, 3),
+    };
+
+    if (isRemoteMode && user) {
+      try {
+        const updatedFragment = await updateRemoteFragment(id, preparedData, user);
+        setFragments(prev => prev.map(f => 
+          f.id === id ? updatedFragment : f
+        ));
+        setIsEditModalOpen(false);
+        setFragmentToEdit(null);
+      } catch (error) {
+        console.error(error);
+        alert('Não foi possível editar o fragmento no Supabase.');
+      }
+      return;
+    }
+
     setFragments(prev => prev.map(f => 
-      f.id === id ? { ...f, ...updatedData } : f
+      f.id === id ? { ...f, ...preparedData } : f
     ));
     setIsEditModalOpen(false);
     setFragmentToEdit(null);
@@ -110,11 +235,21 @@ export default function App() {
     }
   };
 
-  const handleConfirmDeleteFragment = () => {
+  const handleConfirmDeleteFragment = async () => {
     if (!fragmentToDelete) return;
 
     const deletedId = fragmentToDelete.id;
     const deletedTitle = fragmentToDelete.title;
+
+    if (isRemoteMode) {
+      try {
+        await deleteRemoteFragment(deletedId);
+      } catch (error) {
+        console.error(error);
+        alert('Não foi possível excluir o fragmento no Supabase.');
+        return;
+      }
+    }
 
     setFragments(prev => prev.filter(f => f.id !== deletedId));
     setSavedFragmentIds(prev => prev.filter(id => id !== deletedId));
@@ -126,12 +261,45 @@ export default function App() {
   };
 
   const handleResetData = () => {
+    if (isRemoteMode) {
+      alert('No modo Supabase, restaure os dados executando o seed do projeto no painel ou CLI do Supabase.');
+      return;
+    }
+
     if (confirm('Tem certeza que deseja restaurar os fragmentos originais do Altiplano?')) {
       localStorage.removeItem('situated_memories');
       setFragments(ensureFixedMapPositions(INITIAL_FRAGMENTS));
       setSelectedFragmentId(null);
       setActiveTab('nexo');
     }
+  };
+
+  const handleSignIn = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!supabase || !authEmail.trim()) return;
+
+    setIsAuthSubmitting(true);
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email: authEmail.trim(),
+        options: {
+          emailRedirectTo: window.location.origin,
+        },
+      });
+
+      if (error) throw error;
+      alert('Enviamos um link de acesso para seu e-mail.');
+    } catch (error) {
+      console.error(error);
+      alert('Não foi possível enviar o link de acesso.');
+    } finally {
+      setIsAuthSubmitting(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    if (!supabase) return;
+    await supabase.auth.signOut();
   };
 
   return (
@@ -141,7 +309,11 @@ export default function App() {
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-surface-container-high/15 via-background to-background pointer-events-none opacity-80" />
 
       {/* Primary Top Header Bar containing platform label and profile */}
-      <HeaderBar currentTerritory={currentTerritory} />
+      <HeaderBar
+        currentTerritory={currentTerritory}
+        displayName={displayName}
+        authLabel={isRemoteMode ? (user ? 'Sessão Supabase' : 'Entrar para contribuir') : 'Modo local'}
+      />
 
       {/* Main Structural Body */}
       <div className="flex-1 w-full flex overflow-hidden z-10">
@@ -152,6 +324,7 @@ export default function App() {
           setActiveTab={setActiveTab} 
           onOpenModal={() => setIsProposalModalOpen(true)}
           currentTerritory={currentTerritory}
+          displayName={displayName}
         />
 
         {/* Content Panel Area */}
@@ -168,6 +341,7 @@ export default function App() {
                   onSelectNode={setSelectedFragmentId}
                   savedFragmentIds={savedFragmentIds}
                   onToggleSaveFragment={handleToggleSaveFragment}
+                  territories={territories}
                 />
               </div>
             </div>
@@ -202,6 +376,54 @@ export default function App() {
               </div>
 
               <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-6 space-y-6">
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold text-on-surface">Conexão Supabase</h3>
+                  <p className="text-xs text-on-surface-variant leading-relaxed">
+                    {dataStatus}
+                  </p>
+                  {isRemoteMode ? (
+                    user ? (
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                        <span className="text-xs text-on-surface-variant font-mono">{user.email}</span>
+                        <button
+                          onClick={handleSignOut}
+                          className="px-4 py-2 bg-surface-container border border-[#dac2b8]/20 text-on-surface hover:bg-surface-container-high rounded-full text-xs font-semibold max-w-sm transition-colors cursor-pointer"
+                        >
+                          Sair
+                        </button>
+                      </div>
+                    ) : (
+                      <form onSubmit={handleSignIn} className="flex flex-col sm:flex-row gap-3">
+                        <input
+                          type="email"
+                          value={authEmail}
+                          onChange={(event) => setAuthEmail(event.target.value)}
+                          placeholder="seu-email@exemplo.com"
+                          className="flex-1 bg-surface-container-low/60 rounded-full border border-[#dac2b8]/20 px-4 py-2.5 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
+                        />
+                        <button
+                          type="submit"
+                          disabled={isAuthSubmitting}
+                          className="px-5 py-2.5 bg-primary text-on-primary hover:brightness-105 rounded-full text-xs font-semibold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+                        >
+                          {isAuthSubmitting ? 'Enviando...' : 'Entrar por e-mail'}
+                        </button>
+                      </form>
+                    )
+                  ) : (
+                    <p className="text-xs text-on-surface-variant/70 leading-relaxed">
+                      Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY para ativar armazenamento remoto.
+                    </p>
+                  )}
+                </div>
+
+                <div className="pt-4 border-t border-[#dac2b8]/10 space-y-2">
+                  <h3 className="text-sm font-semibold text-on-surface">Territórios Carregados</h3>
+                  <p className="text-xs text-on-surface-variant leading-relaxed">
+                    {territories.length} territórios disponíveis para a constelação e seus filtros.
+                  </p>
+                </div>
+
                 <div className="space-y-2">
                   <h3 className="text-sm font-semibold text-on-surface">Restaurar Dados Originais</h3>
                   <p className="text-xs text-on-surface-variant leading-relaxed">

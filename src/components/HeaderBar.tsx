@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 interface HeaderBarProps {
   currentTerritory: string;
+  displayName?: string;
+  authLabel?: string;
 }
 
 const spaceTimeFormatter = new Intl.DateTimeFormat('pt-BR', {
@@ -13,7 +15,7 @@ const spaceTimeFormatter = new Intl.DateTimeFormat('pt-BR', {
   hourCycle: 'h23'
 });
 
-export default function HeaderBar({ currentTerritory }: HeaderBarProps) {
+export default function HeaderBar({ currentTerritory, displayName = 'Ouvinte Atento', authLabel }: HeaderBarProps) {
   const [time, setTime] = useState<string>('');
 
   useEffect(() => {
@@ -52,8 +54,8 @@ export default function HeaderBar({ currentTerritory }: HeaderBarProps) {
             </div>
           </button>
           <div className="hidden md:block text-left">
-            <p className="text-xs font-sans font-semibold text-on-surface leading-tight">Ouvinte Atento</p>
-            <span className="text-[10px] opacity-60 font-mono text-on-surface-variant uppercase tracking-wider">{currentTerritory}</span>
+            <p className="text-xs font-sans font-semibold text-on-surface leading-tight">{displayName}</p>
+            <span className="text-[10px] opacity-60 font-mono text-on-surface-variant uppercase tracking-wider">{authLabel ?? currentTerritory}</span>
           </div>
         </div>
       </div>

@@ -106,6 +106,18 @@ Orientações de implementação:
 - Manter logs de referência sobre quem forneceu o link e em qual contexto o fragmento foi ofertado, sem gravar o arquivo em si.
 - Evitar qualquer funcionalidade que facilite cópia, exportação ou download do acervo.
 
+## Supabase
+
+O app pode operar em modo local quando as variáveis Supabase não estão configuradas. Para ativar armazenamento remoto:
+
+- crie um projeto Supabase;
+- execute `supabase/migrations/20260608000000_create_vizinhancas_schema.sql`;
+- execute `supabase/seed.sql` para carregar territórios e fragmentos iniciais;
+- configure `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` no ambiente do Vite/Vercel;
+- habilite login por e-mail no painel de Auth do Supabase.
+
+O banco guarda usuários, perfis públicos, territórios, fragmentos e fragmentos salvos. Arquivos de mídia continuam fora do Supabase: a plataforma armazena apenas links públicos de visualização, com limite de 3 links por fragmento.
+
 ## Propósito
 
 Vizinhanças propõe um lugar para cuidar de relações e narrativas, não apenas para indexar informação. Aqui, a tecnologia é uma superfície para a escuta, o cuidado e a construção de presença coletiva.

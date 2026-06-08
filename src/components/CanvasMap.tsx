@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { WorldFragment } from '../types';
+import { Territory, WorldFragment } from '../types';
 import {
   Sprout,
   Map,
@@ -19,6 +19,7 @@ interface CanvasMapProps {
   onSelectNode: (id: string | null) => void;
   savedFragmentIds?: string[];
   onToggleSaveFragment?: (id: string) => void;
+  territories?: Territory[];
 }
 
 export default function CanvasMap({
@@ -26,7 +27,8 @@ export default function CanvasMap({
   selectedId,
   onSelectNode,
   savedFragmentIds = [],
-  onToggleSaveFragment
+  onToggleSaveFragment,
+  territories: availableTerritories = []
 }: CanvasMapProps) {
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
   const [filterTerritory, setFilterTerritory] = useState<string>('todos');
@@ -39,7 +41,13 @@ export default function CanvasMap({
   const dragMovedRef = useRef(false);
 
   // Gets unique territory options
-  const territories = ['todos', ...Array.from(new Set(fragments.map(f => f.territory)))];
+  const territories = [
+    'todos',
+    ...Array.from(new Set([
+      ...availableTerritories.map((territory) => territory.id),
+      ...fragments.map(f => f.territory)
+    ]))
+  ];
 
   const handleNodeClick = (id: string) => {
     if (dragMovedRef.current) return; // Prevent action if user was dragging

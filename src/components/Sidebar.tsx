@@ -13,13 +13,15 @@ interface SidebarProps {
   setActiveTab: (tab: ActiveTab) => void;
   onOpenModal: () => void;
   currentTerritory: string;
+  displayName?: string;
 }
 
 export default function Sidebar({ 
   activeTab, 
   setActiveTab, 
   onOpenModal, 
-  currentTerritory 
+  currentTerritory,
+  displayName = 'Ouvinte Atento'
 }: SidebarProps) {
   
   const steps = [
@@ -52,7 +54,7 @@ export default function Sidebar({
             <span className="material-symbols-outlined font-light text-2xl" style={{ fontVariationSettings: "'FILL' 1, 'wght' 200" }}>hearing</span>
           </div>
           <div>
-            <h2 className="font-sans font-semibold text-base text-primary tracking-wide">Ouvinte Atento</h2>
+            <h2 className="font-sans font-semibold text-base text-primary tracking-wide">{displayName}</h2>
             <p className="font-mono text-[10px] text-on-surface-variant opacity-80 uppercase tracking-wider">Território: {currentTerritory}</p>
           </div>
         </div>
