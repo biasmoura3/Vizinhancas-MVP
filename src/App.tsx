@@ -4,6 +4,8 @@ import HeaderBar from './components/HeaderBar';
 import CanvasMap from './components/CanvasMap';
 import ProposalModal from './components/ProposalModal';
 import EditFragmentModal from './components/EditFragmentModal';
+import DeleteFragmentModal from './components/DeleteFragmentModal';
+import FragmentDeletedToast from './components/FragmentDeletedToast';
 
 import ManifestoTab from './components/tabs/ManifestoTab';
 import ZeloTab from './components/tabs/ZeloTab';
@@ -19,6 +21,8 @@ export default function App() {
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [fragmentToEdit, setFragmentToEdit] = useState<WorldFragment | null>(null);
+  const [fragmentToDelete, setFragmentToDelete] = useState<WorldFragment | null>(null);
+  const [deletedFragmentTitle, setDeletedFragmentTitle] = useState<string | null>(null);
   // Fragments reactive state
   const [fragments, setFragments] = useState<WorldFragment[]>(() => {
     const saved = localStorage.getItem('situated_memories');
@@ -46,6 +50,16 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('saved_fragment_ids', JSON.stringify(savedFragmentIds));
   }, [savedFragmentIds]);
+
+  useEffect(() => {
+    if (!deletedFragmentTitle) return;
+
+    const toastTimeout = window.setTimeout(() => {
+      setDeletedFragmentTitle(null);
+    }, 4000);
+
+    return () => window.clearTimeout(toastTimeout);
+  }, [deletedFragmentTitle]);
 
   const handleToggleSaveFragment = (id: string) => {
     setSavedFragmentIds(prev => 
@@ -90,15 +104,25 @@ export default function App() {
 
   const handleDeleteFragment = (id: string) => {
     // Only allow deletion if user created it
-    const fragmentToDelete = fragments.find(f => f.id === id);
-    if (fragmentToDelete && fragmentToDelete.isUserCreated) {
-      if (confirm(`Tem certeza que deseja excluir "${fragmentToDelete.title}"?`)) {
-        setFragments(prev => prev.filter(f => f.id !== id));
-        if (selectedFragmentId === id) {
-          setSelectedFragmentId(null);
-        }
-      }
+    const fragment = fragments.find(f => f.id === id);
+    if (fragment && fragment.isUserCreated) {
+      setFragmentToDelete(fragment);
     }
+  };
+
+  const handleConfirmDeleteFragment = () => {
+    if (!fragmentToDelete) return;
+
+    const deletedId = fragmentToDelete.id;
+    const deletedTitle = fragmentToDelete.title;
+
+    setFragments(prev => prev.filter(f => f.id !== deletedId));
+    setSavedFragmentIds(prev => prev.filter(id => id !== deletedId));
+    if (selectedFragmentId === deletedId) {
+      setSelectedFragmentId(null);
+    }
+    setFragmentToDelete(null);
+    setDeletedFragmentTitle(deletedTitle);
   };
 
   const handleResetData = () => {
@@ -257,6 +281,18 @@ export default function App() {
         }}
         onSubmit={handleEditFragment}
         fragment={fragmentToEdit}
+      />
+
+      <DeleteFragmentModal
+        isOpen={fragmentToDelete !== null}
+        fragment={fragmentToDelete}
+        onCancel={() => setFragmentToDelete(null)}
+        onConfirm={handleConfirmDeleteFragment}
+      />
+
+      <FragmentDeletedToast
+        fragmentTitle={deletedFragmentTitle}
+        onClose={() => setDeletedFragmentTitle(null)}
       />
 
     </div>
