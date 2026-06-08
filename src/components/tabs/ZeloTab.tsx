@@ -9,7 +9,8 @@ import {
   ArrowUpRight,
   Bookmark,
   Edit,
-  Trash2
+  Trash2,
+  Lock
 } from 'lucide-react';
 
 interface ZeloTabProps {
@@ -20,6 +21,8 @@ interface ZeloTabProps {
   onToggleSaveFragment?: (id: string) => void;
   onOpenEditModal?: (fragment: WorldFragment) => void;
   onDeleteFragment?: (id: string) => void;
+  isAuthenticated?: boolean;
+  onRequireAuth?: () => void;
 }
 
 export default function ZeloTab({ 
@@ -29,7 +32,9 @@ export default function ZeloTab({
   savedFragmentIds = [],
   onToggleSaveFragment,
   onOpenEditModal,
-  onDeleteFragment
+  onDeleteFragment,
+  isAuthenticated = true,
+  onRequireAuth
 }: ZeloTabProps) {
   
   const [zeloSubTab, setZeloSubTab] = useState<'meus-fragmentos' | 'salvos'>('meus-fragmentos');
@@ -42,6 +47,32 @@ export default function ZeloTab({
 
   // Stats calculations
   const totalSecured = fragments.length;
+
+  if (!isAuthenticated) {
+    return (
+      <div className="w-full h-full flex items-center justify-center px-4 py-10 animate-in fade-in duration-300">
+        <div className="w-full max-w-xl border border-dashed border-[#dac2b8]/20 rounded-2xl p-10 text-center space-y-5 bg-[#0a1120]/45">
+          <div className="w-14 h-14 mx-auto rounded-full bg-primary/10 border border-primary/20 text-primary flex items-center justify-center">
+            <Lock className="w-6 h-6" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="font-serif text-2xl font-light text-on-surface">Documentação disponível para contribuintes</h2>
+            <p className="text-sm text-on-surface-variant/75 leading-relaxed max-w-md mx-auto">
+              Entre para propor fragmentos, cuidar dos seus registros e acessar seu acervo salvo.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onRequireAuth}
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-primary text-on-primary hover:brightness-105 rounded-full text-sm font-semibold transition-all cursor-pointer"
+          >
+            <Sprout className="w-4 h-4" />
+            Entrar para contribuir
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-5xl mx-auto py-6 px-4 space-y-10 animate-in fade-in duration-300">

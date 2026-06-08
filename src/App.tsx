@@ -7,6 +7,7 @@ import ProposalModal from './components/ProposalModal';
 import EditFragmentModal from './components/EditFragmentModal';
 import DeleteFragmentModal from './components/DeleteFragmentModal';
 import FragmentDeletedToast from './components/FragmentDeletedToast';
+import AuthModal from './components/AuthModal';
 
 import ManifestoTab from './components/tabs/ManifestoTab';
 import ZeloTab from './components/tabs/ZeloTab';
@@ -43,6 +44,9 @@ export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [authEmail, setAuthEmail] = useState('');
   const [isAuthSubmitting, setIsAuthSubmitting] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMessage, setAuthMessage] = useState<string | null>(null);
+  const [authError, setAuthError] = useState<string | null>(null);
   const [dataStatus, setDataStatus] = useState(isSupabaseConfigured ? 'Conectando ao Supabase...' : 'Modo local');
 
   const isRemoteMode = isSupabaseConfigured && Boolean(supabase);
@@ -100,10 +104,17 @@ export default function App() {
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
       const activeUser = session?.user ?? null;
       setUser(activeUser);
-      refreshRemoteData(activeUser).catch((error) => {
-        console.error(error);
-        setDataStatus('Erro ao sincronizar sessão Supabase');
-      });
+      if (activeUser) {
+        setIsAuthModalOpen(false);
+        setAuthMessage(null);
+        setAuthError(null);
+      }
+      window.setTimeout(() => {
+        refreshRemoteData(activeUser).catch((error) => {
+          console.error(error);
+          setDataStatus('Erro ao sincronizar sessão Supabase');
+        });
+      }, 0);
     });
 
     return () => {
@@ -122,10 +133,26 @@ export default function App() {
     return () => window.clearTimeout(toastTimeout);
   }, [deletedFragmentTitle]);
 
+  const openAuthModal = () => {
+    if (!isRemoteMode) return;
+    setAuthMessage(null);
+    setAuthError(null);
+    setIsAuthModalOpen(true);
+  };
+
+  const handleOpenProposalFlow = () => {
+    if (isRemoteMode && !user) {
+      openAuthModal();
+      return;
+    }
+
+    setIsProposalModalOpen(true);
+  };
+
   const handleToggleSaveFragment = async (id: string) => {
     if (isRemoteMode) {
       if (!user) {
-        alert('Entre com seu e-mail para salvar fragmentos no acervo.');
+        openAuthModal();
         return;
       }
 
@@ -152,7 +179,7 @@ export default function App() {
 
   const handleAddFragment = async (newFragData: Omit<WorldFragment, 'id' | 'createdAt'>) => {
     if (isRemoteMode && !user) {
-      alert('Entre com seu e-mail para propor um fragmento.');
+      openAuthModal();
       return;
     }
 
@@ -278,20 +305,24 @@ export default function App() {
     event.preventDefault();
     if (!supabase || !authEmail.trim()) return;
 
+    setAuthMessage(null);
+    setAuthError(null);
     setIsAuthSubmitting(true);
     try {
       const { error } = await supabase.auth.signInWithOtp({
         email: authEmail.trim(),
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: `${window.location.origin}${window.location.pathname}`,
+          shouldCreateUser: true,
         },
       });
 
       if (error) throw error;
-      alert('Enviamos um link de acesso para seu e-mail.');
+      setAuthMessage('Enviamos um link de acesso para seu e-mail. Abra o link nesta mesma janela para concluir a entrada.');
     } catch (error) {
       console.error(error);
-      alert('Não foi possível enviar o link de acesso.');
+      const errorMessage = error instanceof Error ? error.message : 'Tente novamente em alguns instantes.';
+      setAuthError(`Não foi possível enviar o link de acesso. ${errorMessage}`);
     } finally {
       setIsAuthSubmitting(false);
     }
@@ -313,6 +344,8 @@ export default function App() {
         currentTerritory={currentTerritory}
         displayName={displayName}
         authLabel={isRemoteMode ? (user ? 'Sessão Supabase' : 'Entrar para contribuir') : 'Modo local'}
+        isAuthenticated={!isRemoteMode || Boolean(user)}
+        onAuthClick={openAuthModal}
       />
 
       {/* Main Structural Body */}
@@ -322,7 +355,7 @@ export default function App() {
         <Sidebar 
           activeTab={activeTab} 
           setActiveTab={setActiveTab} 
-          onOpenModal={() => setIsProposalModalOpen(true)}
+          onOpenModal={handleOpenProposalFlow}
           currentTerritory={currentTerritory}
           displayName={displayName}
         />
@@ -357,6 +390,8 @@ export default function App() {
               onToggleSaveFragment={handleToggleSaveFragment}
               onOpenEditModal={handleOpenEditModal}
               onDeleteFragment={handleDeleteFragment}
+              isAuthenticated={!isRemoteMode || Boolean(user)}
+              onRequireAuth={openAuthModal}
             />
           )}
 
@@ -393,22 +428,34 @@ export default function App() {
                         </button>
                       </div>
                     ) : (
-                      <form onSubmit={handleSignIn} className="flex flex-col sm:flex-row gap-3">
-                        <input
-                          type="email"
-                          value={authEmail}
-                          onChange={(event) => setAuthEmail(event.target.value)}
-                          placeholder="seu-email@exemplo.com"
-                          className="flex-1 bg-surface-container-low/60 rounded-full border border-[#dac2b8]/20 px-4 py-2.5 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
-                        />
-                        <button
-                          type="submit"
-                          disabled={isAuthSubmitting}
-                          className="px-5 py-2.5 bg-primary text-on-primary hover:brightness-105 rounded-full text-xs font-semibold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-wait"
-                        >
-                          {isAuthSubmitting ? 'Enviando...' : 'Entrar por e-mail'}
-                        </button>
-                      </form>
+                      <div className="space-y-3">
+                        <form onSubmit={handleSignIn} className="flex flex-col sm:flex-row gap-3">
+                          <input
+                            type="email"
+                            value={authEmail}
+                            onChange={(event) => setAuthEmail(event.target.value)}
+                            placeholder="seu-email@exemplo.com"
+                            className="flex-1 bg-surface-container-low/60 rounded-full border border-[#dac2b8]/20 px-4 py-2.5 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
+                          />
+                          <button
+                            type="submit"
+                            disabled={isAuthSubmitting}
+                            className="px-5 py-2.5 bg-primary text-on-primary hover:brightness-105 rounded-full text-xs font-semibold transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+                          >
+                            {isAuthSubmitting ? 'Enviando...' : 'Entrar por e-mail'}
+                          </button>
+                        </form>
+                        {authMessage && (
+                          <p className="text-xs leading-relaxed text-secondary bg-secondary/10 border border-secondary/15 rounded-xl px-4 py-3">
+                            {authMessage}
+                          </p>
+                        )}
+                        {authError && (
+                          <p className="text-xs leading-relaxed text-error bg-error/10 border border-error/15 rounded-xl px-4 py-3">
+                            {authError}
+                          </p>
+                        )}
+                      </div>
                     )
                   ) : (
                     <p className="text-xs text-on-surface-variant/70 leading-relaxed">
@@ -479,7 +526,7 @@ export default function App() {
 
       {/* FLOATING ACTION BUTTON */}
       <button 
-        onClick={() => setIsProposalModalOpen(true)}
+        onClick={handleOpenProposalFlow}
         className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary hover:brightness-110 active:scale-95 text-on-primary flex items-center justify-center cursor-pointer shadow-2xl hover:rotate-90 transition-all z-30 font-semibold"
         title="Propor Novo Fragmento de Mundo"
       >
@@ -515,6 +562,17 @@ export default function App() {
       <FragmentDeletedToast
         fragmentTitle={deletedFragmentTitle}
         onClose={() => setDeletedFragmentTitle(null)}
+      />
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        email={authEmail}
+        isSubmitting={isAuthSubmitting}
+        message={authMessage}
+        error={authError}
+        onEmailChange={setAuthEmail}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSubmit={handleSignIn}
       />
 
     </div>

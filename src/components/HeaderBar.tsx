@@ -4,6 +4,8 @@ interface HeaderBarProps {
   currentTerritory: string;
   displayName?: string;
   authLabel?: string;
+  isAuthenticated?: boolean;
+  onAuthClick?: () => void;
 }
 
 const spaceTimeFormatter = new Intl.DateTimeFormat('pt-BR', {
@@ -15,7 +17,13 @@ const spaceTimeFormatter = new Intl.DateTimeFormat('pt-BR', {
   hourCycle: 'h23'
 });
 
-export default function HeaderBar({ currentTerritory, displayName = 'Ouvinte Atento', authLabel }: HeaderBarProps) {
+export default function HeaderBar({
+  currentTerritory,
+  displayName = 'Ouvinte Atento',
+  authLabel,
+  isAuthenticated = true,
+  onAuthClick,
+}: HeaderBarProps) {
   const [time, setTime] = useState<string>('');
 
   useEffect(() => {
@@ -46,18 +54,28 @@ export default function HeaderBar({ currentTerritory, displayName = 'Ouvinte Ate
           <span>{time || '15:10:00 GMT-3'}</span>
         </div>
 
-        {/* User profile identifier (Email / Caretaker handle) */}
-        <div className="flex items-center gap-2.5 pl-3 border-l border-[#dac2b8]/15">
-          <button className="w-9 h-9 rounded-full bg-gradient-to-tr from-primary to-secondary p-[1px] cursor-pointer transition-transform hover:scale-105 active:scale-95 shadow-md">
-            <div className="w-full h-full rounded-full bg-[#0b1326] flex items-center justify-center text-xs text-primary font-mono font-bold uppercase">
-              OA
+        {isAuthenticated ? (
+          <div className="flex items-center gap-2.5 pl-3 border-l border-[#dac2b8]/15">
+            <button className="w-9 h-9 rounded-full bg-gradient-to-tr from-primary to-secondary p-[1px] cursor-pointer transition-transform hover:scale-105 active:scale-95 shadow-md">
+              <div className="w-full h-full rounded-full bg-[#0b1326] flex items-center justify-center text-xs text-primary font-mono font-bold uppercase">
+                {displayName.slice(0, 2)}
+              </div>
+            </button>
+            <div className="hidden md:block text-left">
+              <p className="text-xs font-sans font-semibold text-on-surface leading-tight">{displayName}</p>
+              <span className="text-[10px] opacity-60 font-mono text-on-surface-variant uppercase tracking-wider">{authLabel ?? currentTerritory}</span>
             </div>
-          </button>
-          <div className="hidden md:block text-left">
-            <p className="text-xs font-sans font-semibold text-on-surface leading-tight">{displayName}</p>
-            <span className="text-[10px] opacity-60 font-mono text-on-surface-variant uppercase tracking-wider">{authLabel ?? currentTerritory}</span>
           </div>
-        </div>
+        ) : (
+          <button
+            type="button"
+            onClick={onAuthClick}
+            className="pl-3 border-l border-[#dac2b8]/15 flex items-center gap-2 text-xs font-semibold text-on-primary bg-primary hover:brightness-105 rounded-full px-4 py-2.5 transition-all cursor-pointer shadow-md"
+          >
+            <span className="material-symbols-outlined text-base leading-none">login</span>
+            <span>Entrar para contribuir</span>
+          </button>
+        )}
       </div>
     </header>
   );
