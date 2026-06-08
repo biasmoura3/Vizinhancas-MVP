@@ -1,4 +1,4 @@
-import { WorldFragment, AssemblyItem, LoreDocument } from './types';
+﻿import { WorldFragment, AssemblyItem, LoreDocument } from './types';
 
 export const INITIAL_FRAGMENTS: WorldFragment[] = [
   {
@@ -7,41 +7,37 @@ export const INITIAL_FRAGMENTS: WorldFragment[] = [
     type: 'audio',
     source: 'Terras Altas Andinas',
     territory: 'Setor 4',
-    status: 'Zelo Concedido',
-    content: 'Gravação binaural das correntes de ar frio que sopram através das frestas rochosas rituais no desfiladeiro alto de Tarapacá. O som simula uma flauta ancestral, modulada unicamente pelo sopro atmosférico.',
+    content: 'GravaÃ§Ã£o binaural das correntes de ar frio que sopram atravÃ©s das frestas rochosas rituais no desfiladeiro alto de TarapacÃ¡. O som simula uma flauta ancestral, modulada unicamente pelo sopro atmosfÃ©rico.',
     audioDuration: '00:12',
     audioWaveform: [4, 12, 18, 14, 8, 12, 22, 25, 16, 9, 7, 13, 19, 11, 8, 4, 10, 15, 12, 5],
     createdAt: '2026-05-12T14:35:00Z',
   },
   {
     id: 'poet-2',
-    title: '"A terra não lembra nossos nomes, apenas o ritmo de nossos passos e o calor das sementes que deixamos para trás."',
+    title: '"A terra nÃ£o lembra nossos nomes, apenas o ritmo de nossos passos e o calor das sementes que deixamos para trÃ¡s."',
     type: 'poetic',
-    source: 'Tradição Oral #22',
+    source: 'TradiÃ§Ã£o Oral #22',
     territory: 'Setor 4',
-    status: 'Zelo Concedido',
-    content: 'Fragmento lírico coletado durante os rituais de semeadura noturna. Reflete a recusa histórica do registro burocrático em prol de uma marcação ritmada corporal na geografia viva do território.',
+    content: 'Fragmento lÃ­rico coletado durante os rituais de semeadura noturna. Reflete a recusa histÃ³rica do registro burocrÃ¡tico em prol de uma marcaÃ§Ã£o ritmada corporal na geografia viva do territÃ³rio.',
     createdAt: '2026-05-18T09:12:00Z',
   },
   {
     id: 'memb-3',
     title: 'Membrana Viva',
     type: 'visual',
-    source: 'Arquivo Botânico',
+    source: 'Arquivo BotÃ¢nico',
     territory: 'Setor 4',
-    status: 'Zelo Concedido',
-    content: 'Registro fotográfico de uma simbiose de musgos andinos cultivados sobre hardware de comunicação abandonado. De forma fascinante, o musgo formou canais umectantes que mantêm os circuitos reativos sob baixas correntes, retransmitindo dados de acoplamento bio-sintético.',
+    content: 'Registro fotogrÃ¡fico de uma simbiose de musgos andinos cultivados sobre hardware de comunicaÃ§Ã£o abandonado. De forma fascinante, o musgo formou canais umectantes que mantÃªm os circuitos reativos sob baixas correntes, retransmitindo dados de acoplamento bio-sintÃ©tico.',
     imageUrl: 'https://images.unsplash.com/photo-1545231027-63b39f612acf?q=80&w=600&auto=format&fit=crop', // Beautiful high-quality moss macroshot as base
     createdAt: '2026-05-24T18:40:00Z',
   },
   {
     id: 'mang-4',
-    title: 'Eco Resonante do Igapó',
+    title: 'Eco Resonante do IgapÃ³',
     type: 'audio',
-    source: 'Guardas da Maré',
+    source: 'Guardas da MarÃ©',
     territory: 'Setor 2A',
-    status: 'Ritualizado',
-    content: 'Ruídos estalados produzidos por colônias de caranguejos de mangue sob as raízes suspensas durante o pico da maré vazante. Formam um mapa sonoro de sedimentação e fluxo de água salgada.',
+    content: 'RuÃ­dos estalados produzidos por colÃ´nias de caranguejos de mangue sob as raÃ­zes suspensas durante o pico da marÃ© vazante. Formam um mapa sonoro de sedimentaÃ§Ã£o e fluxo de Ã¡gua salgada.',
     audioDuration: '00:45',
     audioWaveform: [3, 6, 4, 9, 15, 19, 11, 5, 8, 14, 20, 24, 18, 10, 12, 6, 4, 3, 7, 10],
     createdAt: '2026-05-27T11:20:00Z',
@@ -50,44 +46,40 @@ export const INITIAL_FRAGMENTS: WorldFragment[] = [
     id: 'flor-5',
     title: 'Xilo-Sinalizadores de Solo',
     type: 'visual',
-    source: 'Laboratório das Raízes',
+    source: 'LaboratÃ³rio das RaÃ­zes',
     territory: 'Setor 7G',
-    status: 'Zelo Concedido',
-    content: 'Raízes aéreas impregnadas com biocatalisadores biolinescentes naturais que reagem aos micro-tremores de terra. O brilho pulsa em tons esmeralda a cada vibração infinitesimal do leito tectônico subjacente.',
+    content: 'RaÃ­zes aÃ©reas impregnadas com biocatalisadores biolinescentes naturais que reagem aos micro-tremores de terra. O brilho pulsa em tons esmeralda a cada vibraÃ§Ã£o infinitesimal do leito tectÃ´nico subjacente.',
     imageUrl: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=600&auto=format&fit=crop', // Beautiful glowing roots image
     createdAt: '2026-05-29T10:00:00Z',
     isUserCreated: true,
   },
   {
     id: 'vale-6',
-    title: 'Canto das Águas Subterrâneas',
+    title: 'Canto das Ãguas SubterrÃ¢neas',
     type: 'poetic',
-    source: 'Poética do Meio Bio',
+    source: 'PoÃ©tica do Meio Bio',
     territory: 'Setor 9N',
-    status: 'Zelo Concedido',
-    content: 'Expressão falada transmitida por tubos hídricos em fossos subterrâneos desativados. Atua como um registro do movimento invisível dos lençóis profundos e murmúrios geológicos compartilhados.',
+    content: 'ExpressÃ£o falada transmitida por tubos hÃ­dricos em fossos subterrÃ¢neos desativados. Atua como um registro do movimento invisÃ­vel dos lenÃ§Ã³is profundos e murmÃºrios geolÃ³gicos compartilhados.',
     createdAt: '2026-06-01T12:00:00Z',
   },
   {
     id: 'linc-7',
-    title: 'Comunidade Liquênica Ativa',
+    title: 'Comunidade LiquÃªnica Ativa',
     type: 'visual',
     source: 'Fotografia de Contato',
     territory: 'Setor 7G',
-    status: 'Zelo Concedido',
-    content: 'Comunidades simbióticas circulares formadas na interface entre as cascas de árvores decíduas e placas metálicas fotovoltaicas intemperizadas, gerando micro-padrões de absorção de luz.',
+    content: 'Comunidades simbiÃ³ticas circulares formadas na interface entre as cascas de Ã¡rvores decÃ­duas e placas metÃ¡licas fotovoltaicas intemperizadas, gerando micro-padrÃµes de absorÃ§Ã£o de luz.',
     imageUrl: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=600&auto=format&fit=crop',
     createdAt: '2026-06-02T15:30:00Z',
     isUserCreated: true,
   },
   {
     id: 'vento-8',
-    title: 'Murmúrios do Vento Solar',
+    title: 'MurmÃºrios do Vento Solar',
     type: 'audio',
-    source: 'Coletor Atmosférico',
+    source: 'Coletor AtmosfÃ©rico',
     territory: 'Setor 4',
-    status: 'Ritualizado',
-    content: 'Registro acústico sintetizado a partir de alterações geomagnéticas fracas causadas por ventos solares na atmosfera de baixa pressão do Altiplano Tarapacá.',
+    content: 'Registro acÃºstico sintetizado a partir de alteraÃ§Ãµes geomagnÃ©ticas fracas causadas por ventos solares na atmosfera de baixa pressÃ£o do Altiplano TarapacÃ¡.',
     audioDuration: '00:15',
     audioWaveform: [5, 12, 15, 20, 10, 12, 14, 18, 22, 25, 20, 15, 10, 8, 12, 14, 16, 12, 8, 4],
     createdAt: '2026-06-02T19:45:00Z',
@@ -95,35 +87,35 @@ export const INITIAL_FRAGMENTS: WorldFragment[] = [
 ];
 
 export const TERRITORIES = [
-  { id: 'Setor 4', name: 'Território das Alturas (Setor 4)', coordinates: '19.4324° S, 69.2154° W' },
-  { id: 'Setor 7G', name: 'Selvageria Urbana (Setor 7G)', coordinates: '23.5505° S, 46.6333° W' },
-  { id: 'Setor 2A', name: 'Margens do Igapó (Setor 2A)', coordinates: '3.0722° S, 60.0125° W' },
-  { id: 'Setor 9N', name: 'Aluviões do Vale Central (Setor 9N)', coordinates: '33.4489° S, 70.6693° W' }
+  { id: 'Setor 4', name: 'TerritÃ³rio das Alturas (Setor 4)', coordinates: '19.4324Â° S, 69.2154Â° W' },
+  { id: 'Setor 7G', name: 'Selvageria Urbana (Setor 7G)', coordinates: '23.5505Â° S, 46.6333Â° W' },
+  { id: 'Setor 2A', name: 'Margens do IgapÃ³ (Setor 2A)', coordinates: '3.0722Â° S, 60.0125Â° W' },
+  { id: 'Setor 9N', name: 'AluviÃµes do Vale Central (Setor 9N)', coordinates: '33.4489Â° S, 70.6693Â° W' }
 ];
 
 export const INITIAL_ASSEMBLIES: AssemblyItem[] = [
   {
     id: 'ass-1',
     title: 'Assembleia de Re-Escuta das Alturas',
-    date: 'Amanhã às 18:00 (Fuso Local)',
+    date: 'AmanhÃ£ Ã s 18:00 (Fuso Local)',
     territory: 'Setor 4',
-    description: 'Encontro circular para audição coletiva de novos registros binaurais recolhidos pelas redes de sismógrafos e flautas eólicas do desfiladeiro alto.',
+    description: 'Encontro circular para audiÃ§Ã£o coletiva de novos registros binaurais recolhidos pelas redes de sismÃ³grafos e flautas eÃ³licas do desfiladeiro alto.',
     attendees: 14,
   },
   {
     id: 'ass-2',
-    title: 'Mutirão Linfático',
-    date: 'Próxima Lua Cheia (03/06)',
+    title: 'MutirÃ£o LinfÃ¡tico',
+    date: 'PrÃ³xima Lua Cheia (03/06)',
     territory: 'Setor 7G',
-    description: 'Ritual prático de cultivo urbano entre o Archive Room central e as praças sementes do território 7G.',
+    description: 'Ritual prÃ¡tico de cultivo urbano entre o Archive Room central e as praÃ§as sementes do territÃ³rio 7G.',
     attendees: 29,
   },
   {
     id: 'ass-3',
-    title: 'Escuta das Células Cíclicas',
-    date: 'Finalizado há 2 dias',
+    title: 'Escuta das CÃ©lulas CÃ­clicas',
+    date: 'Finalizado hÃ¡ 2 dias',
     territory: 'Setor 2A',
-    description: 'Mapeamento acústico de bio-indicadores estuarinos. Debate sobre a salinização precoce do lençol freático.',
+    description: 'Mapeamento acÃºstico de bio-indicadores estuarinos. Debate sobre a salinizaÃ§Ã£o precoce do lenÃ§ol freÃ¡tico.',
     attendees: 8,
   }
 ];
@@ -138,23 +130,23 @@ export const PRESET_IMAGES = [
 export const LORE_DOCUMENTS: LoreDocument[] = [
   {
     id: 'doc-1',
-    category: 'Manisfestação Teórica',
+    category: 'ManisfestaÃ§Ã£o TeÃ³rica',
     title: 'Tratado de Simbiose Mineral e Tecno-Urbana',
-    content: 'O projeto propõe que as tecnologias obsoletas do antropoceno não precisam se transformar em lixo inerte. Sob condições adequadas de umidade, temperatura e quietude ritual, as interfaces computacionais se tornam o berçário ideal para os esporos e micélios nativos. Através deste amálgama metal-fúngico, novas transmissões sonoras e de baixa voltagem são percebidas como registros situados.',
+    content: 'O projeto propÃµe que as tecnologias obsoletas do antropoceno nÃ£o precisam se transformar em lixo inerte. Sob condiÃ§Ãµes adequadas de umidade, temperatura e quietude ritual, as interfaces computacionais se tornam o berÃ§Ã¡rio ideal para os esporos e micÃ©lios nativos. AtravÃ©s deste amÃ¡lgama metal-fÃºngico, novas transmissÃµes sonoras e de baixa voltagem sÃ£o percebidas como registros situados.',
     date: 'Setembro, 2025'
   },
   {
     id: 'doc-2',
-    category: 'Mapeamento Botânico',
-    title: 'Musgo Andino e Retransmissão Bio-Análoga',
-    content: 'A espécie Bryophyta tarapacensis demonstra afinidade incomum por ligas de cobre e silício presentes em microcontroladores descartados. Ela age como uma esponja capacitiva. Quando o ar está úmido, a membrana do musgo altera a resistividade elétrica dos trilhos condutores. Esses ciclos diários de umidade são transcritos por nossos receptores analógicos como variações sonoras rítmicas e sussurros de baixa frequência.',
+    category: 'Mapeamento BotÃ¢nico',
+    title: 'Musgo Andino e RetransmissÃ£o Bio-AnÃ¡loga',
+    content: 'A espÃ©cie Bryophyta tarapacensis demonstra afinidade incomum por ligas de cobre e silÃ­cio presentes em microcontroladores descartados. Ela age como uma esponja capacitiva. Quando o ar estÃ¡ Ãºmido, a membrana do musgo altera a resistividade elÃ©trica dos trilhos condutores. Esses ciclos diÃ¡rios de umidade sÃ£o transcritos por nossos receptores analÃ³gicos como variaÃ§Ãµes sonoras rÃ­tmicas e sussurros de baixa frequÃªncia.',
     date: 'Janeiro, 2026'
   },
   {
     id: 'doc-3',
     category: 'Sabedoria Ancestral',
-    title: 'Registro das Tradições Orais de Semeadura',
-    content: 'A tradição oral andina não separa a fala humana do som da terra. As canções de plantio (tarapacas) agem como moduladores de solo. A hipótese especulativa de nosso cuidado (Zelo) é que o ritmo das batidas corporais e cânticos gera micro-sinais mecânicos que alteram a germinação das sementes nativas, explicando o sucesso ecológico das plantações guardadas.',
-    date: 'Março, 2026'
+    title: 'Registro das TradiÃ§Ãµes Orais de Semeadura',
+    content: 'A tradiÃ§Ã£o oral andina nÃ£o separa a fala humana do som da terra. As canÃ§Ãµes de plantio (tarapacas) agem como moduladores de solo. A hipÃ³tese especulativa de nosso cuidado (Zelo) Ã© que o ritmo das batidas corporais e cÃ¢nticos gera micro-sinais mecÃ¢nicos que alteram a germinaÃ§Ã£o das sementes nativas, explicando o sucesso ecolÃ³gico das plantaÃ§Ãµes guardadas.',
+    date: 'MarÃ§o, 2026'
   }
 ];

@@ -1,5 +1,4 @@
-export type FragmentType = 'audio' | 'poetic' | 'visual';
-export type StewardshipStatus = 'Zelo Concedido' | 'Em Análise' | 'Ritualizado';
+﻿export type FragmentType = 'audio' | 'poetic' | 'visual';
 
 export interface WorldFragment {
   id: string;
@@ -7,7 +6,6 @@ export interface WorldFragment {
   type: FragmentType;
   source: string;
   territory: string;
-  status: StewardshipStatus;
   content: string;
   imageUrl?: string;
   audioDuration?: string;

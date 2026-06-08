@@ -13,7 +13,7 @@ import {
 interface ProposalModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (fragment: Omit<WorldFragment, 'id' | 'createdAt' | 'status'>) => void;
+  onSubmit: (fragment: Omit<WorldFragment, 'id' | 'createdAt'>) => void;
   currentTerritory: string;
 }
 

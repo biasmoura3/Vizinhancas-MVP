@@ -52,12 +52,11 @@ export default function App() {
     );
   };
 
-  const handleAddFragment = (newFragData: Omit<WorldFragment, 'id' | 'createdAt' | 'status'>) => {
+  const handleAddFragment = (newFragData: Omit<WorldFragment, 'id' | 'createdAt'>) => {
     const uniqueId = `frag-${Date.now()}`;
     const newFragment: WorldFragment = {
       ...newFragData,
       id: uniqueId,
-      status: 'Zelo Concedido', // Proposto e integrado imediatamente sem barreira de aprovação
       createdAt: new Date().toISOString(),
       isUserCreated: true
     };
@@ -67,7 +66,7 @@ export default function App() {
     setActiveTab('nexo'); // Takes them to view it on the map!
   };
 
-  const handleEditFragment = (id: string, updatedData: Partial<Omit<WorldFragment, 'id' | 'createdAt' | 'status'>>) => {
+  const handleEditFragment = (id: string, updatedData: Partial<Omit<WorldFragment, 'id' | 'createdAt'>>) => {
     setFragments(prev => prev.map(f => 
       f.id === id ? { ...f, ...updatedData } : f
     ));

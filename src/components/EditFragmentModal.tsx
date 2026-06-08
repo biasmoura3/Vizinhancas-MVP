@@ -13,7 +13,7 @@ import {
 interface EditFragmentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (id: string, fragment: Partial<Omit<WorldFragment, 'id' | 'createdAt' | 'status'>>) => void;
+  onSubmit: (id: string, fragment: Partial<Omit<WorldFragment, 'id' | 'createdAt'>>) => void;
   fragment: WorldFragment | null;
 }
 
