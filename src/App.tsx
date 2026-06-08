@@ -8,7 +8,7 @@ import EditFragmentModal from './components/EditFragmentModal';
 import ManifestoTab from './components/tabs/ManifestoTab';
 import ZeloTab from './components/tabs/ZeloTab';
 
-import { ActiveTab, WorldFragment, StewardshipStatus } from './types';
+import { ActiveTab, WorldFragment } from './types';
 import { INITIAL_FRAGMENTS } from './data';
 
 export default function App() {
@@ -83,16 +83,6 @@ export default function App() {
     }
   };
 
-  const handleUpdateStatus = (id: string, newStatus: StewardshipStatus) => {
-    setFragments(prev => prev.map(f => 
-      f.id === id ? { ...f, status: newStatus } : f
-    ));
-  };
-
-  const handleSelectTerritory = (territoryId: string) => {
-    setCurrentTerritory(territoryId);
-  };
-
   const handleDeleteFragment = (id: string) => {
     // Only allow deletion if user created it
     const fragmentToDelete = fragments.find(f => f.id === id);
@@ -158,9 +148,6 @@ export default function App() {
           {activeTab === 'zelo' && (
             <ZeloTab 
               fragments={fragments} 
-              onUpdateFragmentStatus={handleUpdateStatus} 
-              currentTerritory={currentTerritory}
-              onSelectTerritory={handleSelectTerritory}
               onSelectFragment={setSelectedFragmentId}
               setActiveTab={setActiveTab}
               savedFragmentIds={savedFragmentIds}

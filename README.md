@@ -7,7 +7,7 @@ Vizinhanças é um ambiente digital vivo para o cultivo de vizinhanças entre de
 Este README deve acompanhar as definições vigentes do MVP. Sempre que uma regra de produto mudar, este documento deve ser atualizado junto com o código.
 
 - Fragmentos de mundo são unidades independentes do acervo.
-- A navegação acontece por constelação visual de pontos, filtros de território, detalhes do fragmento e acervo salvo.
+- A navegação acontece por constelação visual de pontos, detalhes do fragmento e acervo salvo.
 - Cada fragmento traz metadados de origem, território, formato, conteúdo e data de registro.
 - O sistema aceita fragmentos sonoros, visuais e textuais.
 - Usuários podem propor, editar e excluir seus próprios fragmentos.
@@ -29,7 +29,7 @@ O usuário é convidado a testemunhar. Pode ouvir e ver fragmentos, mas não pod
 - uma constelação visual de fragmentos de mundo;
 - acervo de conhecimentos de diferentes lugares e comunidades;
 - alimentação comunitária do conteúdo;
-- filtros por território e visualização por formato;
+- visualização por formato;
 - edição e exclusão de fragmentos criados pelo próprio usuário;
 - salvamento de fragmentos de outros territórios para consulta posterior;
 - preservação da experiência de presença e não extração.
@@ -39,7 +39,7 @@ O usuário é convidado a testemunhar. Pode ouvir e ver fragmentos, mas não pod
 1. A comunidade compartilha fragmentos de mundo.
 2. Cada fragmento registra origem, território, formato e conteúdo.
 3. O usuário acessa esses fragmentos como testemunha, numa experiência que não transfere o conteúdo.
-4. A navegação funciona como uma constelação de pontos independentes, com filtros por território e painéis de detalhe.
+4. A navegação funciona como uma constelação de pontos independentes, com painéis de detalhe.
 5. Fragmentos de outros territórios podem ser salvos em um acervo pessoal para consulta posterior.
 
 ## Estrutura do Projeto

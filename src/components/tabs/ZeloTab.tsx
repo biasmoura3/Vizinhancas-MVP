@@ -1,12 +1,7 @@
 ﻿import { useState } from 'react';
-import { WorldFragment, StewardshipStatus } from '../../types';
-import { TERRITORIES } from '../../data';
+import { WorldFragment } from '../../types';
 import { 
-  ShieldCheck, 
-  MapPin, 
-  Activity, 
   Database, 
-  CheckCircle,
   Sprout,
   Volume2,
   FileText,
@@ -16,13 +11,9 @@ import {
   Edit,
   Trash2
 } from 'lucide-react';
-import FragmentViewer from '../../components/FragmentViewer';
 
 interface ZeloTabProps {
   fragments: WorldFragment[];
-  onUpdateFragmentStatus: (id: string, status: StewardshipStatus) => void;
-  currentTerritory: string;
-  onSelectTerritory: (territoryId: string) => void;
   onSelectFragment?: (id: string) => void;
   setActiveTab?: (tab: any) => void;
   savedFragmentIds?: string[];
@@ -33,9 +24,6 @@ interface ZeloTabProps {
 
 export default function ZeloTab({ 
   fragments, 
-  onUpdateFragmentStatus, 
-  currentTerritory,
-  onSelectTerritory,
   onSelectFragment,
   setActiveTab,
   savedFragmentIds = [],
@@ -44,10 +32,7 @@ export default function ZeloTab({
   onDeleteFragment
 }: ZeloTabProps) {
   
-  const [zeloSubTab, setZeloSubTab] = useState<'indice' | 'meus-fragmentos' | 'salvos'>('indice');
-
-  // Display fragments filtered by current territory
-  const filteredFragments = fragments.filter(f => f.territory === currentTerritory);
+  const [zeloSubTab, setZeloSubTab] = useState<'meus-fragmentos' | 'salvos'>('meus-fragmentos');
   
   // User created registered fragments
   const userRegisteredFragments = fragments.filter(f => f.isUserCreated === true);
@@ -57,21 +42,20 @@ export default function ZeloTab({
 
   // Stats calculations
   const totalSecured = fragments.length;
-  const totalTerritories = TERRITORIES.length;
 
   return (
     <div className="w-full max-w-5xl mx-auto py-6 px-4 space-y-10 animate-in fade-in duration-300">
       
       {/* Header Panel */}
       <div className="space-y-2 border-b border-[#dac2b8]/10 pb-5">
-        <h2 className="font-serif text-3xl font-light text-on-surface">Documentação & Índice de Fragmentos</h2>
+        <h2 className="font-serif text-3xl font-light text-on-surface">Documentação de Fragmentos</h2>
         <p className="text-sm text-on-surface-variant leading-relaxed">
-          Navegue pelos fragmentos de mundo comunitários. Gerencie seus fragmentos registrados e explore o acervo por território, origem e formato.
+          Gerencie seus fragmentos registrados e mantenha por perto as referências comunitárias salvas para consulta posterior.
         </p>
       </div>
 
       {/* METRICS ROW */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-5 flex items-center gap-4">
           <div className="w-12 h-12 bg-secondary/15 rounded-xl border border-secondary/20 flex items-center justify-center text-secondary shrink-0">
             <Database className="w-5 h-5 animate-pulse-slow" />
@@ -92,32 +76,10 @@ export default function ZeloTab({
           </div>
         </div>
 
-        <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-5 flex items-center gap-4">
-          <div className="w-12 h-12 bg-tertiary/15 rounded-xl border border-tertiary/20 flex items-center justify-center text-tertiary shrink-0">
-            <MapPin className="w-5 h-5 text-tertiary" />
-          </div>
-          <div>
-            <span className="font-mono text-[10px] uppercase text-on-surface-variant/60 block font-semibold">Setores Mapeados</span>
-            <span className="font-serif text-2xl text-on-surface tracking-wide">{totalTerritories} Áreas</span>
-          </div>
-        </div>
       </div>
 
       {/* Aesthetic sub-navigation for tabs inside document section */}
       <div className="flex border-b border-[#dac2b8]/10 select-none">
-        <button
-          onClick={() => setZeloSubTab('indice')}
-          className={`px-5 py-3 font-sans text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer relative ${
-            zeloSubTab === 'indice' 
-              ? 'text-primary' 
-              : 'text-on-surface-variant/60 hover:text-on-surface hover:bg-[#dac2b8]/5'
-          }`}
-        >
-          Índice do Território
-          {zeloSubTab === 'indice' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
-          )}
-        </button>
         <button
           onClick={() => setZeloSubTab('meus-fragmentos')}
           className={`px-5 py-3 font-sans text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer relative flex items-center gap-2 ${
@@ -151,128 +113,6 @@ export default function ZeloTab({
           )}
         </button>
       </div>
-
-      {/* RENDER CONTENT DYNAMICALLY BASED ON SUB TAB */}
-      {zeloSubTab === 'indice' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-in fade-in duration-300">
-          
-          {/* LEFT COLUMN: ACTIVE COORDINATION ANCHORS */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="flex items-center gap-2 mb-4">
-              <MapPin className="w-5 h-5 text-primary" />
-              <h3 className="font-serif text-xl text-on-surface">Divisão por Área Ativa</h3>
-            </div>
-
-            <div className="space-y-3">
-              {TERRITORIES.map((t) => {
-                const isActive = t.id === currentTerritory;
-                const fragmentCount = fragments.filter(f => f.territory === t.id).length;
-                return (
-                  <div 
-                    key={t.id}
-                    onClick={() => onSelectTerritory(t.id)}
-                    className={`px-6 py-4 rounded-2xl border transition-all text-left flex items-center justify-between cursor-pointer ${
-                      isActive 
-                        ? 'bg-primary/5 border-primary/60 ring-1 ring-primary/35 text-on-surface shadow-md' 
-                        : 'bg-surface-container/30 border-[#dac2b8]/10 text-on-surface-variant hover:border-[#dac2b8]/20'
-                    }`}
-                  >
-                    <div className="space-y-1">
-                      <h4 className="font-serif text-sm font-semibold text-on-surface flex items-center gap-2">
-                        {t.name}
-                        {isActive && <span className="w-2 h-2 rounded-full bg-secondary text-secondary-bright animate-ping" />}
-                      </h4>
-                      <p className="font-mono text-[9px] text-on-surface-variant/60">{t.coordinates}</p>
-                    </div>
-                    <div className="flex items-center gap-2 font-mono text-[10px] shrink-0 ml-4">
-                      <Activity className="w-3.5 h-3.5 text-secondary" />
-                      <span>{fragmentCount} fragmentos</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* RIGHT COLUMN: DOCUMENTARY CATALOGUE */}
-          <div className="lg:col-span-7 space-y-6">
-            <div className="flex items-center gap-2 mb-4">
-              <ShieldCheck className="w-5 h-5 text-[#ffb596]" />
-              <h3 className="font-serif text-xl text-on-surface">Catálogo de Fragmentos de {currentTerritory}</h3>
-            </div>
-
-            <div className="space-y-4">
-              {filteredFragments.length > 0 ? (
-                filteredFragments.map((f) => (
-                  <div 
-                    key={f.id}
-                    className="glass-panel border border-[#dac2b8]/15 rounded-2xl p-5 space-y-4 animate-in slide-in-from-right duration-300 bg-[#0a1120]/40"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-start gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-surface-container/50 flex items-center justify-center text-on-surface-variant mt-1 shrink-0 border border-[#dac2b8]/10">
-                          {f.type === 'audio' && <Volume2 className="w-4 h-4 text-blue-400" />}
-                          {f.type === 'poetic' && <FileText className="w-4 h-4 text-emerald-400" />}
-                          {f.type === 'visual' && <ImageIcon className="w-4 h-4 text-amber-400" />}
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-[8px] uppercase tracking-wider bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-full font-semibold">
-                              {f.type === 'audio' ? 'Fragmento Sonoro' : f.type === 'visual' ? 'Fragmento Visual' : 'Fragmento Textual'}
-                            </span>
-                            {f.isUserCreated && (
-                              <span className="font-sans text-[8px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full font-semibold flex items-center gap-1 leading-none">
-                                <Sprout className="w-2.5 h-2.5" />
-                                Seu Fragmento
-                              </span>
-                            )}
-                          </div>
-                          <h4 className="font-serif text-base font-normal text-on-surface pt-1.5">{f.title}</h4>
-                        </div>
-                      </div>
-                    </div>
-
-                    {f.imageUrl && (
-                      <div className="relative w-full h-28 rounded-lg overflow-hidden border border-[#dac2b8]/10">
-                        <FragmentViewer url={f.imageUrl} alt={f.title} className="w-full h-full object-cover" />
-                      </div>
-                    )}
-
-                    <p className="text-xs text-on-surface-variant leading-relaxed line-clamp-3 select-text font-sans">{f.content}</p>
-
-                    <div className="flex items-center justify-between pt-3 border-t border-[#dac2b8]/10">
-                      <div className="text-[10px] font-mono text-on-surface-variant/60">
-                        <span>Origem: {f.source}</span>
-                      </div>
-
-                      {onSelectFragment && setActiveTab && (
-                        <button 
-                          onClick={() => {
-                            onSelectFragment(f.id);
-                            setActiveTab('nexo');
-                          }}
-                          className="px-4 py-2 bg-primary hover:brightness-105 active:scale-95 text-on-primary text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer transition-all shadow-md font-sans"
-                        >
-                          Ver na Constelação
-                          <ArrowUpRight className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="border border-dashed border-[#dac2b8]/10 rounded-2xl p-8 text-center space-y-3">
-                  <CheckCircle className="w-8 h-8 text-secondary/60 mx-auto" />
-                  <p className="font-serif text-base text-on-surface">Sem fragmentos para {currentTerritory}</p>
-                  <p className="text-xs text-on-surface-variant/70 leading-relaxed max-w-xs mx-auto font-sans">
-                    Nenhum fragmento de mundo foi inserido nesta área ainda. Proponha um novo fragmento clicando no botão "+" flutuante.
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* SUB TAB: USER REGISTERED FRAGMENTS */}
       {zeloSubTab === 'meus-fragmentos' && (
