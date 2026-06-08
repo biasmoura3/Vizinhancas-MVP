@@ -17,15 +17,6 @@ export interface WorldFragment {
 
 export type ActiveTab = 'arquivo' | 'ponto' | 'doc' | 'zelo' | 'manifesto' | 'nexo' | 'settings' | 'suporte';
 
-export interface AssemblyItem {
-  id: string;
-  title: string;
-  date: string;
-  territory: string;
-  description: string;
-  attendees: number;
-}
-
 export interface LoreDocument {
   id: string;
   category: string;

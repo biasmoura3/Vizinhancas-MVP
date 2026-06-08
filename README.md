@@ -46,7 +46,7 @@ O usuário é convidado a testemunhar. Pode ouvir e ver fragmentos, mas não pod
 
 - `src/` — código principal do app em React + TypeScript.
 - `src/components/` — componentes de interface, como `CanvasMap`, `Sidebar`, `ProposalModal` e abas de conteúdo.
-- `src/data.ts` — dados iniciais de fragmentos, territórios, assembleias e documentos.
+- `src/data.ts` — dados iniciais de fragmentos, territórios e documentos.
 - `src/types.ts` — definições centrais dos tipos usados pelo app.
 
 ## Tecnologias Usadas

@@ -1,4 +1,4 @@
-﻿import { WorldFragment, AssemblyItem, LoreDocument } from './types';
+﻿import { WorldFragment, LoreDocument } from './types';
 
 export const INITIAL_FRAGMENTS: WorldFragment[] = [
   {
@@ -91,33 +91,6 @@ export const TERRITORIES = [
   { id: 'Setor 7G', name: 'Selvageria Urbana (Setor 7G)', coordinates: '23.5505Â° S, 46.6333Â° W' },
   { id: 'Setor 2A', name: 'Margens do IgapÃ³ (Setor 2A)', coordinates: '3.0722Â° S, 60.0125Â° W' },
   { id: 'Setor 9N', name: 'AluviÃµes do Vale Central (Setor 9N)', coordinates: '33.4489Â° S, 70.6693Â° W' }
-];
-
-export const INITIAL_ASSEMBLIES: AssemblyItem[] = [
-  {
-    id: 'ass-1',
-    title: 'Assembleia de Re-Escuta das Alturas',
-    date: 'AmanhÃ£ Ã s 18:00 (Fuso Local)',
-    territory: 'Setor 4',
-    description: 'Encontro circular para audiÃ§Ã£o coletiva de novos registros binaurais recolhidos pelas redes de sismÃ³grafos e flautas eÃ³licas do desfiladeiro alto.',
-    attendees: 14,
-  },
-  {
-    id: 'ass-2',
-    title: 'MutirÃ£o LinfÃ¡tico',
-    date: 'PrÃ³xima Lua Cheia (03/06)',
-    territory: 'Setor 7G',
-    description: 'Ritual prÃ¡tico de cultivo urbano entre o Archive Room central e as praÃ§as sementes do territÃ³rio 7G.',
-    attendees: 29,
-  },
-  {
-    id: 'ass-3',
-    title: 'Escuta das CÃ©lulas CÃ­clicas',
-    date: 'Finalizado hÃ¡ 2 dias',
-    territory: 'Setor 2A',
-    description: 'Mapeamento acÃºstico de bio-indicadores estuarinos. Debate sobre a salinizaÃ§Ã£o precoce do lenÃ§ol freÃ¡tico.',
-    attendees: 8,
-  }
 ];
 
 export const PRESET_IMAGES = [
