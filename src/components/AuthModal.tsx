@@ -18,6 +18,7 @@ interface AuthModalProps {
   onPasswordChange: (password: string) => void;
   onClose: () => void;
   onSubmit: (event: React.FormEvent) => void;
+  onResendConfirmation: () => void;
 }
 
 export default function AuthModal({
@@ -35,6 +36,7 @@ export default function AuthModal({
   onPasswordChange,
   onClose,
   onSubmit,
+  onResendConfirmation,
 }: AuthModalProps) {
   if (!isOpen) return null;
 
@@ -152,6 +154,15 @@ export default function AuthModal({
             className="w-full py-3 bg-primary text-on-primary hover:brightness-105 rounded-full text-sm font-semibold transition-all cursor-pointer disabled:opacity-60 disabled:cursor-wait"
           >
             {isSubmitting ? 'Aguarde...' : isSignUp ? 'Criar cadastro' : 'Entrar'}
+          </button>
+
+          <button
+            type="button"
+            onClick={onResendConfirmation}
+            disabled={isSubmitting || !email.trim()}
+            className="w-full py-2.5 border border-[#dac2b8]/20 text-on-surface-variant hover:text-on-surface hover:bg-surface-container/45 rounded-full text-xs font-semibold transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Reenviar confirmacao
           </button>
         </form>
       </div>

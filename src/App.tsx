@@ -81,6 +81,20 @@ export default function App() {
     return error.message || fallback;
   };
 
+  const resendSignupConfirmation = async (email: string) => {
+    if (!supabase) return;
+
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email,
+      options: {
+        emailRedirectTo: getAuthRedirectUrl(),
+      },
+    });
+
+    if (error) throw error;
+  };
+
   useEffect(() => {
     if (!isRemoteMode) {
       localStorage.setItem('situated_memories', JSON.stringify(fragments));
@@ -347,6 +361,7 @@ export default function App() {
   const handleAuthSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!supabase || !authEmail.trim() || !authPassword) return;
+    const email = authEmail.trim();
 
     if (authMode === 'signUp' && !authName.trim()) {
       setAuthError('Informe seu nome para criar o cadastro.');
@@ -358,7 +373,6 @@ export default function App() {
     setIsAuthSubmitting(true);
     try {
       if (authMode === 'signUp') {
-        const email = authEmail.trim();
         const { data, error } = await supabase.auth.signUp({
           email,
           password: authPassword,
@@ -376,45 +390,60 @@ export default function App() {
           return;
         }
 
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email,
-          password: authPassword,
-        });
-
-        if (!signInError) {
-          setAuthMessage('Cadastro criado. Voce ja esta conectado.');
+        if (data.user?.identities && data.user.identities.length === 0) {
+          setAuthMode('signIn');
+          setAuthError('Este e-mail ja tem cadastro. Use a aba Entrar com a senha cadastrada.');
           return;
         }
 
-        if (signInError.message.includes('Email not confirmed')) {
-          const { error: resendError } = await supabase.auth.resend({
-            type: 'signup',
-            email,
-            options: {
-              emailRedirectTo: getAuthRedirectUrl(),
-            },
-          });
-
-          if (resendError) throw resendError;
+        if (data.user) {
+          await resendSignupConfirmation(email);
           setAuthMode('signIn');
           setAuthMessage('Cadastro criado. Enviamos um link de confirmacao para seu e-mail; depois de confirmar, volte aqui e entre com sua senha.');
           return;
         }
 
-        throw signInError;
+        throw new Error('O Supabase nao retornou uma sessao nem um usuario para este cadastro.');
       }
 
       const { error } = await supabase.auth.signInWithPassword({
-        email: authEmail.trim(),
+        email,
         password: authPassword,
       });
 
-      if (error) throw error;
+      if (error) {
+        if (error.message.includes('Email not confirmed')) {
+          await resendSignupConfirmation(email);
+          setAuthMessage('Seu cadastro ainda precisa de confirmacao. Reenviamos o link para seu e-mail.');
+          return;
+        }
+
+        throw error;
+      }
       setAuthMessage('Entrada realizada.');
     } catch (error) {
       console.error(error);
       const errorMessage = getAuthErrorMessage(error);
       setAuthError(`Nao foi possivel concluir o acesso. ${errorMessage}`);
+    } finally {
+      setIsAuthSubmitting(false);
+    }
+  };
+
+  const handleResendAuthConfirmation = async () => {
+    if (!supabase || !authEmail.trim()) return;
+
+    setAuthMessage(null);
+    setAuthError(null);
+    setIsAuthSubmitting(true);
+    try {
+      await resendSignupConfirmation(authEmail.trim());
+      setAuthMode('signIn');
+      setAuthMessage('Reenviamos o link de confirmacao para seu e-mail.');
+    } catch (error) {
+      console.error(error);
+      const errorMessage = getAuthErrorMessage(error);
+      setAuthError(`Nao foi possivel reenviar a confirmacao. ${errorMessage}`);
     } finally {
       setIsAuthSubmitting(false);
     }
@@ -663,6 +692,7 @@ export default function App() {
         onPasswordChange={setAuthPassword}
         onClose={closeAuthModal}
         onSubmit={handleAuthSubmit}
+        onResendConfirmation={handleResendAuthConfirmation}
       />
 
     </div>
