@@ -121,7 +121,7 @@ export default function App() {
       {/* Background celestial grid */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-surface-container-high/15 via-background to-background pointer-events-none opacity-80" />
 
-      {/* Primary Top Header Bar containing platform label, notifications, and profile */}
+      {/* Primary Top Header Bar containing platform label and profile */}
       <HeaderBar currentTerritory={currentTerritory} />
 
       {/* Main Structural Body */}
