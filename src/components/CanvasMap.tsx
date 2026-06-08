@@ -134,7 +134,6 @@ export default function CanvasMap({
 
   // Find currently active details info
   const activeFragment = fragments.find(f => f.id === selectedId) || null;
-  const activePos = activeFragment ? getPos(activeFragment.id) : null;
   const activeMediaLinks = activeFragment
     ? (activeFragment.mediaLinks?.length ? activeFragment.mediaLinks : activeFragment.imageUrl ? [activeFragment.imageUrl] : []).slice(0, 3)
     : [];
@@ -263,17 +262,16 @@ export default function CanvasMap({
             );
           })}
 
-          {/* DETAILS OVERLAY POPUP: Renders directly anchored in the position of the selected fragment */}
-          {activeFragment && activePos && (
+          {/* DETAILS OVERLAY POPUP: stays centered while the constellation remains visible around it */}
+          {activeFragment && (
             <div
               style={{
-                left: `${activePos.x}%`,
-                top: `${activePos.y}%`,
-                // Smart coordinate translation to prevent container border overflow
-                transform: `translate(${activePos.x > 55 ? 'calc(-100% - 24px)' : '24px'}, ${activePos.y > 60 ? '-80%' : '-25%'})`
+                left: '50%',
+                top: '50%',
+                transform: `translate(calc(-50% - ${offset.x}px), calc(-50% - ${offset.y}px))`
               }}
               onMouseDown={(e) => e.stopPropagation()} // allows text selection/interaction inside card without invoking drag
-              className="absolute z-40 w-80 max-w-[calc(100vw-3rem)] max-h-[80vh] overflow-y-auto glass-panel border border-[#dac2b8]/25 rounded-2xl shadow-[0_12px_42px_rgba(0,0,0,0.85)] p-5 animate-in zoom-in-95 duration-200 select-text cursor-default space-y-4 bg-[#0a1120]/95 backdrop-blur-md"
+              className="absolute z-40 w-[min(27rem,calc(100vw-2rem))] max-h-[min(78vh,42rem)] overflow-y-auto glass-panel border border-[#dac2b8]/30 rounded-2xl shadow-[0_18px_60px_rgba(0,0,0,0.88),0_0_34px_rgba(255,181,150,0.12)] p-6 animate-in zoom-in-95 duration-200 select-text cursor-default space-y-4 bg-[#0a1120]/90 backdrop-blur-md"
             >
               {/* Popover Header */}
               <div className="flex items-center justify-between pb-2.5 border-b border-[#dac2b8]/15 text-xs font-mono text-primary uppercase select-none">
@@ -293,13 +291,13 @@ export default function CanvasMap({
                         onToggleSaveFragment(activeFragment.id);
                       }}
                       title={savedFragmentIds.includes(activeFragment.id) ? "Remover dos salvos" : "Salvar de outras comunidades"}
-                      className={`w-6 h-6 flex items-center justify-center rounded-full transition-all cursor-pointer ${
+                      className={`w-7 h-7 flex items-center justify-center rounded-full transition-all cursor-pointer ${
                         savedFragmentIds.includes(activeFragment.id)
                           ? 'bg-secondary/40 text-[#ffb596] border border-[#ffb596]/45'
                           : 'bg-surface-container/20 hover:bg-[#dac2b8]/15 text-on-surface-variant hover:text-primary border border-transparent'
                       }`}
                     >
-                      <Bookmark className={`w-3 h-3 ${savedFragmentIds.includes(activeFragment.id) ? 'fill-[#ffb596]' : ''}`} />
+                      <Bookmark className={`w-3.5 h-3.5 ${savedFragmentIds.includes(activeFragment.id) ? 'fill-[#ffb596]' : ''}`} />
                     </button>
                   )}
                   <button
@@ -307,26 +305,26 @@ export default function CanvasMap({
                       e.stopPropagation();
                       onSelectNode(null);
                     }}
-                    className="text-on-surface-variant hover:text-on-surface text-sm cursor-pointer hover:rotate-90 transition-transform w-6 h-6 flex items-center justify-center rounded-full bg-surface-container/20 hover:bg-surface-container/50 border border-transparent"
+                    className="text-on-surface-variant hover:text-on-surface text-sm cursor-pointer hover:rotate-90 transition-transform w-7 h-7 flex items-center justify-center rounded-full bg-surface-container/20 hover:bg-surface-container/50 border border-transparent"
                   >
-                    <X className="w-3 h-3" />
+                    <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
 
               {/* Media preview frame */}
               {activePreviewUrl && (
-                <div className="relative w-full h-36 rounded-lg overflow-hidden border border-[#dac2b8]/10 group">
+                <div className="relative w-full h-44 rounded-lg overflow-hidden border border-[#dac2b8]/10 group">
                   <FragmentViewer url={activePreviewUrl} alt={activeFragment.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0a1120] to-transparent opacity-65 pointer-events-none" />
                 </div>
               )}
 
-              <h3 className="font-serif text-base leading-snug font-normal text-on-surface">
+              <h3 className="font-serif text-xl leading-snug font-normal text-on-surface">
                 {activeFragment.title}
               </h3>
 
-              <p className="text-xs text-on-surface-variant leading-relaxed select-text font-sans">
+              <p className="text-sm text-on-surface-variant leading-relaxed select-text font-sans">
                 {activeFragment.content}
               </p>
 
@@ -347,7 +345,7 @@ export default function CanvasMap({
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-2 text-[10px] font-mono text-on-surface-variant border-t border-[#dac2b8]/10 pt-3">
+              <div className="grid grid-cols-2 gap-3 text-[10px] font-mono text-on-surface-variant border-t border-[#dac2b8]/10 pt-3">
                 <div>
                   <span className="opacity-55 block uppercase font-bold text-[8px]">Origem</span>
                   <span className="text-on-surface block font-sans font-medium mt-0.5">{activeFragment.source}</span>
@@ -365,7 +363,7 @@ export default function CanvasMap({
                       e.stopPropagation();
                       if (onToggleSaveFragment) onToggleSaveFragment(activeFragment.id);
                     }}
-                    className={`w-full py-2 px-3 rounded-xl font-sans text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all border ${
+                    className={`w-full py-2.5 px-3 rounded-xl font-sans text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all border ${
                       savedFragmentIds.includes(activeFragment.id)
                         ? 'bg-secondary/15 text-[#ffb596] border-secondary/30 hover:bg-secondary/25'
                         : 'bg-surface-container-high/40 hover:bg-surface-container-high text-on-surface border-[#dac2b8]/15 hover:border-[#dac2b8]/35'
