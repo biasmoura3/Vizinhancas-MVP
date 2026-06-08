@@ -7,6 +7,10 @@ export interface WorldFragment {
   source: string;
   territory: string;
   content: string;
+  mapPosition?: {
+    x: number;
+    y: number;
+  };
   imageUrl?: string;
   mediaLinks?: string[];
   createdAt: string;

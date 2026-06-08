@@ -10,6 +10,7 @@ import ZeloTab from './components/tabs/ZeloTab';
 
 import { ActiveTab, WorldFragment } from './types';
 import { INITIAL_FRAGMENTS } from './data';
+import { ensureFixedMapPositions, findOpenMapPosition, getFragmentMapPosition } from './utils/constellationLayout';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('nexo'); // Defaulting to the map step
@@ -22,9 +23,9 @@ export default function App() {
   const [fragments, setFragments] = useState<WorldFragment[]>(() => {
     const saved = localStorage.getItem('situated_memories');
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) { console.error(e); }
+      try { return ensureFixedMapPositions(JSON.parse(saved)); } catch (e) { console.error(e); }
     }
-    return INITIAL_FRAGMENTS;
+    return ensureFixedMapPositions(INITIAL_FRAGMENTS);
   });
 
   // Saved fragments from other communities/authors state
@@ -54,14 +55,19 @@ export default function App() {
 
   const handleAddFragment = (newFragData: Omit<WorldFragment, 'id' | 'createdAt'>) => {
     const uniqueId = `frag-${Date.now()}`;
-    const newFragment: WorldFragment = {
-      ...newFragData,
-      id: uniqueId,
-      createdAt: new Date().toISOString(),
-      isUserCreated: true
-    };
 
-    setFragments(prev => [newFragment, ...prev]);
+    setFragments(prev => {
+      const mapPosition = findOpenMapPosition(prev.map(getFragmentMapPosition));
+      const newFragment: WorldFragment = {
+        ...newFragData,
+        id: uniqueId,
+        mapPosition,
+        createdAt: new Date().toISOString(),
+        isUserCreated: true
+      };
+
+      return [newFragment, ...prev];
+    });
     setSelectedFragmentId(uniqueId);
     setActiveTab('nexo'); // Takes them to view it on the map!
   };
@@ -98,7 +104,7 @@ export default function App() {
   const handleResetData = () => {
     if (confirm('Tem certeza que deseja restaurar os fragmentos originais do Altiplano?')) {
       localStorage.removeItem('situated_memories');
-      setFragments(INITIAL_FRAGMENTS);
+      setFragments(ensureFixedMapPositions(INITIAL_FRAGMENTS));
       setSelectedFragmentId(null);
       setActiveTab('nexo');
     }

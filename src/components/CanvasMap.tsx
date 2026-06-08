@@ -1,16 +1,17 @@
-﻿import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { WorldFragment } from '../types';
-import { 
-  Sprout, 
-  Map, 
-  Volume2, 
-  FileText, 
-  Image as ImageIcon, 
+import {
+  Sprout,
+  Map,
+  Volume2,
+  FileText,
+  Image as ImageIcon,
   Locate,
   X,
   Bookmark
 } from 'lucide-react';
 import FragmentViewer from './FragmentViewer';
+import { getFragmentMapPosition } from '../utils/constellationLayout';
 
 interface CanvasMapProps {
   fragments: WorldFragment[];
@@ -18,12 +19,6 @@ interface CanvasMapProps {
   onSelectNode: (id: string | null) => void;
   savedFragmentIds?: string[];
   onToggleSaveFragment?: (id: string) => void;
-}
-
-interface NodePosition {
-  id: string;
-  x: number; // percentage width (0-100)
-  y: number; // percentage height (0-100)
 }
 
 export default function CanvasMap({
@@ -43,37 +38,6 @@ export default function CanvasMap({
   const [hasDragged, setHasDragged] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0, offsetX: 0, offsetY: 0 });
 
-  // Hardcoded node positions for initial fragments, with fallback random offsets for added items
-  const [positions, setPositions] = useState<NodePosition[]>([
-    { id: 'alti-1', x: 30, y: 25 },
-    { id: 'poet-2', x: 74, y: 35 },
-    { id: 'memb-3', x: 50, y: 64 },
-    { id: 'mang-4', x: 18, y: 72 },
-    { id: 'flor-5', x: 82, y: 75 },
-    { id: 'vale-6', x: 46, y: 42 },
-    { id: 'linc-7', x: 88, y: 55 },
-    { id: 'vento-8', x: 14, y: 40 }
-  ]);
-
-  // If new fragments are added dynamically, generate safe positions for them
-  useEffect(() => {
-    const existingIds = positions.map(p => p.id);
-    const newFragments = fragments.filter(f => !existingIds.includes(f.id));
-    
-    if (newFragments.length > 0) {
-      const updatedPositions = [...positions];
-      newFragments.forEach((f) => {
-        // Place new nodes in random vacant zones
-        updatedPositions.push({
-          id: f.id,
-          x: 20 + Math.floor(Math.random() * 60),
-          y: 20 + Math.floor(Math.random() * 60)
-        });
-      });
-      setPositions(updatedPositions);
-    }
-  }, [fragments, positions]);
-
   // Gets unique territory options
   const territories = ['todos', ...Array.from(new Set(fragments.map(f => f.territory)))];
 
@@ -84,7 +48,8 @@ export default function CanvasMap({
 
   // Helper to find a node's physical position
   const getPos = (id: string) => {
-    return positions.find(p => p.id === id) || { x: 50, y: 50 };
+    const fragment = fragments.find(f => f.id === id);
+    return fragment ? getFragmentMapPosition(fragment) : { x: 50, y: 50 };
   };
 
   // Dragging event handlers for the background
@@ -109,11 +74,11 @@ export default function CanvasMap({
     if (!isDragging) return;
     const dx = e.clientX - dragStartRef.current.x;
     const dy = e.clientY - dragStartRef.current.y;
-    
+
     if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
       setHasDragged(true);
     }
-    
+
     setOffset({
       x: dragStartRef.current.offsetX + dx,
       y: dragStartRef.current.offsetY + dy
@@ -147,11 +112,11 @@ export default function CanvasMap({
     const touch = e.touches[0];
     const dx = touch.clientX - dragStartRef.current.x;
     const dy = touch.clientY - dragStartRef.current.y;
-    
+
     if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
       setHasDragged(true);
     }
-    
+
     setOffset({
       x: dragStartRef.current.offsetX + dx,
       y: dragStartRef.current.offsetY + dy
@@ -170,7 +135,6 @@ export default function CanvasMap({
 
   return (
     <div className="w-full h-full relative flex flex-col overflow-hidden text-on-surface select-none">
-      
       {/* Top filter overlay on map - Outside panning wrapper so it is fixed */}
       <div className="absolute top-4 left-6 z-30 flex gap-2 max-w-full overflow-x-auto pb-1">
         {territories.map((ter) => (
@@ -178,8 +142,8 @@ export default function CanvasMap({
             key={ter}
             onClick={() => setFilterTerritory(ter)}
             className={`px-3 py-1.5 rounded-full text-xs font-semibold capitalize font-mono transition-all shrink-0 cursor-pointer border ${
-              filterTerritory === ter 
-                ? 'bg-secondary text-on-secondary border-secondary/50 shadow-md' 
+              filterTerritory === ter
+                ? 'bg-secondary text-on-secondary border-secondary/50 shadow-md'
                 : 'bg-surface-container/85 border-[#dac2b8]/15 hover:border-[#dac2b8]/40 text-on-surface-variant'
             }`}
           >
@@ -189,7 +153,7 @@ export default function CanvasMap({
       </div>
 
       {/* Map Interactive Canvas Container */}
-      <div 
+      <div
         ref={containerRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -202,9 +166,8 @@ export default function CanvasMap({
           isDragging ? 'cursor-grabbing bg-slate-950/20' : 'cursor-grab'
         }`}
       >
-        
         {/* PANNABLE WRAPPER: Translates the entire network together organically */}
-        <div 
+        <div
           style={{
             transform: `translate(${offset.x}px, ${offset.y}px)`,
           }}
@@ -220,8 +183,8 @@ export default function CanvasMap({
             const isHovered = hoveredNodeId === frag.id;
             // Clean title truncation for highly polished Obsidian visual mapping
             const cleanTitle = frag.title.replace(/^"/, '').replace(/"$/, '');
-            const displayTitle = cleanTitle.length > 20 
-              ? `${cleanTitle.substring(0, 18)}...` 
+            const displayTitle = cleanTitle.length > 20
+              ? `${cleanTitle.substring(0, 18)}...`
               : cleanTitle;
 
             return (
@@ -259,10 +222,10 @@ export default function CanvasMap({
                               : 'bg-emerald-400 border-emerald-400/30'
                     }`}
                     style={{
-                      boxShadow: isSelected 
-                        ? '0 0 15px #ffb596, inset 0 0 4px rgba(255,255,255,0.8)' 
-                        : isHovered 
-                          ? '0 0 8px rgba(255,181,150,0.5)' 
+                      boxShadow: isSelected
+                        ? '0 0 15px #ffb596, inset 0 0 4px rgba(255,255,255,0.8)'
+                        : isHovered
+                          ? '0 0 8px rgba(255,181,150,0.5)'
                           : 'none'
                     }}
                   />
@@ -330,7 +293,7 @@ export default function CanvasMap({
                       <Bookmark className={`w-3 h-3 ${savedFragmentIds.includes(activeFragment.id) ? 'fill-[#ffb596]' : ''}`} />
                     </button>
                   )}
-                  <button 
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onSelectNode(null);
@@ -401,8 +364,8 @@ export default function CanvasMap({
                   >
                     <Bookmark className={`w-3.5 h-3.5 ${savedFragmentIds.includes(activeFragment.id) ? 'fill-current' : ''}`} />
                     <span>
-                      {savedFragmentIds.includes(activeFragment.id) 
-                        ? 'Remover do Acervo de Fragmentos' 
+                      {savedFragmentIds.includes(activeFragment.id)
+                        ? 'Remover do Acervo de Fragmentos'
                         : 'Salvar no Acervo de Fragmentos'}
                     </span>
                   </button>
