@@ -19,10 +19,10 @@ Este README deve acompanhar as definições vigentes do MVP. Sempre que uma regr
 No MVP de Vizinhanças, a experiência central é uma constelação de fragmentos de mundo e saberes comunitários. Esses fragmentos são oferecidos por pessoas e coletivos, levando em conta:
 
 - contextos de enunciação: quem ofereceu o fragmento e em qual território;
-- formatos variados: áudio, imagem e texto;
+- formatos variados: fragmentos sonoros, imagem e texto;
 - uma lógica de presença e testemunho em vez de busca tradicional ou extração de conteúdo.
 
-O usuário é convidado a testemunhar. Pode ouvir e ver fragmentos, mas não pode baixar, copiar ou exportar o conteúdo. Isso protege a comunidade contra extrativismo e reforça a presença no encontro com o material.
+O usuário é convidado a testemunhar. Pode ver fragmentos e suas referências incorporadas, mas não pode baixar, copiar ou exportar o conteúdo. Isso protege a comunidade contra extrativismo e reforça a presença no encontro com o material.
 
 ## O MVP Oferece
 
@@ -78,14 +78,14 @@ O projeto será implantado no Vercel. Para publicar:
 
 ## Política de Mídia — Sem Armazenamento
 
-- O sistema **não armazena** arquivos de mídia (imagens, áudios, vídeos) no nosso servidor ou em buckets gerenciados pelo projeto.
-- Contribuintes devem fornecer **links de visualização** hospedados por serviços terceiros, como YouTube, Vimeo, SoundCloud, Imgur ou provedores que ofereçam URLs de visualização pública.
+- O sistema **não armazena** arquivos de mídia (imagens e vídeos) no nosso servidor ou em buckets gerenciados pelo projeto.
+- Contribuintes devem fornecer **links de visualização** hospedados por serviços terceiros, como YouTube, Vimeo, Imgur ou provedores que ofereçam URLs de visualização pública.
 - O app **incorpora** esses links para visualização inline dentro da interface; o arquivo não é transferido para armazenamento nosso nem disponibilizado para download.
 
 Padrões e exemplos aceitos:
 
 - Imagem direta: `https://i.imgur.com/exemplo.jpg`
-- Áudio: SoundCloud ou URL direta para mp3/ogg com CORS habilitado
+- Fragmento sonoro com preview: `https://www.youtube.com/watch?v=...`
 - Vídeo: `https://www.youtube.com/watch?v=...` ou `https://vimeo.com/...`
 - Texto/documento: links para páginas públicas que possam ser incorporadas em iframe
 
@@ -95,7 +95,7 @@ Orientações de implementação:
 - Validar e sanitizar URLs recebidas; aplicar uma lista de domínios confiáveis.
 - Renderizar mídia inline sem proxiar o arquivo.
 - Para iframes, usar atributos de `sandbox` restritivos e políticas de Content Security Policy no deploy.
-- Para imagens e áudio, usar elementos nativos (`<img>`, `<audio>`) com controles limitados e sem links de download explícitos.
+- Para imagens, usar elemento nativo (`<img>`) sem links de download explícitos.
 - Evitar `allow-scripts` em iframes quando possível; quando necessário, restringir a origem e auditar o provedor.
 
 ## Segurança e Governança

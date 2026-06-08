@@ -59,7 +59,8 @@ export default function ProposalModal({
     e.preventDefault();
     if (!title.trim()) return;
 
-    const chosenMediaUrl = mediaLinks.find((link) => link.trim() !== '');
+    const cleanedMediaLinks = mediaLinks.map((link) => link.trim()).filter(Boolean).slice(0, 3);
+    const chosenMediaUrl = cleanedMediaLinks[0];
     const previewUrl = type === 'visual'
       ? chosenMediaUrl ?? 'https://images.unsplash.com/photo-1545231027-63b39f612acf?q=80&w=600&auto=format&fit=crop'
       : chosenMediaUrl ?? undefined;
@@ -71,8 +72,7 @@ export default function ProposalModal({
       territory: territory || 'Setor 7G',
       content: content || 'Nenhuma narração tecida.',
       imageUrl: previewUrl,
-      audioDuration: undefined,
-      audioWaveform: undefined
+      mediaLinks: cleanedMediaLinks
     });
 
     // Reset Form state
@@ -209,7 +209,7 @@ export default function ProposalModal({
                       Links de visualização
                     </label>
                     <p className="text-[11px] text-on-surface-variant leading-relaxed">
-                      Cole URLs de serviços de visualização ou arquivos diretos para reproduzir sem sair da página.
+                      Para fragmentos sonoros, cole links do YouTube. O primeiro aparece como preview; os demais ficam clicáveis no card.
                     </p>
                     <div className="space-y-3">
                       {mediaLinks.map((link, index) => (

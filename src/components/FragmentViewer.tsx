@@ -11,7 +11,6 @@ const WHITELIST = [
   'youtube.com',
   'youtu.be',
   'vimeo.com',
-  'soundcloud.com',
   'imgur.com',
   'i.imgur.com',
 ];
@@ -26,10 +25,6 @@ function getHostname(u: string) {
 
 function isImageUrl(u: string) {
   return /\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i.test(u);
-}
-
-function isAudioUrl(u: string) {
-  return /\.(mp3|ogg|wav|m4a)(\?.*)?$/i.test(u);
 }
 
 function extractYouTubeEmbed(u: string) {
@@ -70,16 +65,6 @@ const FragmentViewer: React.FC<Props> = ({ url, mimeType, alt, className }) => {
     );
   }
 
-  // Audio file
-  if (isAudioUrl(url) || (mimeType && mimeType.startsWith('audio/'))) {
-    return (
-      <audio controls controlsList="nodownload" className={className}>
-        <source src={url} />
-        Seu navegador não suporta o elemento de áudio.
-      </audio>
-    );
-  }
-
   // YouTube
   if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) {
     const embed = extractYouTubeEmbed(url);
@@ -88,10 +73,11 @@ const FragmentViewer: React.FC<Props> = ({ url, mimeType, alt, className }) => {
         <iframe
           src={embed}
           title="YouTube video"
-          width="560"
-          height="315"
+          width="100%"
+          height="100%"
+          className="w-full h-full"
           frameBorder="0"
-          sandbox="allow-same-origin allow-forms allow-popups"
+          sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-presentation"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />
@@ -114,24 +100,6 @@ const FragmentViewer: React.FC<Props> = ({ url, mimeType, alt, className }) => {
           sandbox="allow-same-origin allow-forms allow-popups"
           allow="autoplay; fullscreen; picture-in-picture"
           allowFullScreen
-        />
-      </div>
-    );
-  }
-
-  // SoundCloud
-  if (hostname.includes('soundcloud.com')) {
-    const embed = `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}`;
-    return (
-      <div className={className}>
-        <iframe
-          width="100%"
-          height={166}
-          scrolling="no"
-          frameBorder="no"
-          src={embed}
-          sandbox="allow-same-origin allow-forms allow-popups"
-          title="SoundCloud audio"
         />
       </div>
     );

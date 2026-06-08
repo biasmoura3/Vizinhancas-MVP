@@ -8,8 +8,6 @@ export const INITIAL_FRAGMENTS: WorldFragment[] = [
     source: 'Terras Altas Andinas',
     territory: 'Setor 4',
     content: 'GravaÃ§Ã£o binaural das correntes de ar frio que sopram atravÃ©s das frestas rochosas rituais no desfiladeiro alto de TarapacÃ¡. O som simula uma flauta ancestral, modulada unicamente pelo sopro atmosfÃ©rico.',
-    audioDuration: '00:12',
-    audioWaveform: [4, 12, 18, 14, 8, 12, 22, 25, 16, 9, 7, 13, 19, 11, 8, 4, 10, 15, 12, 5],
     createdAt: '2026-05-12T14:35:00Z',
   },
   {
@@ -38,8 +36,6 @@ export const INITIAL_FRAGMENTS: WorldFragment[] = [
     source: 'Guardas da MarÃ©',
     territory: 'Setor 2A',
     content: 'RuÃ­dos estalados produzidos por colÃ´nias de caranguejos de mangue sob as raÃ­zes suspensas durante o pico da marÃ© vazante. Formam um mapa sonoro de sedimentaÃ§Ã£o e fluxo de Ã¡gua salgada.',
-    audioDuration: '00:45',
-    audioWaveform: [3, 6, 4, 9, 15, 19, 11, 5, 8, 14, 20, 24, 18, 10, 12, 6, 4, 3, 7, 10],
     createdAt: '2026-05-27T11:20:00Z',
   },
   {
@@ -80,8 +76,6 @@ export const INITIAL_FRAGMENTS: WorldFragment[] = [
     source: 'Coletor AtmosfÃ©rico',
     territory: 'Setor 4',
     content: 'Registro acÃºstico sintetizado a partir de alteraÃ§Ãµes geomagnÃ©ticas fracas causadas por ventos solares na atmosfera de baixa pressÃ£o do Altiplano TarapacÃ¡.',
-    audioDuration: '00:15',
-    audioWaveform: [5, 12, 15, 20, 10, 12, 14, 18, 22, 25, 20, 15, 10, 8, 12, 14, 16, 12, 8, 4],
     createdAt: '2026-06-02T19:45:00Z',
   }
 ];

@@ -38,7 +38,7 @@ export default function EditFragmentModal({
       setType(fragment.type);
       setTerritory(fragment.territory);
       setContent(fragment.content);
-      setMediaLinks(fragment.imageUrl ? [fragment.imageUrl] : ['']);
+      setMediaLinks(fragment.mediaLinks?.length ? fragment.mediaLinks.slice(0, 3) : fragment.imageUrl ? [fragment.imageUrl] : ['']);
     }
   }, [isOpen, fragment]);
 
@@ -62,7 +62,8 @@ export default function EditFragmentModal({
     e.preventDefault();
     if (!title.trim()) return;
 
-    const chosenMediaUrl = mediaLinks.find((link) => link.trim() !== '');
+    const cleanedMediaLinks = mediaLinks.map((link) => link.trim()).filter(Boolean).slice(0, 3);
+    const chosenMediaUrl = cleanedMediaLinks[0];
     const previewUrl = type === 'visual'
       ? chosenMediaUrl ?? fragment.imageUrl ?? 'https://images.unsplash.com/photo-1545231027-63b39f612acf?q=80&w=600&auto=format&fit=crop'
       : chosenMediaUrl ?? undefined;
@@ -74,6 +75,7 @@ export default function EditFragmentModal({
       territory: territory || 'Setor 7G',
       content: content || 'Nenhuma narração tecida.',
       imageUrl: previewUrl,
+      mediaLinks: cleanedMediaLinks,
     });
 
     onClose();
@@ -205,7 +207,7 @@ export default function EditFragmentModal({
                       Links de visualização
                     </label>
                     <p className="text-[11px] text-on-surface-variant leading-relaxed">
-                      Cole URLs de serviços de visualização ou arquivos diretos para reproduzir sem sair da página.
+                      Para fragmentos sonoros, cole links do YouTube. O primeiro aparece como preview; os demais ficam clicáveis no card.
                     </p>
                     <div className="space-y-3">
                       {mediaLinks.map((link, index) => (

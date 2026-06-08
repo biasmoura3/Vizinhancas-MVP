@@ -8,8 +8,7 @@ export interface WorldFragment {
   territory: string;
   content: string;
   imageUrl?: string;
-  audioDuration?: string;
-  audioWaveform?: number[];
+  mediaLinks?: string[];
   createdAt: string;
   authorEmail?: string;
   isUserCreated?: boolean;

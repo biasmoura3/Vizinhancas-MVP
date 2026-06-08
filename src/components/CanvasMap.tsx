@@ -43,104 +43,6 @@ export default function CanvasMap({
   const [hasDragged, setHasDragged] = useState(false);
   const dragStartRef = useRef({ x: 0, y: 0, offsetX: 0, offsetY: 0 });
 
-  // Audio playback and synthesis state
-  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-  const [audioProgress, setAudioProgress] = useState(0);
-  const audioIntervalRef = useRef<any>(null);
-  const synthNodesRef = useRef<{ ctx: AudioContext | null; oscillator: OscillatorNode | null; gain: GainNode | null; filter: BiquadFilterNode | null }>({
-    ctx: null,
-    oscillator: null,
-    gain: null,
-    filter: null
-  });
-
-  const startSynthesizer = (frag: WorldFragment) => {
-    try {
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-      if (!AudioContextClass) return;
-
-      const ctx = new AudioContextClass();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      const filter = ctx.createBiquadFilter();
-
-      osc.type = 'triangle';
-      const baseFreq = frag.id === 'alti-1' ? 220 : frag.id === 'vento-8' ? 280 : 180;
-      osc.frequency.setValueAtTime(baseFreq, ctx.currentTime);
-
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(500, ctx.currentTime);
-
-      gain.gain.setValueAtTime(0, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.8);
-
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start();
-
-      synthNodesRef.current = { ctx, oscillator: osc, gain, filter };
-      setIsPlayingAudio(true);
-
-      const waveform = frag.audioWaveform || [5, 10, 15, 20];
-      let step = 0;
-      
-      if (audioIntervalRef.current) clearInterval(audioIntervalRef.current);
-      
-      audioIntervalRef.current = setInterval(() => {
-        setAudioProgress((prev) => {
-          if (prev >= 100) {
-            stopSynthesizer();
-            return 0;
-          }
-          
-          if (synthNodesRef.current.oscillator && synthNodesRef.current.ctx) {
-            const currentWaveVal = waveform[step % waveform.length];
-            const pitchAdjust = (currentWaveVal / 25) * 110;
-            const targetFreq = baseFreq + pitchAdjust;
-            synthNodesRef.current.oscillator.frequency.exponentialRampToValueAtTime(
-              targetFreq, 
-              synthNodesRef.current.ctx.currentTime + 0.25
-            );
-            step += 1;
-          }
-          
-          return prev + 3;
-        });
-      }, 330);
-
-    } catch (e) {
-      console.error("Synthesizer failed to start:", e);
-    }
-  };
-
-  const stopSynthesizer = () => {
-    try {
-      const { ctx, oscillator, gain } = synthNodesRef.current;
-      if (gain && ctx) {
-        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.2);
-        setTimeout(() => {
-          if (oscillator) {
-            try { oscillator.stop(); } catch (e) {}
-          }
-          if (ctx && ctx.state !== 'closed') {
-            try { ctx.close(); } catch (e) {}
-          }
-        }, 250);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-    
-    if (audioIntervalRef.current) {
-      clearInterval(audioIntervalRef.current);
-      audioIntervalRef.current = null;
-    }
-    setIsPlayingAudio(false);
-    setAudioProgress(0);
-  };
-
   // Hardcoded node positions for initial fragments, with fallback random offsets for added items
   const [positions, setPositions] = useState<NodePosition[]>([
     { id: 'alti-1', x: 30, y: 25 },
@@ -259,18 +161,12 @@ export default function CanvasMap({
   // Find currently active details info
   const activeFragment = fragments.find(f => f.id === selectedId) || null;
   const activePos = activeFragment ? getPos(activeFragment.id) : null;
-
-  // Auto-play / synthesis control when selectedId changes
-  useEffect(() => {
-    if (activeFragment && activeFragment.type === 'audio') {
-      startSynthesizer(activeFragment);
-    } else {
-      stopSynthesizer();
-    }
-    return () => {
-      stopSynthesizer();
-    };
-  }, [selectedId]);
+  const activeMediaLinks = activeFragment
+    ? (activeFragment.mediaLinks?.length ? activeFragment.mediaLinks : activeFragment.imageUrl ? [activeFragment.imageUrl] : []).slice(0, 3)
+    : [];
+  const activePreviewUrl = activeFragment?.type === 'audio'
+    ? activeMediaLinks[0]
+    : activeFragment?.imageUrl;
 
   return (
     <div className="w-full h-full relative flex flex-col overflow-hidden text-on-surface select-none">
@@ -446,10 +342,10 @@ export default function CanvasMap({
                 </div>
               </div>
 
-              {/* Image Frame if image is available */}
-              {activeFragment.imageUrl && (
+              {/* Media preview frame */}
+              {activePreviewUrl && (
                 <div className="relative w-full h-36 rounded-lg overflow-hidden border border-[#dac2b8]/10 group">
-                  <FragmentViewer url={activeFragment.imageUrl} alt={activeFragment.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <FragmentViewer url={activePreviewUrl} alt={activeFragment.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0a1120] to-transparent opacity-65 pointer-events-none" />
                 </div>
               )}
@@ -458,70 +354,26 @@ export default function CanvasMap({
                 {activeFragment.title}
               </h3>
 
-              {/* Generative Audio Synthesizer Controls */}
-              {activeFragment.type === 'audio' && (
-                <div className="bg-[#0b1326]/60 border border-[#dac2b8]/10 rounded-xl p-3.5 space-y-2.5 select-none">
-                  <div className="flex items-center justify-between">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (isPlayingAudio) {
-                          stopSynthesizer();
-                        } else {
-                          startSynthesizer(activeFragment);
-                        }
-                      }}
-                      className="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center cursor-pointer hover:brightness-110 active:scale-95 transition-all shadow-md"
-                    >
-                      {isPlayingAudio ? (
-                        <span className="w-2.5 h-2.5 bg-on-primary rounded-sm" />
-                      ) : (
-                        <span className="border-t-[5px] border-t-transparent border-b-[5px] border-b-transparent border-l-[8px] border-l-on-primary ml-0.5" />
-                      )}
-                    </button>
-                    
-                    <div className="flex-1 ml-3">
-                      <div className="flex items-center justify-between text-[9px] font-mono opacity-60">
-                        <span>{isPlayingAudio ? 'PRODUZINDO TIMBRE...' : 'SINTETIZADOR DISPONÍVEL'}</span>
-                        <span>{activeFragment.audioDuration || '00:15'}</span>
-                      </div>
-                      <div className="w-full bg-surface-container/40 rounded-full h-1 mt-1 overflow-hidden">
-                        <div 
-                          className="bg-primary h-full transition-all duration-300"
-                          style={{ width: `${audioProgress}%` }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Dynamic waveform visualizer bar graph */}
-                  <div className="flex justify-between items-end h-8 gap-0.5">
-                    {(activeFragment.audioWaveform || [4, 8, 12, 16, 20, 15, 10, 8, 4]).map((barVal, index) => {
-                      const waveStateHeight = `${(barVal / 25) * 100}%`;
-                      return (
-                        <div
-                          key={index}
-                          className={`flex-1 rounded-sm transition-all duration-300 ${
-                            isPlayingAudio 
-                              ? 'bg-[#ffb596]/80 animate-pulse' 
-                              : 'bg-on-surface-variant/20'
-                          }`}
-                          style={{
-                            height: isPlayingAudio 
-                              ? `calc(${waveStateHeight} + ${Math.sin(audioProgress / 3 + index) * 18}%)`
-                              : waveStateHeight,
-                            animationDelay: `${index * 35}ms`
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-
               <p className="text-xs text-on-surface-variant leading-relaxed select-text font-sans">
                 {activeFragment.content}
               </p>
+
+              {activeFragment.type === 'audio' && activeMediaLinks.length > 0 && (
+                <div className="space-y-1.5 text-xs font-sans">
+                  {activeMediaLinks.map((link, index) => (
+                    <a
+                      key={`${link}-${index}`}
+                      href={link}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="block truncate text-primary hover:text-primary-bright underline underline-offset-4 decoration-primary/35"
+                    >
+                      Link do vídeo {index + 1}
+                    </a>
+                  ))}
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-2 text-[10px] font-mono text-on-surface-variant border-t border-[#dac2b8]/10 pt-3">
                 <div>
