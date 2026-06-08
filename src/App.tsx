@@ -15,7 +15,7 @@ import ZeloTab from './components/tabs/ZeloTab';
 import { ActiveTab, Territory, WorldFragment } from './types';
 import { INITIAL_FRAGMENTS, TERRITORIES } from './data';
 import { ensureFixedMapPositions, findOpenMapPosition, getFragmentMapPosition } from './utils/constellationLayout';
-import { isSupabaseConfigured, supabase } from './lib/supabase';
+import { isSupabaseConfigured, supabase, supabaseConfigError } from './lib/supabase';
 import {
   createRemoteFragment,
   deleteRemoteFragment,
@@ -51,6 +51,16 @@ export default function App() {
 
   const isRemoteMode = isSupabaseConfigured && Boolean(supabase);
   const displayName = user?.email?.split('@')[0] || 'Ouvinte Atento';
+  const getAuthErrorMessage = (error: unknown) => {
+    const fallback = 'Tente novamente em alguns instantes.';
+    if (!(error instanceof Error)) return fallback;
+
+    if (error.message.includes('Invalid path specified in request URL')) {
+      return 'Confira se VITE_SUPABASE_URL esta usando a URL raiz do projeto Supabase, sem /auth/v1 ou outros caminhos.';
+    }
+
+    return error.message || fallback;
+  };
 
   useEffect(() => {
     if (!isRemoteMode) {
@@ -321,7 +331,7 @@ export default function App() {
       setAuthMessage('Enviamos um link de acesso para seu e-mail. Abra o link nesta mesma janela para concluir a entrada.');
     } catch (error) {
       console.error(error);
-      const errorMessage = error instanceof Error ? error.message : 'Tente novamente em alguns instantes.';
+      const errorMessage = getAuthErrorMessage(error);
       setAuthError(`Não foi possível enviar o link de acesso. ${errorMessage}`);
     } finally {
       setIsAuthSubmitting(false);
@@ -459,7 +469,7 @@ export default function App() {
                     )
                   ) : (
                     <p className="text-xs text-on-surface-variant/70 leading-relaxed">
-                      Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY para ativar armazenamento remoto.
+                      {supabaseConfigError ?? 'Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY para ativar armazenamento remoto.'}
                     </p>
                   )}
                 </div>

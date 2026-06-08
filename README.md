@@ -113,8 +113,10 @@ O app pode operar em modo local quando as variáveis Supabase não estão config
 - crie um projeto Supabase;
 - execute `supabase/migrations/20260608000000_create_vizinhancas_schema.sql`;
 - execute `supabase/seed.sql` para carregar territórios e fragmentos iniciais;
-- configure `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` no ambiente do Vite/Vercel;
-- habilite login por e-mail no painel de Auth do Supabase.
+- configure `VITE_SUPABASE_URL` com a URL raiz do projeto Supabase, por exemplo `https://seu-projeto.supabase.co`, sem `/auth/v1`, `/rest/v1` ou outros caminhos;
+- configure `VITE_SUPABASE_ANON_KEY` no ambiente do Vite/Vercel;
+- habilite login por e-mail no painel de Auth do Supabase;
+- em Auth > URL Configuration, adicione a URL publicada do app em Redirect URLs para que o link de acesso possa voltar para a tela correta.
 
 O banco guarda usuários, perfis públicos, territórios, fragmentos e fragmentos salvos. Arquivos de mídia continuam fora do Supabase: a plataforma armazena apenas links públicos de visualização, com limite de 3 links por fragmento.
 
