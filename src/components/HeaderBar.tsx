@@ -4,13 +4,22 @@ interface HeaderBarProps {
   currentTerritory: string;
 }
 
+const spaceTimeFormatter = new Intl.DateTimeFormat('pt-BR', {
+  timeZone: 'Etc/GMT+3',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false,
+  hourCycle: 'h23'
+});
+
 export default function HeaderBar({ currentTerritory }: HeaderBarProps) {
   const [time, setTime] = useState<string>('');
 
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      setTime(now.toISOString().substring(11, 19) + ' UTC');
+      setTime(`${spaceTimeFormatter.format(now)} GMT-3`);
     };
     updateTime();
     const interval = setInterval(updateTime, 1000);
@@ -32,7 +41,7 @@ export default function HeaderBar({ currentTerritory }: HeaderBarProps) {
         {/* Real-time Clock */}
         <div className="hidden sm:flex flex-col items-end text-right font-mono text-[10px] opacity-75 mr-2">
           <span className="text-secondary font-semibold uppercase tracking-wider">Espaço-Tempo</span>
-          <span>{time || '15:10:00 UTC'}</span>
+          <span>{time || '15:10:00 GMT-3'}</span>
         </div>
 
         {/* User profile identifier (Email / Caretaker handle) */}
