@@ -13,7 +13,7 @@ import ManifestoTab from './components/tabs/ManifestoTab';
 import ZeloTab from './components/tabs/ZeloTab';
 
 import { ActiveTab, Territory, WorldFragment } from './types';
-import { INITIAL_FRAGMENTS, TERRITORIES } from './data';
+import { TERRITORIES } from './data';
 import { ensureFixedMapPositions, findOpenMapPosition, getFragmentMapPosition } from './utils/constellationLayout';
 import { isSupabaseConfigured, supabase, supabaseConfigError } from './lib/supabase';
 import {
@@ -439,15 +439,17 @@ export default function App() {
 
   const handleResetData = () => {
     if (isRemoteMode) {
-      alert('No modo online, a restauracao dos dados originais precisa ser feita pela equipe tecnica.');
+      alert('No modo online, a limpeza dos fragmentos precisa ser feita pela equipe tecnica.');
       return;
     }
 
-    if (confirm('Tem certeza que deseja restaurar os fragmentos originais do Altiplano?')) {
+    if (confirm('Tem certeza que deseja limpar todos os fragmentos locais?')) {
       localStorage.removeItem('situated_memories');
+      localStorage.removeItem('saved_fragment_ids');
       localStorage.removeItem('vizinhancas_territories');
       setTerritories(TERRITORIES);
-      setFragments(ensureFixedMapPositions(INITIAL_FRAGMENTS));
+      setFragments([]);
+      setSavedFragmentIds([]);
       setSelectedFragmentId(null);
       setActiveTab('nexo');
     }
@@ -680,15 +682,15 @@ export default function App() {
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="text-sm font-semibold text-on-surface">Restaurar Dados Originais</h3>
+                  <h3 className="text-sm font-semibold text-on-surface">Limpar Dados Locais</h3>
                   <p className="text-xs text-on-surface-variant leading-relaxed">
-                    Apaga todos os fragmentos criados por você e restaura os fragmentos originais de exemplo.
+                    Apaga os fragmentos e salvamentos guardados neste navegador, mantendo apenas os territórios de base.
                   </p>
                   <button
                     onClick={handleResetData}
                     className="mt-2 px-4 py-2.5 bg-error/15 border border-error/30 text-error hover:bg-error/25 rounded-full text-xs font-semibold max-w-sm transition-colors cursor-pointer cursor-pointer shadow-md"
                   >
-                    Restaurar Todos os Fragmentos
+                    Limpar Fragmentos Locais
                   </button>
                 </div>
 

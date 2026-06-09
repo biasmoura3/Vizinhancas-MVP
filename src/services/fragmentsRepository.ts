@@ -1,5 +1,5 @@
 import { User } from '@supabase/supabase-js';
-import { DEFAULT_FRAGMENT_CONNECTIONS, INITIAL_FRAGMENTS, TERRITORIES } from '../data';
+import { TERRITORIES } from '../data';
 import { FragmentType, Territory, WorldFragment } from '../types';
 import { ensureFixedMapPositions } from '../utils/constellationLayout';
 import { supabase } from '../lib/supabase';
@@ -31,20 +31,16 @@ type TerritoryRow = {
 
 const TERRITORIES_STORAGE_KEY = 'vizinhancas_territories';
 
+const isLocalUserFragment = (fragment: WorldFragment) => {
+  return Boolean(fragment.authorId) || /^frag-\d+$/.test(fragment.id);
+};
+
 const toTerritory = (row: TerritoryRow): Territory => ({
   id: row.id,
   name: row.name,
   coordinates: row.coordinates ?? '',
   createdAt: row.created_at,
 });
-
-const hasDefaultConnectionProfile = (id: string) => (
-  Object.prototype.hasOwnProperty.call(DEFAULT_FRAGMENT_CONNECTIONS, id)
-);
-
-const getDefaultConnectedFragmentIds = (id: string) => (
-  DEFAULT_FRAGMENT_CONNECTIONS[id] ?? []
-);
 
 const toFragment = (row: FragmentRow, user: User | null): WorldFragment => ({
   id: row.id,
@@ -58,10 +54,8 @@ const toFragment = (row: FragmentRow, user: User | null): WorldFragment => ({
     : undefined,
   imageUrl: row.image_url ?? undefined,
   mediaLinks: (row.media_links ?? []).slice(0, 3),
-  isOpenToConnections: (row.is_open_to_connections ?? false) || hasDefaultConnectionProfile(row.id),
-  connectedFragmentIds: (row.connected_fragment_ids?.length
-    ? row.connected_fragment_ids
-    : getDefaultConnectedFragmentIds(row.id)).slice(0, 5),
+  isOpenToConnections: row.is_open_to_connections ?? false,
+  connectedFragmentIds: (row.connected_fragment_ids ?? []).slice(0, 5),
   createdAt: row.created_at,
   updatedAt: row.updated_at,
   authorId: row.author_id,
@@ -110,12 +104,13 @@ export const loadLocalFragments = () => {
   const saved = localStorage.getItem('situated_memories');
   if (saved) {
     try {
-      return ensureFixedMapPositions(JSON.parse(saved));
+      const fragments = JSON.parse(saved) as WorldFragment[];
+      return ensureFixedMapPositions(fragments.filter(isLocalUserFragment));
     } catch (error) {
       console.error(error);
     }
   }
-  return ensureFixedMapPositions(INITIAL_FRAGMENTS);
+  return [];
 };
 
 export const loadLocalSavedFragmentIds = () => {
@@ -127,7 +122,7 @@ export const loadLocalSavedFragmentIds = () => {
       console.error(error);
     }
   }
-  return ['alti-1', 'memb-3'];
+  return [];
 };
 
 export const loadLocalTerritories = () => {
@@ -201,6 +196,7 @@ export const loadRemoteFragments = async (user: User | null) => {
   const { data, error } = await supabase
     .from('fragments')
     .select('*')
+    .not('author_id', 'is', null)
     .order('created_at', { ascending: false });
 
   if (error) throw error;

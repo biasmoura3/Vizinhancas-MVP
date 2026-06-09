@@ -5,17 +5,6 @@ export interface MapPosition {
   y: number;
 }
 
-const INITIAL_FRAGMENT_POSITIONS: Record<string, MapPosition> = {
-  'alti-1': { x: 30, y: 25 },
-  'poet-2': { x: 74, y: 35 },
-  'memb-3': { x: 50, y: 64 },
-  'mang-4': { x: 18, y: 72 },
-  'flor-5': { x: 82, y: 75 },
-  'vale-6': { x: 46, y: 42 },
-  'linc-7': { x: 88, y: 55 },
-  'vento-8': { x: 14, y: 40 }
-};
-
 const MIN_NODE_DISTANCE = 12;
 const GRID_X = [12, 26, 40, 54, 68, 82, 94];
 const GRID_Y = [16, 30, 44, 58, 72, 86];
@@ -36,7 +25,7 @@ const buildCandidatePositions = (): MapPosition[] => {
 };
 
 export const getFragmentMapPosition = (fragment: WorldFragment): MapPosition => {
-  return fragment.mapPosition ?? INITIAL_FRAGMENT_POSITIONS[fragment.id] ?? { x: 50, y: 50 };
+  return fragment.mapPosition ?? { x: 50, y: 50 };
 };
 
 export const findOpenMapPosition = (occupied: MapPosition[]): MapPosition => {
@@ -61,9 +50,7 @@ export const ensureFixedMapPositions = (fragments: WorldFragment[]): WorldFragme
   const occupied: MapPosition[] = [];
 
   return fragments.map((fragment) => {
-    const mapPosition = fragment.mapPosition
-      ?? INITIAL_FRAGMENT_POSITIONS[fragment.id]
-      ?? findOpenMapPosition(occupied);
+    const mapPosition = fragment.mapPosition ?? findOpenMapPosition(occupied);
 
     occupied.push(mapPosition);
 

@@ -46,7 +46,7 @@ O usuário é convidado a testemunhar. Pode ver fragmentos e suas referências i
 
 - `src/` — código principal do app em React + TypeScript.
 - `src/components/` — componentes de interface, como `CanvasMap`, `Sidebar`, `ProposalModal` e abas de conteúdo.
-- `src/data.ts` — dados iniciais de fragmentos, territórios e documentos.
+- `src/data.ts` — dados de territórios, imagens predefinidas e documentos informativos.
 - `src/types.ts` — definições centrais dos tipos usados pelo app.
 
 ## Tecnologias Usadas
@@ -112,7 +112,7 @@ O app pode operar em modo local quando as variáveis Supabase não estão config
 
 - crie um projeto Supabase;
 - execute `supabase/migrations/20260608000000_create_vizinhancas_schema.sql`;
-- execute `supabase/seed.sql` para carregar territórios e fragmentos iniciais;
+- execute `supabase/seed.sql` para carregar os territórios iniciais;
 - configure `VITE_SUPABASE_URL` com a URL raiz do projeto Supabase, por exemplo `https://seu-projeto.supabase.co`, sem `/auth/v1`, `/rest/v1` ou outros caminhos;
 - configure `VITE_SUPABASE_ANON_KEY` no ambiente do Vite/Vercel;
 - habilite o provedor de e-mail no painel de Auth do Supabase para cadastro, confirmacao e entrada com senha;
@@ -122,7 +122,7 @@ O app pode operar em modo local quando as variáveis Supabase não estão config
 
 As informacoes do perfil publico sao armazenadas automaticamente em `public.profiles` pelo trigger `on_auth_user_created` quando o usuario e criado em `auth.users`.
 
-O banco guarda usuários, perfis públicos, territórios, fragmentos e fragmentos salvos. Arquivos de mídia continuam fora do Supabase: a plataforma armazena apenas links públicos de visualização, com limite de 3 links por fragmento.
+O banco guarda usuários, perfis públicos, territórios, fragmentos criados por usuários e fragmentos salvos. Arquivos de mídia continuam fora do Supabase: a plataforma armazena apenas links públicos de visualização, com limite de 3 links por fragmento.
 
 ## Propósito
 
