@@ -704,14 +704,59 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 5: SUPPORT (Suporte) */}
-          {activeTab === 'suporte' && (
-            <div className="p-8 space-y-6 max-w-2xl mx-auto animate-in fade-in duration-300">
+          {/* TAB 5: HELP (Ajuda) */}
+          {activeTab === 'ajuda' && (
+            <div className="p-8 space-y-6 max-w-3xl mx-auto animate-in fade-in duration-300">
               <div className="space-y-1 border-b border-[#dac2b8]/10 pb-4">
-                <h2 className="font-serif text-2xl text-on-surface">Canais de Suporte e Ajuda</h2>
+                <h2 className="font-serif text-2xl text-on-surface">Ajuda</h2>
                 <p className="text-xs text-on-surface-variant leading-relaxed">
-                  Entre em contato conosco se precisar de ajuda ou quiser relatar algum problema.
+                  Um guia rapido para entrar na plataforma, navegar pela constelacao e cuidar dos seus fragmentos.
                 </p>
+              </div>
+
+              <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-6 space-y-5">
+                <div className="space-y-2">
+                  <span className="font-mono text-[10px] uppercase text-primary block font-semibold">Como funciona a plataforma</span>
+                  <p className="text-xs text-on-surface-variant leading-relaxed">
+                    Vizinhanças e um espaco para reunir fragmentos de mundo: registros sonoros, imagens, poemas, relatos e pequenos sinais da vida local. Cada fragmento pertence a um territorio e pode se aproximar de outros, formando uma constelacao de memorias, afetos e conexoes comunitarias.
+                  </p>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {[
+                    {
+                      title: 'Explorar a constelacao',
+                      text: 'Use o mapa para descobrir fragmentos, perceber aproximacoes entre eles e navegar pelos territorios disponiveis.',
+                    },
+                    {
+                      title: 'Propor fragmentos',
+                      text: 'Envie um registro visual, poetico ou sonoro. Voce pode indicar o territorio, contar a origem do fragmento e sugerir conexoes.',
+                    },
+                    {
+                      title: 'Guardar descobertas',
+                      text: 'Salve fragmentos importantes para voltar depois e acompanhar aquilo que mais conversa com o seu percurso.',
+                    },
+                    {
+                      title: 'Cuidar do acervo',
+                      text: 'Consulte a documentacao, leia o manifesto e acompanhe as orientacoes de zelo para manter o espaco coletivo organizado.',
+                    },
+                  ].map((item) => (
+                    <div key={item.title} className="rounded-lg border border-[#dac2b8]/10 bg-surface-container-low/45 p-4 space-y-2">
+                      <h3 className="text-sm font-semibold text-on-surface">{item.title}</h3>
+                      <p className="text-xs text-on-surface-variant/75 leading-relaxed">{item.text}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pt-4 border-t border-[#dac2b8]/10 space-y-3">
+                  <span className="font-mono text-[10px] uppercase text-primary block font-semibold">Primeiros passos</span>
+                  <ol className="space-y-2 text-xs text-on-surface-variant leading-relaxed list-decimal list-inside">
+                    <li>Comece pela Constelacao para ver como os fragmentos estao distribuidos no mapa.</li>
+                    <li>Abra um fragmento para ler seu conteudo, entender seu territorio e observar suas conexoes.</li>
+                    <li>Use Propor Fragmento quando quiser acrescentar uma lembranca, imagem, som ou texto ao acervo.</li>
+                    <li>Visite Documentacao e Manifesto para entender as regras de cuidado, autoria e uso comunitario.</li>
+                  </ol>
+                </div>
               </div>
 
               <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-6 space-y-4">

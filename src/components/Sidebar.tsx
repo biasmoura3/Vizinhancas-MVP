@@ -134,15 +134,15 @@ export default function Sidebar({
         </button>
 
         <button
-          onClick={() => setActiveTab('suporte')}
+          onClick={() => setActiveTab('ajuda')}
           className={`w-full flex items-center gap-3 px-4 py-3 rounded-full text-left transition-all ${
-            activeTab === 'suporte' 
+            activeTab === 'ajuda' 
               ? 'bg-surface-container-high text-primary font-medium' 
               : 'text-on-surface-variant hover:bg-surface-container/40 hover:text-on-surface'
           }`}
         >
           <HelpCircle className="w-4 h-4 mr-1" />
-          <span className="font-sans text-xs tracking-wide">Suporte</span>
+          <span className="font-sans text-xs tracking-wide">Ajuda</span>
         </button>
       </div>
     </aside>

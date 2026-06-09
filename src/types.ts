@@ -36,7 +36,7 @@ export interface UserProfile {
   createdAt: string;
 }
 
-export type ActiveTab = 'arquivo' | 'ponto' | 'doc' | 'zelo' | 'manifesto' | 'nexo' | 'settings' | 'suporte';
+export type ActiveTab = 'arquivo' | 'ponto' | 'doc' | 'zelo' | 'manifesto' | 'nexo' | 'settings' | 'ajuda';
 
 export interface LoreDocument {
   id: string;
