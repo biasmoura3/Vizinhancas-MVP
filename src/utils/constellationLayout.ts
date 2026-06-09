@@ -24,21 +24,32 @@ const buildCandidatePositions = (): MapPosition[] => {
   });
 };
 
+const shufflePositions = (positions: MapPosition[]): MapPosition[] => {
+  const shuffled = [...positions];
+
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+
+  return shuffled;
+};
+
 export const getFragmentMapPosition = (fragment: WorldFragment): MapPosition => {
   return fragment.mapPosition ?? { x: 50, y: 50 };
 };
 
 export const findOpenMapPosition = (occupied: MapPosition[]): MapPosition => {
-  const candidates = buildCandidatePositions();
+  const candidates = shufflePositions(buildCandidatePositions());
   const openCandidate = candidates.find((candidate) => isBreathingRoomAvailable(candidate, occupied));
 
   if (openCandidate) {
     return openCandidate;
   }
 
-  const fallbackIndex = occupied.length;
+  const fallbackIndex = occupied.length + Math.floor(Math.random() * 12);
   const angle = fallbackIndex * 2.399963229728653;
-  const radius = 28 + fallbackIndex * 1.4;
+  const radius = 22 + Math.random() * 30;
 
   return {
     x: Math.max(8, Math.min(92, 50 + Math.cos(angle) * radius)),

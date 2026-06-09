@@ -2,6 +2,7 @@ import { User } from '@supabase/supabase-js';
 import { TERRITORIES } from '../data';
 import { FragmentType, Territory, WorldFragment } from '../types';
 import { ensureFixedMapPositions } from '../utils/constellationLayout';
+import { sanitizeFragmentConnections } from '../utils/fragmentConnections';
 import { supabase } from '../lib/supabase';
 
 type FragmentRow = {
@@ -105,7 +106,7 @@ export const loadLocalFragments = () => {
   if (saved) {
     try {
       const fragments = JSON.parse(saved) as WorldFragment[];
-      return ensureFixedMapPositions(fragments.filter(isLocalUserFragment));
+      return sanitizeFragmentConnections(ensureFixedMapPositions(fragments.filter(isLocalUserFragment)));
     } catch (error) {
       console.error(error);
     }
@@ -200,7 +201,7 @@ export const loadRemoteFragments = async (user: User | null) => {
     .order('created_at', { ascending: false });
 
   if (error) throw error;
-  return ensureFixedMapPositions((data ?? []).map((row) => toFragment(row, user)));
+  return sanitizeFragmentConnections(ensureFixedMapPositions((data ?? []).map((row) => toFragment(row, user))));
 };
 
 export const loadRemoteSavedFragmentIds = async (user: User | null) => {

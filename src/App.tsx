@@ -15,6 +15,7 @@ import ZeloTab from './components/tabs/ZeloTab';
 import { ActiveTab, Territory, WorldFragment } from './types';
 import { TERRITORIES } from './data';
 import { ensureFixedMapPositions, findOpenMapPosition, getFragmentMapPosition } from './utils/constellationLayout';
+import { sanitizeConnectedFragmentIds } from './utils/fragmentConnections';
 import { isSupabaseConfigured, supabase, supabaseConfigError } from './lib/supabase';
 import {
   createRemoteFragment,
@@ -292,6 +293,11 @@ export default function App() {
 
     const uniqueId = `frag-${Date.now()}`;
     const mapPosition = findOpenMapPosition(fragments.map(getFragmentMapPosition));
+    const connectedFragmentIds = sanitizeConnectedFragmentIds(
+      newFragData.connectedFragmentIds,
+      uniqueId,
+      fragments.map((fragment) => fragment.id),
+    );
 
     if (isRemoteMode && user) {
       try {
@@ -300,7 +306,7 @@ export default function App() {
           ...newFragData,
           territory: fragmentTerritory.id,
           mediaLinks: newFragData.mediaLinks?.slice(0, 3) ?? [],
-          connectedFragmentIds: newFragData.connectedFragmentIds?.slice(0, 5) ?? [],
+          connectedFragmentIds,
           isOpenToConnections: newFragData.isOpenToConnections ?? false,
           mapPosition,
         };
@@ -322,7 +328,7 @@ export default function App() {
       ...newFragData,
       territory: fragmentTerritory.id,
       mediaLinks: newFragData.mediaLinks?.slice(0, 3) ?? [],
-      connectedFragmentIds: newFragData.connectedFragmentIds?.slice(0, 5) ?? [],
+      connectedFragmentIds,
       isOpenToConnections: newFragData.isOpenToConnections ?? false,
       mapPosition,
     };
@@ -349,11 +355,18 @@ export default function App() {
         const fragmentTerritory = updatedData.territory
           ? await ensureTerritoryForFragment(updatedData.territory)
           : null;
+        const connectedFragmentIds = updatedData.connectedFragmentIds === undefined
+          ? undefined
+          : sanitizeConnectedFragmentIds(
+              updatedData.connectedFragmentIds,
+              id,
+              fragments.map((fragment) => fragment.id),
+            );
         const preparedData = {
           ...updatedData,
           ...(fragmentTerritory ? { territory: fragmentTerritory.id } : {}),
           mediaLinks: updatedData.mediaLinks?.slice(0, 3),
-          connectedFragmentIds: updatedData.connectedFragmentIds?.slice(0, 5),
+          connectedFragmentIds,
         };
         const updatedFragment = await updateRemoteFragment(id, preparedData, user);
         if (fragmentTerritory) {
@@ -375,11 +388,18 @@ export default function App() {
     const fragmentTerritory = updatedData.territory
       ? await ensureTerritoryForFragment(updatedData.territory)
       : null;
+    const connectedFragmentIds = updatedData.connectedFragmentIds === undefined
+      ? undefined
+      : sanitizeConnectedFragmentIds(
+          updatedData.connectedFragmentIds,
+          id,
+          fragments.map((fragment) => fragment.id),
+        );
     const preparedData = {
       ...updatedData,
       ...(fragmentTerritory ? { territory: fragmentTerritory.id } : {}),
       mediaLinks: updatedData.mediaLinks?.slice(0, 3),
-      connectedFragmentIds: updatedData.connectedFragmentIds?.slice(0, 5),
+      connectedFragmentIds,
     };
 
     if (fragmentTerritory) {
