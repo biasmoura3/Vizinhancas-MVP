@@ -52,7 +52,7 @@ export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authMessage, setAuthMessage] = useState<string | null>(null);
   const [authError, setAuthError] = useState<string | null>(null);
-  const [dataStatus, setDataStatus] = useState(isSupabaseConfigured ? 'Conectando ao Supabase...' : 'Modo local');
+  const [dataStatus, setDataStatus] = useState(isSupabaseConfigured ? 'Conectando ao armazenamento online...' : 'Modo local');
 
   const isRemoteMode = isSupabaseConfigured && Boolean(supabase);
   const displayName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'Ouvinte Atento';
@@ -63,7 +63,7 @@ export default function App() {
     if (!(error instanceof Error)) return fallback;
 
     if (error.message.includes('Invalid path specified in request URL')) {
-      return 'Confira se VITE_SUPABASE_URL esta usando a URL raiz do projeto Supabase, sem /auth/v1 ou outros caminhos.';
+      return 'Ha um problema na configuracao da conexao. Avise a equipe para revisar o ambiente.';
     }
 
     if (error.message.includes('Invalid login credentials')) {
@@ -117,7 +117,7 @@ export default function App() {
     setTerritories(remoteTerritories);
     setFragments(remoteFragments);
     setSavedFragmentIds(remoteSavedIds);
-    setDataStatus(activeUser ? 'Conectado ao Supabase' : 'Supabase conectado: entre para contribuir');
+    setDataStatus(activeUser ? 'Armazenamento online conectado' : 'Armazenamento online ativo: entre para contribuir');
   };
 
   useEffect(() => {
@@ -135,7 +135,7 @@ export default function App() {
       } catch (error) {
         console.error(error);
         if (!isMounted) return;
-        setDataStatus('Falha ao carregar Supabase; usando dados locais');
+        setDataStatus('Falha ao carregar dados online; usando dados locais');
         setTerritories(TERRITORIES);
         setFragments(loadLocalFragments());
         setSavedFragmentIds(loadLocalSavedFragmentIds());
@@ -156,7 +156,7 @@ export default function App() {
       window.setTimeout(() => {
         refreshRemoteData(activeUser).catch((error) => {
           console.error(error);
-          setDataStatus('Erro ao sincronizar sessão Supabase');
+          setDataStatus('Erro ao sincronizar a sessao');
         });
       }, 0);
     });
@@ -256,7 +256,7 @@ export default function App() {
         setActiveTab('nexo');
       } catch (error) {
         console.error(error);
-        alert('Não foi possível publicar o fragmento no Supabase.');
+        alert('Nao foi possivel publicar o fragmento agora.');
       }
       return;
     }
@@ -291,7 +291,7 @@ export default function App() {
         setFragmentToEdit(null);
       } catch (error) {
         console.error(error);
-        alert('Não foi possível editar o fragmento no Supabase.');
+        alert('Nao foi possivel editar o fragmento agora.');
       }
       return;
     }
@@ -330,7 +330,7 @@ export default function App() {
         await deleteRemoteFragment(deletedId);
       } catch (error) {
         console.error(error);
-        alert('Não foi possível excluir o fragmento no Supabase.');
+        alert('Nao foi possivel excluir o fragmento agora.');
         return;
       }
     }
@@ -346,7 +346,7 @@ export default function App() {
 
   const handleResetData = () => {
     if (isRemoteMode) {
-      alert('No modo Supabase, restaure os dados executando o seed do projeto no painel ou CLI do Supabase.');
+      alert('No modo online, a restauracao dos dados originais precisa ser feita pela equipe tecnica.');
       return;
     }
 
@@ -403,7 +403,7 @@ export default function App() {
           return;
         }
 
-        throw new Error('O Supabase nao retornou uma sessao nem um usuario para este cadastro.');
+        throw new Error('Nao foi possivel confirmar o cadastro agora.');
       }
 
       const { error } = await supabase.auth.signInWithPassword({
@@ -465,7 +465,7 @@ export default function App() {
       <HeaderBar
         currentTerritory={currentTerritory}
         displayName={displayName}
-        authLabel={isRemoteMode ? (user ? 'Sessão Supabase' : 'Entrar para contribuir') : 'Modo local'}
+        authLabel={isRemoteMode ? (user ? 'Sessao ativa' : 'Entrar para contribuir') : 'Modo local'}
         isAuthenticated={!isRemoteMode || Boolean(user)}
         onAuthClick={openAuthModal}
       />
@@ -534,7 +534,7 @@ export default function App() {
 
               <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-6 space-y-6">
                 <div className="space-y-3">
-                  <h3 className="text-sm font-semibold text-on-surface">Conexão Supabase</h3>
+                  <h3 className="text-sm font-semibold text-on-surface">Conexao de dados</h3>
                   <p className="text-xs text-on-surface-variant leading-relaxed">
                     {dataStatus}
                   </p>
@@ -572,7 +572,7 @@ export default function App() {
                     )
                   ) : (
                     <p className="text-xs text-on-surface-variant/70 leading-relaxed">
-                      {supabaseConfigError ?? 'Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY para ativar armazenamento remoto.'}
+                      {supabaseConfigError ?? 'Configure o ambiente para ativar o armazenamento online.'}
                     </p>
                   )}
                 </div>

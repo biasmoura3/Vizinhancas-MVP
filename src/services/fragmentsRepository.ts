@@ -151,7 +151,7 @@ export const createRemoteFragment = async (
   id: string,
   user: User,
 ) => {
-  if (!supabase) throw new Error('Supabase não configurado.');
+  if (!supabase) throw new Error('Armazenamento online nao configurado.');
 
   const { data, error } = await supabase
     .from('fragments')
@@ -168,7 +168,7 @@ export const updateRemoteFragment = async (
   fragment: Partial<Omit<WorldFragment, 'id' | 'createdAt'>>,
   user: User,
 ) => {
-  if (!supabase) throw new Error('Supabase não configurado.');
+  if (!supabase) throw new Error('Armazenamento online nao configurado.');
 
   const { data, error } = await supabase
     .from('fragments')
@@ -182,7 +182,7 @@ export const updateRemoteFragment = async (
 };
 
 export const deleteRemoteFragment = async (id: string) => {
-  if (!supabase) throw new Error('Supabase não configurado.');
+  if (!supabase) throw new Error('Armazenamento online nao configurado.');
 
   const { error } = await supabase
     .from('fragments')
@@ -193,7 +193,7 @@ export const deleteRemoteFragment = async (id: string) => {
 };
 
 export const saveRemoteFragment = async (fragmentId: string, user: User) => {
-  if (!supabase) throw new Error('Supabase não configurado.');
+  if (!supabase) throw new Error('Armazenamento online nao configurado.');
 
   const { error } = await supabase
     .from('saved_fragments')
@@ -203,7 +203,7 @@ export const saveRemoteFragment = async (fragmentId: string, user: User) => {
 };
 
 export const unsaveRemoteFragment = async (fragmentId: string, user: User) => {
-  if (!supabase) throw new Error('Supabase não configurado.');
+  if (!supabase) throw new Error('Armazenamento online nao configurado.');
 
   const { error } = await supabase
     .from('saved_fragments')

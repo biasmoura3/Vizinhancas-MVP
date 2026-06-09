@@ -25,11 +25,11 @@ const normalizedSupabaseUrl = normalizeSupabaseUrl(supabaseUrl);
 const normalizedAnonKey = supabaseAnonKey?.trim();
 
 export const supabaseConfigError = !supabaseUrl || !normalizedAnonKey
-  ? 'Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY para ativar cadastro e entrada com senha.'
+  ? 'Armazenamento online desativado: avise a equipe para configurar o ambiente.'
   : !normalizedSupabaseUrl
-    ? 'VITE_SUPABASE_URL precisa ser a URL do projeto Supabase, comecando com https://.'
+    ? 'Armazenamento online indisponivel: a URL de conexao precisa ser revisada.'
     : PLACEHOLDER_VALUES.has(normalizedAnonKey)
-      ? 'Substitua VITE_SUPABASE_ANON_KEY pela chave anon publica do projeto Supabase.'
+      ? 'Armazenamento online indisponivel: a chave de conexao precisa ser revisada.'
       : null;
 
 export const isSupabaseConfigured = !supabaseConfigError;
