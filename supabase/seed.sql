@@ -19,6 +19,8 @@ insert into public.fragments (
   map_position_y,
   image_url,
   media_links,
+  is_open_to_connections,
+  connected_fragment_ids,
   author_id,
   created_at
 )
@@ -34,6 +36,8 @@ values
     25,
     null,
     array[]::text[],
+    true,
+    array['poet-2', 'memb-3']::text[],
     null,
     '2026-05-12T14:35:00Z'
   ),
@@ -48,6 +52,8 @@ values
     35,
     null,
     array[]::text[],
+    true,
+    array['alti-1']::text[],
     null,
     '2026-05-18T09:12:00Z'
   ),
@@ -62,6 +68,8 @@ values
     64,
     'https://images.unsplash.com/photo-1545231027-63b39f612acf?q=80&w=600&auto=format&fit=crop',
     array['https://images.unsplash.com/photo-1545231027-63b39f612acf?q=80&w=600&auto=format&fit=crop'],
+    true,
+    array['alti-1']::text[],
     null,
     '2026-05-24T18:40:00Z'
   ),
@@ -75,6 +83,8 @@ values
     18,
     72,
     null,
+    array[]::text[],
+    true,
     array[]::text[],
     null,
     '2026-05-27T11:20:00Z'
@@ -90,6 +100,8 @@ values
     75,
     'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=600&auto=format&fit=crop',
     array['https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=600&auto=format&fit=crop'],
+    true,
+    array['linc-7']::text[],
     null,
     '2026-05-29T10:00:00Z'
   ),
@@ -103,6 +115,8 @@ values
     46,
     42,
     null,
+    array[]::text[],
+    true,
     array[]::text[],
     null,
     '2026-06-01T12:00:00Z'
@@ -118,6 +132,8 @@ values
     55,
     'https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=600&auto=format&fit=crop',
     array['https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=600&auto=format&fit=crop'],
+    true,
+    array['flor-5']::text[],
     null,
     '2026-06-02T15:30:00Z'
   ),
@@ -132,6 +148,8 @@ values
     40,
     null,
     array[]::text[],
+    true,
+    array[]::text[],
     null,
     '2026-06-02T19:45:00Z'
   )
@@ -145,4 +163,6 @@ set title = excluded.title,
     map_position_y = excluded.map_position_y,
     image_url = excluded.image_url,
     media_links = excluded.media_links,
+    is_open_to_connections = excluded.is_open_to_connections,
+    connected_fragment_ids = excluded.connected_fragment_ids,
     created_at = excluded.created_at;

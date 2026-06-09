@@ -42,10 +42,13 @@ create table if not exists public.fragments (
   map_position_y numeric,
   image_url text,
   media_links text[] not null default array[]::text[],
+  is_open_to_connections boolean not null default false,
+  connected_fragment_ids text[] not null default array[]::text[],
   author_id uuid references auth.users(id) on delete set null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
-  constraint fragments_media_links_max_3 check (cardinality(media_links) <= 3)
+  constraint fragments_media_links_max_3 check (cardinality(media_links) <= 3),
+  constraint fragments_connected_fragment_ids_max_5 check (cardinality(connected_fragment_ids) <= 5)
 );
 
 create table if not exists public.saved_fragments (

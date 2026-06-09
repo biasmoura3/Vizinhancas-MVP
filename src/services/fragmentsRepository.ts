@@ -15,6 +15,8 @@ type FragmentRow = {
   map_position_y: number | null;
   image_url: string | null;
   media_links: string[] | null;
+  is_open_to_connections: boolean | null;
+  connected_fragment_ids: string[] | null;
   author_id: string | null;
   created_at: string;
   updated_at: string;
@@ -48,6 +50,8 @@ const toFragment = (row: FragmentRow, user: User | null): WorldFragment => ({
     : undefined,
   imageUrl: row.image_url ?? undefined,
   mediaLinks: (row.media_links ?? []).slice(0, 3),
+  isOpenToConnections: row.is_open_to_connections ?? false,
+  connectedFragmentIds: (row.connected_fragment_ids ?? []).slice(0, 5),
   createdAt: row.created_at,
   updatedAt: row.updated_at,
   authorId: row.author_id,
@@ -69,6 +73,8 @@ const toFragmentInsert = (
   map_position_y: fragment.mapPosition?.y ?? null,
   image_url: fragment.imageUrl ?? null,
   media_links: (fragment.mediaLinks ?? []).slice(0, 3),
+  is_open_to_connections: fragment.isOpenToConnections ?? false,
+  connected_fragment_ids: (fragment.connectedFragmentIds ?? []).slice(0, 5),
   author_id: user.id,
 });
 
@@ -86,6 +92,8 @@ const toFragmentUpdate = (fragment: Partial<Omit<WorldFragment, 'id' | 'createdA
     : {}),
   ...(fragment.imageUrl !== undefined ? { image_url: fragment.imageUrl ?? null } : {}),
   ...(fragment.mediaLinks !== undefined ? { media_links: fragment.mediaLinks.slice(0, 3) } : {}),
+  ...(fragment.isOpenToConnections !== undefined ? { is_open_to_connections: fragment.isOpenToConnections } : {}),
+  ...(fragment.connectedFragmentIds !== undefined ? { connected_fragment_ids: fragment.connectedFragmentIds.slice(0, 5) } : {}),
 });
 
 export const loadLocalFragments = () => {

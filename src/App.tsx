@@ -298,6 +298,8 @@ export default function App() {
           ...newFragData,
           territory: fragmentTerritory.id,
           mediaLinks: newFragData.mediaLinks?.slice(0, 3) ?? [],
+          connectedFragmentIds: newFragData.connectedFragmentIds?.slice(0, 5) ?? [],
+          isOpenToConnections: newFragData.isOpenToConnections ?? false,
           mapPosition,
         };
         const createdFragment = await createRemoteFragment(preparedFragment, uniqueId, user);
@@ -318,6 +320,8 @@ export default function App() {
       ...newFragData,
       territory: fragmentTerritory.id,
       mediaLinks: newFragData.mediaLinks?.slice(0, 3) ?? [],
+      connectedFragmentIds: newFragData.connectedFragmentIds?.slice(0, 5) ?? [],
+      isOpenToConnections: newFragData.isOpenToConnections ?? false,
       mapPosition,
     };
 
@@ -347,6 +351,7 @@ export default function App() {
           ...updatedData,
           ...(fragmentTerritory ? { territory: fragmentTerritory.id } : {}),
           mediaLinks: updatedData.mediaLinks?.slice(0, 3),
+          connectedFragmentIds: updatedData.connectedFragmentIds?.slice(0, 5),
         };
         const updatedFragment = await updateRemoteFragment(id, preparedData, user);
         if (fragmentTerritory) {
@@ -372,6 +377,7 @@ export default function App() {
       ...updatedData,
       ...(fragmentTerritory ? { territory: fragmentTerritory.id } : {}),
       mediaLinks: updatedData.mediaLinks?.slice(0, 3),
+      connectedFragmentIds: updatedData.connectedFragmentIds?.slice(0, 5),
     };
 
     if (fragmentTerritory) {
@@ -417,7 +423,12 @@ export default function App() {
       }
     }
 
-    setFragments(prev => prev.filter(f => f.id !== deletedId));
+    setFragments(prev => prev
+      .filter(f => f.id !== deletedId)
+      .map(f => ({
+        ...f,
+        connectedFragmentIds: f.connectedFragmentIds?.filter(id => id !== deletedId),
+      })));
     setSavedFragmentIds(prev => prev.filter(id => id !== deletedId));
     if (selectedFragmentId === deletedId) {
       setSelectedFragmentId(null);
@@ -737,6 +748,7 @@ export default function App() {
         onSubmit={handleAddFragment}
         currentTerritory={currentTerritory}
         territories={territories}
+        fragments={fragments}
       />
 
       {/* Dynamic edit fragment modal handler */}
@@ -748,6 +760,7 @@ export default function App() {
         }}
         onSubmit={handleEditFragment}
         fragment={fragmentToEdit}
+        fragments={fragments}
       />
 
       <DeleteFragmentModal

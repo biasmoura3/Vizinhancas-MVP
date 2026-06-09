@@ -13,6 +13,8 @@ export interface WorldFragment {
   };
   imageUrl?: string;
   mediaLinks?: string[];
+  isOpenToConnections?: boolean;
+  connectedFragmentIds?: string[];
   createdAt: string;
   updatedAt?: string;
   authorId?: string | null;

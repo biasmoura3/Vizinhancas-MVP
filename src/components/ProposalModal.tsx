@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { WorldFragment, FragmentType, Territory } from '../types';
+import FragmentConnectionsField from './FragmentConnectionsField';
 import { 
   X, 
   Sprout, 
@@ -16,6 +17,7 @@ interface ProposalModalProps {
   onSubmit: (fragment: Omit<WorldFragment, 'id' | 'createdAt'>) => void;
   currentTerritory: string;
   territories: Territory[];
+  fragments: WorldFragment[];
 }
 
 export default function ProposalModal({ 
@@ -23,7 +25,8 @@ export default function ProposalModal({
   onClose, 
   onSubmit,
   currentTerritory,
-  territories
+  territories,
+  fragments
 }: ProposalModalProps) {
   
   const [title, setTitle] = useState('');
@@ -32,6 +35,8 @@ export default function ProposalModal({
   const [territory, setTerritory] = useState(currentTerritory);
   const [content, setContent] = useState('');
   const [mediaLinks, setMediaLinks] = useState<string[]>(['']);
+  const [isOpenToConnections, setIsOpenToConnections] = useState(true);
+  const [connectedFragmentIds, setConnectedFragmentIds] = useState<string[]>([]);
   const territoryOptions = Array.from(
     new Map(territories.map((item) => [item.id, item])).values(),
   );
@@ -77,7 +82,9 @@ export default function ProposalModal({
       territory: territory || 'Setor 7G',
       content: content || 'Nenhuma narração tecida.',
       imageUrl: previewUrl,
-      mediaLinks: cleanedMediaLinks
+      mediaLinks: cleanedMediaLinks,
+      isOpenToConnections,
+      connectedFragmentIds: connectedFragmentIds.slice(0, 5),
     });
 
     // Reset Form state
@@ -85,6 +92,8 @@ export default function ProposalModal({
     setSource('');
     setContent('');
     setMediaLinks(['']);
+    setIsOpenToConnections(true);
+    setConnectedFragmentIds([]);
     onClose();
   };
 
@@ -195,6 +204,27 @@ export default function ProposalModal({
                     Se o territorio ainda nao existir, ele sera cadastrado junto com o fragmento.
                   </p>
                 </div>
+
+                <label className="flex items-start gap-3 rounded-lg border border-[#dac2b8]/15 bg-surface-container-low/35 p-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={isOpenToConnections}
+                    onChange={(e) => setIsOpenToConnections(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border-[#dac2b8]/30 bg-transparent text-primary focus:ring-primary/30"
+                  />
+                  <span className="space-y-1">
+                    <span className="block text-xs font-semibold text-on-surface">Aberto a conexoes da comunidade</span>
+                    <span className="block text-[11px] leading-relaxed text-on-surface-variant/70">
+                      Outros membros poderao ligar seus fragmentos a este.
+                    </span>
+                  </span>
+                </label>
+
+                <FragmentConnectionsField
+                  fragments={fragments}
+                  selectedIds={connectedFragmentIds}
+                  onChange={setConnectedFragmentIds}
+                />
 
               </div>
 

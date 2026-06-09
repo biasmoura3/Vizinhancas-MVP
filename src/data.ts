@@ -9,6 +9,8 @@ export const INITIAL_FRAGMENTS: WorldFragment[] = [
     territory: 'Setor 4',
     content: 'GravaÃ§Ã£o binaural das correntes de ar frio que sopram atravÃ©s das frestas rochosas rituais no desfiladeiro alto de TarapacÃ¡. O som simula uma flauta ancestral, modulada unicamente pelo sopro atmosfÃ©rico.',
     createdAt: '2026-05-12T14:35:00Z',
+    isOpenToConnections: true,
+    connectedFragmentIds: ['poet-2', 'memb-3'],
   },
   {
     id: 'poet-2',
@@ -18,6 +20,8 @@ export const INITIAL_FRAGMENTS: WorldFragment[] = [
     territory: 'Setor 4',
     content: 'Fragmento lÃ­rico coletado durante os rituais de semeadura noturna. Reflete a recusa histÃ³rica do registro burocrÃ¡tico em prol de uma marcaÃ§Ã£o ritmada corporal na geografia viva do territÃ³rio.',
     createdAt: '2026-05-18T09:12:00Z',
+    isOpenToConnections: true,
+    connectedFragmentIds: ['alti-1'],
   },
   {
     id: 'memb-3',
@@ -28,6 +32,8 @@ export const INITIAL_FRAGMENTS: WorldFragment[] = [
     content: 'Registro fotogrÃ¡fico de uma simbiose de musgos andinos cultivados sobre hardware de comunicaÃ§Ã£o abandonado. De forma fascinante, o musgo formou canais umectantes que mantÃªm os circuitos reativos sob baixas correntes, retransmitindo dados de acoplamento bio-sintÃ©tico.',
     imageUrl: 'https://images.unsplash.com/photo-1545231027-63b39f612acf?q=80&w=600&auto=format&fit=crop', // Beautiful high-quality moss macroshot as base
     createdAt: '2026-05-24T18:40:00Z',
+    isOpenToConnections: true,
+    connectedFragmentIds: ['alti-1'],
   },
   {
     id: 'mang-4',
@@ -37,6 +43,8 @@ export const INITIAL_FRAGMENTS: WorldFragment[] = [
     territory: 'Setor 2A',
     content: 'RuÃ­dos estalados produzidos por colÃ´nias de caranguejos de mangue sob as raÃ­zes suspensas durante o pico da marÃ© vazante. Formam um mapa sonoro de sedimentaÃ§Ã£o e fluxo de Ã¡gua salgada.',
     createdAt: '2026-05-27T11:20:00Z',
+    isOpenToConnections: true,
+    connectedFragmentIds: [],
   },
   {
     id: 'flor-5',
@@ -47,6 +55,8 @@ export const INITIAL_FRAGMENTS: WorldFragment[] = [
     content: 'RaÃ­zes aÃ©reas impregnadas com biocatalisadores biolinescentes naturais que reagem aos micro-tremores de terra. O brilho pulsa em tons esmeralda a cada vibraÃ§Ã£o infinitesimal do leito tectÃ´nico subjacente.',
     imageUrl: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?q=80&w=600&auto=format&fit=crop', // Beautiful glowing roots image
     createdAt: '2026-05-29T10:00:00Z',
+    isOpenToConnections: true,
+    connectedFragmentIds: ['linc-7'],
     isUserCreated: true,
   },
   {
@@ -57,6 +67,8 @@ export const INITIAL_FRAGMENTS: WorldFragment[] = [
     territory: 'Setor 9N',
     content: 'ExpressÃ£o falada transmitida por tubos hÃ­dricos em fossos subterrÃ¢neos desativados. Atua como um registro do movimento invisÃ­vel dos lenÃ§Ã³is profundos e murmÃºrios geolÃ³gicos compartilhados.',
     createdAt: '2026-06-01T12:00:00Z',
+    isOpenToConnections: true,
+    connectedFragmentIds: [],
   },
   {
     id: 'linc-7',
@@ -67,6 +79,8 @@ export const INITIAL_FRAGMENTS: WorldFragment[] = [
     content: 'Comunidades simbiÃ³ticas circulares formadas na interface entre as cascas de Ã¡rvores decÃ­duas e placas metÃ¡licas fotovoltaicas intemperizadas, gerando micro-padrÃµes de absorÃ§Ã£o de luz.',
     imageUrl: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=600&auto=format&fit=crop',
     createdAt: '2026-06-02T15:30:00Z',
+    isOpenToConnections: true,
+    connectedFragmentIds: ['flor-5'],
     isUserCreated: true,
   },
   {
@@ -77,6 +91,8 @@ export const INITIAL_FRAGMENTS: WorldFragment[] = [
     territory: 'Setor 4',
     content: 'Registro acÃºstico sintetizado a partir de alteraÃ§Ãµes geomagnÃ©ticas fracas causadas por ventos solares na atmosfera de baixa pressÃ£o do Altiplano TarapacÃ¡.',
     createdAt: '2026-06-02T19:45:00Z',
+    isOpenToConnections: true,
+    connectedFragmentIds: [],
   }
 ];
 

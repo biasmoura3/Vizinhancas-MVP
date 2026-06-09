@@ -8,7 +8,8 @@ import {
   Image as ImageIcon,
   Locate,
   X,
-  Bookmark
+  Bookmark,
+  Link2
 } from 'lucide-react';
 import FragmentViewer from './FragmentViewer';
 import { getFragmentMapPosition } from '../utils/constellationLayout';
@@ -142,6 +143,37 @@ export default function CanvasMap({
 
   // Find currently active details info
   const activeFragment = fragments.find(f => f.id === selectedId) || null;
+  const fragmentById = new Map(fragments.map((fragment) => [fragment.id, fragment]));
+  const isVisibleByFilter = (fragment: WorldFragment) => filterTerritory === 'todos' || fragment.territory === filterTerritory;
+  const visibleConnectionLines = fragments.flatMap((fragment) => {
+    if (!isVisibleByFilter(fragment)) return [];
+
+    return (fragment.connectedFragmentIds ?? []).flatMap((connectedId) => {
+      const connectedFragment = fragmentById.get(connectedId);
+      if (!connectedFragment || !isVisibleByFilter(connectedFragment)) return [];
+
+      const pairKey = [fragment.id, connectedId].sort().join('::');
+      if (fragment.id > connectedId && connectedFragment.connectedFragmentIds?.includes(fragment.id)) return [];
+
+      const from = getFragmentMapPosition(fragment);
+      const to = getFragmentMapPosition(connectedFragment);
+      const isActive = activeFragment
+        ? fragment.id === activeFragment.id || connectedId === activeFragment.id
+        : false;
+
+      return [{ pairKey, from, to, isActive }];
+    });
+  });
+  const activeConnectedFragments = activeFragment
+    ? Array.from(new Set([
+        ...(activeFragment.connectedFragmentIds ?? []),
+        ...fragments
+          .filter((fragment) => fragment.connectedFragmentIds?.includes(activeFragment.id))
+          .map((fragment) => fragment.id),
+      ]))
+        .map((id) => fragmentById.get(id))
+        .filter((fragment): fragment is WorldFragment => Boolean(fragment))
+    : [];
   const activeMediaLinks = activeFragment
     ? Array.from(new Set([
         ...(activeFragment.mediaLinks ?? []),
@@ -198,6 +230,21 @@ export default function CanvasMap({
           }}
           className="absolute inset-0 select-none transition-transform duration-75 ease-out"
         >
+          <svg className="absolute inset-0 z-10 w-full h-full overflow-visible pointer-events-none" aria-hidden="true">
+            {visibleConnectionLines.map((line) => (
+              <line
+                key={line.pairKey}
+                x1={`${line.from.x}%`}
+                y1={`${line.from.y}%`}
+                x2={`${line.to.x}%`}
+                y2={`${line.to.y}%`}
+                className={line.isActive ? 'stroke-primary/60' : 'stroke-[#dac2b8]/18'}
+                strokeWidth={line.isActive ? 1.4 : 0.8}
+                strokeLinecap="round"
+              />
+            ))}
+          </svg>
+
           {/* FLOATING TEXTURED NODES (Sleek Obsidian view) */}
           {fragments.map((frag) => {
             const isFilterMatch = filterTerritory === 'todos' || frag.territory === filterTerritory;
@@ -376,6 +423,31 @@ export default function CanvasMap({
                       Link do vídeo {index + 1}
                     </a>
                   ))}
+                </div>
+              )}
+
+              {activeConnectedFragments.length > 0 && (
+                <div className="border-t border-[#dac2b8]/10 pt-3 space-y-2">
+                  <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase text-on-surface-variant/65 font-semibold select-none">
+                    <Link2 className="w-3.5 h-3.5 text-primary" />
+                    <span>Conexoes</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {activeConnectedFragments.map((connectedFragment) => (
+                      <button
+                        key={connectedFragment.id}
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onSelectNode(connectedFragment.id);
+                        }}
+                        className="max-w-full inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary hover:bg-primary/20 transition-all cursor-pointer"
+                      >
+                        <Link2 className="w-3 h-3 shrink-0" />
+                        <span className="truncate">{connectedFragment.title}</span>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
 
