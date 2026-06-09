@@ -119,7 +119,7 @@ export default function ZeloTab({
               : 'text-on-surface-variant/60 hover:text-on-surface hover:bg-[#dac2b8]/5'
           }`}
         >
-          Meus Fragmentos Registrados
+          Meus fragmentos
           <span className="bg-primary/20 text-primary border border-primary/20 text-[9px] px-1.5 py-0.2 rounded-full font-sans">
             {userRegisteredFragments.length}
           </span>
@@ -135,7 +135,7 @@ export default function ZeloTab({
               : 'text-on-surface-variant/60 hover:text-on-surface hover:bg-[#dac2b8]/5'
           }`}
         >
-          Acervo Salvo (Outros)
+          Salvos
           <span className="bg-[#ffb596]/15 border border-[#ffb596]/15 text-[#ffb596] text-[9px] px-1.5 py-0.2 rounded-full font-sans">
             {savedFragments.length}
           </span>
@@ -215,7 +215,7 @@ export default function ZeloTab({
                           }}
                           className="px-4 py-1.5 bg-primary/10 border border-primary/25 hover:bg-primary/20 text-primary hover:text-primary-bright text-xs font-semibold rounded-full flex items-center gap-1 cursor-pointer transition-all font-sans"
                         >
-                          Navegar Fragmento
+                          Navegar
                           <ArrowUpRight className="w-3 h-3" />
                         </button>
                       )}
@@ -299,7 +299,7 @@ export default function ZeloTab({
                         }}
                         className="px-4 py-2 bg-[#ffb596]/10 border border-[#ffb596]/20 hover:bg-[#ffb596]/20 text-[#ffb596] text-xs font-semibold rounded-full flex items-center gap-1.5 cursor-pointer transition-all font-sans"
                       >
-                        Navegar na Constelação
+                        Navegar
                         <ArrowUpRight className="w-3.5 h-3.5" />
                       </button>
                     )}
