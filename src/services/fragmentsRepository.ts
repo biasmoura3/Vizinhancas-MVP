@@ -27,6 +27,8 @@ type TerritoryRow = {
   created_at: string;
 };
 
+const TERRITORIES_STORAGE_KEY = 'vizinhancas_territories';
+
 const toTerritory = (row: TerritoryRow): Territory => ({
   id: row.id,
   name: row.name,
@@ -110,6 +112,22 @@ export const loadLocalSavedFragmentIds = () => {
   return ['alti-1', 'memb-3'];
 };
 
+export const loadLocalTerritories = () => {
+  const saved = localStorage.getItem(TERRITORIES_STORAGE_KEY);
+  if (saved) {
+    try {
+      return JSON.parse(saved);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  return TERRITORIES;
+};
+
+export const saveLocalTerritories = (territories: Territory[]) => {
+  localStorage.setItem(TERRITORIES_STORAGE_KEY, JSON.stringify(territories));
+};
+
 export const loadRemoteTerritories = async () => {
   if (!supabase) return TERRITORIES;
 
@@ -120,6 +138,43 @@ export const loadRemoteTerritories = async () => {
 
   if (error) throw error;
   return (data ?? []).map(toTerritory);
+};
+
+export const createRemoteTerritory = async (territory: Territory) => {
+  if (!supabase) throw new Error('Armazenamento online nao configurado.');
+
+  const { data: existingTerritory, error: selectError } = await supabase
+    .from('territories')
+    .select('*')
+    .eq('id', territory.id)
+    .maybeSingle();
+
+  if (selectError) throw selectError;
+  if (existingTerritory) return toTerritory(existingTerritory);
+
+  const { data, error } = await supabase
+    .from('territories')
+    .insert({
+      id: territory.id,
+      name: territory.name,
+      coordinates: territory.coordinates || null,
+    })
+    .select('*')
+    .single();
+
+  if (error?.code === '23505') {
+    const { data: repeatedTerritory, error: repeatedSelectError } = await supabase
+      .from('territories')
+      .select('*')
+      .eq('id', territory.id)
+      .single();
+
+    if (repeatedSelectError) throw repeatedSelectError;
+    return toTerritory(repeatedTerritory);
+  }
+
+  if (error) throw error;
+  return toTerritory(data);
 };
 
 export const loadRemoteFragments = async (user: User | null) => {

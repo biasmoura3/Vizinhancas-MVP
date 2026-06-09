@@ -18,13 +18,16 @@ import { ensureFixedMapPositions, findOpenMapPosition, getFragmentMapPosition } 
 import { isSupabaseConfigured, supabase, supabaseConfigError } from './lib/supabase';
 import {
   createRemoteFragment,
+  createRemoteTerritory,
   deleteRemoteFragment,
   loadLocalFragments,
   loadLocalSavedFragmentIds,
+  loadLocalTerritories,
   loadRemoteFragments,
   loadRemoteSavedFragmentIds,
   loadRemoteTerritories,
   saveRemoteFragment,
+  saveLocalTerritories,
   unsaveRemoteFragment,
   updateRemoteFragment,
 } from './services/fragmentsRepository';
@@ -42,7 +45,7 @@ export default function App() {
   const [deletedFragmentTitle, setDeletedFragmentTitle] = useState<string | null>(null);
   const [fragments, setFragments] = useState<WorldFragment[]>(() => loadLocalFragments());
   const [savedFragmentIds, setSavedFragmentIds] = useState<string[]>(() => loadLocalSavedFragmentIds());
-  const [territories, setTerritories] = useState<Territory[]>(TERRITORIES);
+  const [territories, setTerritories] = useState<Territory[]>(() => loadLocalTerritories());
   const [user, setUser] = useState<User | null>(null);
   const [authMode, setAuthMode] = useState<AuthMode>('signUp');
   const [authName, setAuthName] = useState('');
@@ -57,6 +60,45 @@ export default function App() {
   const isRemoteMode = isSupabaseConfigured && Boolean(supabase);
   const displayName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'Ouvinte Atento';
   const getAuthRedirectUrl = () => `${window.location.origin}${window.location.pathname}`;
+
+  const normalizeTerritoryName = (value: string) => value.trim().replace(/\s+/g, ' ');
+
+  const findExistingTerritory = (name: string) => {
+    const normalizedName = normalizeTerritoryName(name).toLocaleLowerCase('pt-BR');
+    return territories.find((territory) => {
+      const normalizedId = territory.id.toLocaleLowerCase('pt-BR');
+      const normalizedDisplayName = territory.name.toLocaleLowerCase('pt-BR');
+      return normalizedId === normalizedName || normalizedDisplayName === normalizedName;
+    });
+  };
+
+  const ensureTerritoryForFragment = async (territoryValue: string) => {
+    const territoryName = normalizeTerritoryName(territoryValue) || currentTerritory;
+    const existingTerritory = findExistingTerritory(territoryName);
+    if (existingTerritory) return existingTerritory;
+
+    const newTerritory: Territory = {
+      id: territoryName,
+      name: territoryName,
+      coordinates: '',
+      createdAt: new Date().toISOString(),
+    };
+
+    if (isRemoteMode && user) {
+      return createRemoteTerritory(newTerritory);
+    }
+
+    return newTerritory;
+  };
+
+  const upsertTerritoryState = (territory: Territory) => {
+    setTerritories((prev) => {
+      const exists = prev.some((item) => item.id === territory.id);
+      return exists
+        ? prev.map((item) => item.id === territory.id ? { ...item, ...territory } : item)
+        : [...prev, territory].sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+    });
+  };
 
   const getAuthErrorMessage = (error: unknown) => {
     const fallback = 'Tente novamente em alguns instantes.';
@@ -106,6 +148,12 @@ export default function App() {
       localStorage.setItem('saved_fragment_ids', JSON.stringify(savedFragmentIds));
     }
   }, [savedFragmentIds, isRemoteMode]);
+
+  useEffect(() => {
+    if (!isRemoteMode) {
+      saveLocalTerritories(territories);
+    }
+  }, [territories, isRemoteMode]);
 
   const refreshRemoteData = async (activeUser: User | null) => {
     const [remoteTerritories, remoteFragments, remoteSavedIds] = await Promise.all([
@@ -242,17 +290,21 @@ export default function App() {
 
     const uniqueId = `frag-${Date.now()}`;
     const mapPosition = findOpenMapPosition(fragments.map(getFragmentMapPosition));
-    const preparedFragment = {
-      ...newFragData,
-      mediaLinks: newFragData.mediaLinks?.slice(0, 3) ?? [],
-      mapPosition,
-    };
 
     if (isRemoteMode && user) {
       try {
+        const fragmentTerritory = await ensureTerritoryForFragment(newFragData.territory);
+        const preparedFragment = {
+          ...newFragData,
+          territory: fragmentTerritory.id,
+          mediaLinks: newFragData.mediaLinks?.slice(0, 3) ?? [],
+          mapPosition,
+        };
         const createdFragment = await createRemoteFragment(preparedFragment, uniqueId, user);
+        upsertTerritoryState(fragmentTerritory);
         setFragments(prev => ensureFixedMapPositions([createdFragment, ...prev]));
         setSelectedFragmentId(createdFragment.id);
+        setCurrentTerritory(fragmentTerritory.id);
         setActiveTab('nexo');
       } catch (error) {
         console.error(error);
@@ -261,6 +313,15 @@ export default function App() {
       return;
     }
 
+    const fragmentTerritory = await ensureTerritoryForFragment(newFragData.territory);
+    const preparedFragment = {
+      ...newFragData,
+      territory: fragmentTerritory.id,
+      mediaLinks: newFragData.mediaLinks?.slice(0, 3) ?? [],
+      mapPosition,
+    };
+
+    upsertTerritoryState(fragmentTerritory);
     setFragments(prev => {
       const newFragment: WorldFragment = {
         ...preparedFragment,
@@ -272,18 +333,26 @@ export default function App() {
       return [newFragment, ...prev];
     });
     setSelectedFragmentId(uniqueId);
+    setCurrentTerritory(fragmentTerritory.id);
     setActiveTab('nexo'); // Takes them to view it on the map!
   };
 
   const handleEditFragment = async (id: string, updatedData: Partial<Omit<WorldFragment, 'id' | 'createdAt'>>) => {
-    const preparedData = {
-      ...updatedData,
-      mediaLinks: updatedData.mediaLinks?.slice(0, 3),
-    };
-
     if (isRemoteMode && user) {
       try {
+        const fragmentTerritory = updatedData.territory
+          ? await ensureTerritoryForFragment(updatedData.territory)
+          : null;
+        const preparedData = {
+          ...updatedData,
+          ...(fragmentTerritory ? { territory: fragmentTerritory.id } : {}),
+          mediaLinks: updatedData.mediaLinks?.slice(0, 3),
+        };
         const updatedFragment = await updateRemoteFragment(id, preparedData, user);
+        if (fragmentTerritory) {
+          upsertTerritoryState(fragmentTerritory);
+          setCurrentTerritory(fragmentTerritory.id);
+        }
         setFragments(prev => prev.map(f => 
           f.id === id ? updatedFragment : f
         ));
@@ -296,6 +365,19 @@ export default function App() {
       return;
     }
 
+    const fragmentTerritory = updatedData.territory
+      ? await ensureTerritoryForFragment(updatedData.territory)
+      : null;
+    const preparedData = {
+      ...updatedData,
+      ...(fragmentTerritory ? { territory: fragmentTerritory.id } : {}),
+      mediaLinks: updatedData.mediaLinks?.slice(0, 3),
+    };
+
+    if (fragmentTerritory) {
+      upsertTerritoryState(fragmentTerritory);
+      setCurrentTerritory(fragmentTerritory.id);
+    }
     setFragments(prev => prev.map(f => 
       f.id === id ? { ...f, ...preparedData } : f
     ));
@@ -352,6 +434,8 @@ export default function App() {
 
     if (confirm('Tem certeza que deseja restaurar os fragmentos originais do Altiplano?')) {
       localStorage.removeItem('situated_memories');
+      localStorage.removeItem('vizinhancas_territories');
+      setTerritories(TERRITORIES);
       setFragments(ensureFixedMapPositions(INITIAL_FRAGMENTS));
       setSelectedFragmentId(null);
       setActiveTab('nexo');
@@ -652,6 +736,7 @@ export default function App() {
         onClose={() => setIsProposalModalOpen(false)}
         onSubmit={handleAddFragment}
         currentTerritory={currentTerritory}
+        territories={territories}
       />
 
       {/* Dynamic edit fragment modal handler */}

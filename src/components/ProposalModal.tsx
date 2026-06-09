@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { WorldFragment, FragmentType } from '../types';
+import { WorldFragment, FragmentType, Territory } from '../types';
 import { 
   X, 
   Sprout, 
@@ -15,13 +15,15 @@ interface ProposalModalProps {
   onClose: () => void;
   onSubmit: (fragment: Omit<WorldFragment, 'id' | 'createdAt'>) => void;
   currentTerritory: string;
+  territories: Territory[];
 }
 
 export default function ProposalModal({ 
   isOpen, 
   onClose, 
   onSubmit,
-  currentTerritory 
+  currentTerritory,
+  territories
 }: ProposalModalProps) {
   
   const [title, setTitle] = useState('');
@@ -30,6 +32,9 @@ export default function ProposalModal({
   const [territory, setTerritory] = useState(currentTerritory);
   const [content, setContent] = useState('');
   const [mediaLinks, setMediaLinks] = useState<string[]>(['']);
+  const territoryOptions = Array.from(
+    new Map(territories.map((item) => [item.id, item])).values(),
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -174,10 +179,21 @@ export default function ProposalModal({
                   <input 
                     type="text"
                     value={territory}
+                    list="proposal-territories"
                     onChange={(e) => setTerritory(e.target.value)}
                     className="w-full bg-transparent border-0 border-b border-[#dac2b8]/30 focus:border-primary focus:ring-0 text-base font-sans text-on-surface py-2 px-0 transition-all placeholder:text-on-surface-variant/30"
-                    placeholder="Bairro ou setor"
+                    placeholder="Escolha um territorio ou escreva um novo"
                   />
+                  <datalist id="proposal-territories">
+                    {territoryOptions.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </datalist>
+                  <p className="text-[11px] text-on-surface-variant/70 leading-relaxed">
+                    Se o territorio ainda nao existir, ele sera cadastrado junto com o fragmento.
+                  </p>
                 </div>
 
               </div>
