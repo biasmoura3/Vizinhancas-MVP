@@ -6,41 +6,44 @@
   --font-serif: "Newsreader", ui-serif, Georgia, serif;
   --font-literata: "Literata", serif;
 
-  --color-surface: #0b1326;
-  --color-surface-dim: #0b1326;
-  --color-surface-bright: #31394d;
-  --color-surface-container-lowest: #060e20;
-  --color-surface-container-low: #131b2e;
-  --color-surface-container: #171f33;
-  --color-surface-container-high: #222a3d;
-  --color-surface-container-highest: #2d3449;
-  --color-on-surface: #dae2fd;
-  --color-on-surface-variant: #dac2b8;
-  --color-inverse-surface: #dae2fd;
-  --color-inverse-on-surface: #283044;
-  --color-outline: #a28c84;
-  --color-outline-variant: #54433c;
-  --color-surface-tint: #ffb596;
-  --color-primary: #ffb596;
-  --color-on-primary: #581e00;
-  --color-primary-container: #d27d56;
-  --color-on-primary-container: #501b00;
-  --color-inverse-primary: #924a28;
+  --color-surface: #0a1225;
+  --color-surface-dim: #0a1225;
+  --color-surface-bright: #2f3b46;
+  --color-surface-container-lowest: #050a16;
+  --color-surface-container-low: #101929;
+  --color-surface-container: #172235;
+  --color-surface-container-high: #233041;
+  --color-surface-container-highest: #314050;
+  --color-on-surface: #dad4ef;
+  --color-on-surface-variant: #bacda6;
+  --color-inverse-surface: #dad4ef;
+  --color-inverse-on-surface: #0a1225;
+  --color-outline: #718379;
+  --color-outline-variant: #39473f;
+  --color-surface-tint: #ffc6ad;
+  --color-primary: #ffc6ad;
+  --color-primary-bright: #ffe1d2;
+  --color-on-primary: #27110a;
+  --color-primary-container: #6b493e;
+  --color-on-primary-container: #ffc6ad;
+  --color-inverse-primary: #7b4d3f;
   --color-secondary: #bacda6;
-  --color-on-secondary: #253519;
-  --color-secondary-container: #3b4c2e;
-  --color-on-secondary-container: #a8bb95;
-  --color-tertiary: #f6be3b;
-  --color-on-tertiary: #402d00;
-  --color-tertiary-container: #bb8b00;
-  --color-on-tertiary-container: #3a2900;
+  --color-secondary-bright: #d7e6c5;
+  --color-on-secondary: #10190f;
+  --color-secondary-container: #354533;
+  --color-on-secondary-container: #d7e6c5;
+  --color-tertiary: #dad4ef;
+  --color-on-tertiary: #181226;
+  --color-tertiary-container: #403852;
+  --color-on-tertiary-container: #dad4ef;
   --color-error: #ffb4ab;
+  --color-error-bright: #ffdad6;
   --color-on-error: #690005;
   --color-error-container: #93000a;
   --color-on-error-container: #ffdad6;
-  --color-background: #0b1326;
-  --color-on-background: #dae2fd;
-  --color-accent: #4fd1c5;
+  --color-background: #0a1225;
+  --color-on-background: #dad4ef;
+  --color-accent: #718379;
 }
 
 /* Custom visual utilities supporting the Speculative Ritual style */
@@ -50,17 +53,17 @@
   }
   
   .glass-panel {
-    background: rgba(11, 19, 38, 0.65);
+    background: rgba(10, 18, 37, 0.72);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
   }
   
   .luminous-thread {
-    box-shadow: 0 0 15px rgba(255, 181, 150, 0.35);
+    box-shadow: 0 0 15px rgba(255, 198, 173, 0.35);
   }
   
   .node-glow {
-    filter: drop-shadow(0 0 8px rgba(246, 190, 59, 0.45));
+    filter: drop-shadow(0 0 8px rgba(186, 205, 166, 0.45));
   }
   
   .animate-pulse-slow {
@@ -82,10 +85,10 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(162, 140, 132, 0.2);
+  background: rgba(113, 131, 121, 0.35);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(162, 140, 132, 0.4);
+  background: rgba(186, 205, 166, 0.5);
 }
 

@@ -37,7 +37,7 @@ export default function ManifestoTab() {
       </header>
 
       {/* Main Philosophy Text */}
-      <section className="glass-panel border border-[#dac2b8]/15 rounded-xl p-5 sm:p-8 md:p-10 space-y-6 shadow-xl relative overflow-hidden">
+      <section className="glass-panel border border-outline/20 rounded-xl p-5 sm:p-8 md:p-10 space-y-6 shadow-xl relative overflow-hidden">
         <span className="absolute top-4 right-6 font-serif text-8xl text-primary/5 select-none font-semibold">§</span>
         <p className="font-literata text-base sm:text-lg leading-relaxed text-on-surface-variant/90 sm:indent-8 font-serif sm:leading-8">
           Hoje em dia, passamos muito tempo conectados a redes distantes e feeds infinitos que não dizem nada sobre a nossa realidade. O projeto <strong>Vizinhanças</strong> nasce do desejo de criar um ponto de encontro verdadeiro. Queremos acolher de forma carinhosa os fragmentos de mundo do nosso povo.
@@ -59,7 +59,7 @@ export default function ManifestoTab() {
             return (
               <div 
                 key={i} 
-                className="glass-panel border border-[#dac2b8]/15 rounded-xl p-5 sm:p-6 hover:border-[#dac2b8]/35 transition-all group flex gap-4"
+                className="glass-panel border border-outline/20 rounded-xl p-5 sm:p-6 hover:border-secondary/40 transition-all group flex gap-4"
               >
                 <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:scale-105 transition-transform shrink-0">
                   <Icon className="w-5 h-5" />
@@ -79,7 +79,7 @@ export default function ManifestoTab() {
       </section>
 
       {/* Footer Reflection */}
-      <footer className="text-center pt-8 border-t border-[#dac2b8]/10 text-xs font-mono text-on-surface-variant/50 max-w-lg mx-auto leading-relaxed">
+      <footer className="text-center pt-8 border-t border-outline/15 text-xs font-mono text-on-surface-variant/50 max-w-lg mx-auto leading-relaxed">
         <p>"O nosso bairro tem voz. Cabe a nós acolhermos e cuidarmos com carinho de cada fragmento de mundo diariamente."</p>
         <span className="block mt-2 text-primary/60 font-sans text-[11px]">— COLETIVO VIZINHANÇAS, 2026.</span>
       </footer>

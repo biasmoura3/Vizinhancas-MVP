@@ -46,7 +46,7 @@ export default function DeleteFragmentModal({
             Você está prestes a excluir o fragmento abaixo do seu acervo. Depois da confirmação, ele será removido da constelação local.
           </p>
 
-          <div className="bg-surface-container-low/60 border border-[#dac2b8]/15 rounded-lg p-4 space-y-1">
+          <div className="bg-surface-container-low/60 border border-outline/20 rounded-lg p-4 space-y-1">
             <span className="font-mono text-[9px] uppercase tracking-wider text-on-surface-variant/50 font-semibold">
               Fragmento selecionado
             </span>
@@ -63,7 +63,7 @@ export default function DeleteFragmentModal({
           <button
             type="button"
             onClick={onCancel}
-            className="w-full sm:w-auto px-6 py-3.5 bg-surface-container border border-[#dac2b8]/20 text-on-surface font-sans font-semibold flex items-center justify-center hover:bg-surface-container-high active:scale-95 transition-all text-sm rounded-full cursor-pointer"
+            className="w-full sm:w-auto px-6 py-3.5 bg-surface-container border border-outline/25 text-on-surface font-sans font-semibold flex items-center justify-center hover:bg-surface-container-high active:scale-95 transition-all text-sm rounded-full cursor-pointer"
           >
             Manter Fragmento
           </button>
