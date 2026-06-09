@@ -168,19 +168,19 @@ export default function ZeloTab({
                   className="glass-panel border border-[#dac2b8]/20 rounded-2xl p-6 space-y-4 bg-[#0a1120]/60 flex flex-col justify-between"
                 >
                   <div className="space-y-3.5">
-                    <div className="flex items-start justify-between">
+                    <div className="flex min-w-0 items-start justify-between gap-2">
                       <span className="font-mono text-[8px] uppercase tracking-wider bg-[#10b981]/15 text-emerald-400 border border-emerald-500/25 px-2.5 py-0.5 rounded-full font-semibold">
                         {f.type === 'audio' ? 'Fragmento Sonoro' : f.type === 'visual' ? 'Fragmento Visual' : 'Fragmento Textual'}
                       </span>
-                      <span className="text-[9px] font-mono text-on-surface-variant/40 shrink-0 select-text">Região: {f.territory}</span>
+                      <span className="min-w-0 text-right text-[9px] font-mono text-on-surface-variant/40 shrink select-text break-words [overflow-wrap:anywhere]">Região: {f.territory}</span>
                     </div>
 
                     <div>
-                      <h4 className="font-serif text-lg font-light text-on-surface leading-snug">{f.title}</h4>
-                      <p className="text-[10px] font-mono text-on-surface-variant/40 mt-0.5">Registrado por: {f.source}</p>
+                      <h4 className="font-serif text-lg font-light text-on-surface leading-snug break-words [overflow-wrap:anywhere]">{f.title}</h4>
+                      <p className="text-[10px] font-mono text-on-surface-variant/40 mt-0.5 break-words [overflow-wrap:anywhere]">Registrado por: {f.source}</p>
                     </div>
 
-                    <p className="text-xs text-on-surface-variant leading-relaxed select-text font-sans italic">
+                    <p className="text-xs text-on-surface-variant leading-relaxed select-text font-sans italic whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
                       "{f.content}"
                     </p>
                     
@@ -264,7 +264,7 @@ export default function ZeloTab({
                           {f.type === 'poetic' && <FileText className="w-3.5 h-3.5 text-emerald-400" />}
                           {f.type === 'visual' && <ImageIcon className="w-3.5 h-3.5 text-amber-400" />}
                         </div>
-                        <span className="font-mono text-[9px] uppercase tracking-wider text-on-surface-variant/60 font-semibold select-none">
+                        <span className="font-mono text-[9px] uppercase tracking-wider text-on-surface-variant/60 font-semibold select-none break-words [overflow-wrap:anywhere]">
                           {f.type === 'audio' ? 'Fragmento Sonoro' : f.type === 'visual' ? 'Fragmento Visual' : 'Fragmento Textual'} • {f.territory}
                         </span>
                       </div>
@@ -281,11 +281,11 @@ export default function ZeloTab({
                     </div>
 
                     <div>
-                      <h4 className="font-serif text-lg font-light text-on-surface">{f.title}</h4>
-                      <p className="text-[10px] font-mono text-on-surface-variant/40">Origem/Autor: {f.source}</p>
+                      <h4 className="font-serif text-lg font-light text-on-surface break-words [overflow-wrap:anywhere]">{f.title}</h4>
+                      <p className="text-[10px] font-mono text-on-surface-variant/40 break-words [overflow-wrap:anywhere]">Origem/Autor: {f.source}</p>
                     </div>
 
-                    <p className="text-xs text-on-surface-variant leading-relaxed select-text font-sans">
+                    <p className="text-xs text-on-surface-variant leading-relaxed select-text font-sans whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
                       {f.content}
                     </p>
                   </div>

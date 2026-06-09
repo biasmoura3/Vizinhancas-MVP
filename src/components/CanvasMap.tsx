@@ -339,7 +339,7 @@ export default function CanvasMap({
             >
               {/* Popover Header */}
               <div className="flex items-center justify-between pb-2.5 border-b border-[#dac2b8]/15 text-xs font-mono text-primary uppercase select-none">
-                <span className="flex items-center gap-1.5 font-semibold">
+                <span className="flex min-w-0 items-center gap-1.5 font-semibold">
                   {activeFragment.type === 'audio' && <Volume2 className="w-3.5 h-3.5 text-blue-400 animate-pulse" />}
                   {activeFragment.type === 'poetic' && <FileText className="w-3.5 h-3.5 text-emerald-400" />}
                   {activeFragment.type === 'visual' && <ImageIcon className="w-3.5 h-3.5 text-amber-400" />}
@@ -401,11 +401,11 @@ export default function CanvasMap({
                 </div>
               )}
 
-              <h3 className="font-serif text-xl leading-snug font-normal text-on-surface">
+              <h3 className="font-serif text-xl leading-snug font-normal text-on-surface break-words [overflow-wrap:anywhere]">
                 {activeFragment.title}
               </h3>
 
-              <p className="text-sm text-on-surface-variant leading-relaxed select-text font-sans">
+              <p className="text-sm text-on-surface-variant leading-relaxed select-text font-sans whitespace-pre-wrap break-words [overflow-wrap:anywhere]">
                 {activeFragment.content}
               </p>
 
@@ -418,9 +418,9 @@ export default function CanvasMap({
                       target="_blank"
                       rel="noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="block truncate text-primary hover:text-primary-bright underline underline-offset-4 decoration-primary/35"
+                      className="block break-words [overflow-wrap:anywhere] text-primary hover:text-primary-bright underline underline-offset-4 decoration-primary/35"
                     >
-                      Link do vídeo {index + 1}
+                      Link de reproducao {index + 1}
                     </a>
                   ))}
                 </div>
@@ -454,11 +454,11 @@ export default function CanvasMap({
               <div className="grid grid-cols-2 gap-3 text-[10px] font-mono text-on-surface-variant border-t border-[#dac2b8]/10 pt-3">
                 <div>
                   <span className="opacity-55 block uppercase font-bold text-[8px]">Origem/Autor</span>
-                  <span className="text-on-surface block font-sans font-medium mt-0.5">{activeFragment.source}</span>
+                  <span className="text-on-surface block font-sans font-medium mt-0.5 break-words [overflow-wrap:anywhere]">{activeFragment.source}</span>
                 </div>
                 <div>
                   <span className="opacity-55 block uppercase font-bold text-[8px]">Região</span>
-                  <span className="text-on-surface block font-sans font-semibold mt-0.5">{activeFragment.territory}</span>
+                  <span className="text-on-surface block font-sans font-semibold mt-0.5 break-words [overflow-wrap:anywhere]">{activeFragment.territory}</span>
                 </div>
               </div>
 

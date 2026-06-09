@@ -35,6 +35,15 @@ export default function EditFragmentModal({
   const [mediaLinks, setMediaLinks] = useState<string[]>(['']);
   const [isOpenToConnections, setIsOpenToConnections] = useState(true);
   const [connectedFragmentIds, setConnectedFragmentIds] = useState<string[]>([]);
+  const mediaFieldLabel = type === 'audio'
+    ? 'Fragmentos de audio: links de reproducao'
+    : 'Fragmentos visuais: links de visualizacao';
+  const mediaFieldInstruction = type === 'audio'
+    ? 'Para fragmentos sonoros, cole links do YouTube para reproducao.'
+    : 'Para fragmentos visuais, use ate 3 imagens publicas diretas (JPG, PNG, WEBP, GIF, AVIF, SVG) ou links publicos de Imgur, Google Drive, Dropbox, Unsplash, Pexels, Pixabay, Cloudinary ou GitHub.';
+  const mediaFieldPlaceholder = type === 'audio'
+    ? 'Link de reproducao'
+    : 'Link de visualizacao';
 
   useEffect(() => {
     if (isOpen && fragment) {
@@ -69,7 +78,9 @@ export default function EditFragmentModal({
     e.preventDefault();
     if (!title.trim()) return;
 
-    const cleanedMediaLinks = mediaLinks.map((link) => link.trim()).filter(Boolean).slice(0, 3);
+    const cleanedMediaLinks = type === 'audio' || type === 'visual'
+      ? mediaLinks.map((link) => link.trim()).filter(Boolean).slice(0, 3)
+      : [];
     const chosenMediaUrl = cleanedMediaLinks[0];
     const previewUrl = type === 'visual'
       ? chosenMediaUrl ?? fragment.imageUrl ?? 'https://images.unsplash.com/photo-1545231027-63b39f612acf?q=80&w=600&auto=format&fit=crop'
@@ -235,10 +246,10 @@ export default function EditFragmentModal({
                 {(type === 'audio' || type === 'visual') && (
                   <div className="space-y-3">
                     <label className="font-mono text-[10px] uppercase text-on-surface-variant/80 tracking-wider block font-semibold">
-                      Links de visualização
+                      {mediaFieldLabel}
                     </label>
                     <p className="text-[11px] text-on-surface-variant leading-relaxed">
-                      Para fragmentos sonoros, cole links do YouTube. Para fragmentos visuais, use ate 3 imagens publicas diretas (JPG, PNG, WEBP, GIF, AVIF, SVG) ou links publicos de Imgur, Google Drive, Dropbox, Unsplash, Pexels, Pixabay, Cloudinary ou GitHub.
+                      {mediaFieldInstruction}
                     </p>
                     <div className="space-y-3">
                       {mediaLinks.map((link, index) => (
@@ -247,7 +258,7 @@ export default function EditFragmentModal({
                             type="url"
                             value={link}
                             onChange={(e) => handleUpdateMediaLink(index, e.target.value)}
-                            placeholder={`Link de visualização ${index + 1}`}
+                            placeholder={`${mediaFieldPlaceholder} ${index + 1}`}
                             className="flex-1 bg-surface-container-low/60 rounded-lg border border-[#dac2b8]/20 px-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
                           />
                           {mediaLinks.length > 1 && (
