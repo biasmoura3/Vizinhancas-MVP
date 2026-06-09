@@ -255,7 +255,7 @@ export default function ProposalModal({
                       Links de visualização
                     </label>
                     <p className="text-[11px] text-on-surface-variant leading-relaxed">
-                      Para fragmentos sonoros, cole links do YouTube. Para fragmentos visuais, informe até 3 imagens para aparecerem no card.
+                      Para fragmentos sonoros, cole links do YouTube. Para fragmentos visuais, use ate 3 imagens publicas diretas (JPG, PNG, WEBP, GIF, AVIF, SVG) ou links publicos de Imgur, Google Drive, Dropbox, Unsplash, Pexels, Pixabay, Cloudinary ou GitHub.
                     </p>
                     <div className="space-y-3">
                       {mediaLinks.map((link, index) => (

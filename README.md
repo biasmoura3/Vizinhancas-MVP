@@ -85,7 +85,8 @@ O projeto será implantado no Vercel. Para publicar:
 
 Padrões e exemplos aceitos:
 
-- Imagem direta: `https://i.imgur.com/exemplo.jpg`
+- Imagem direta publica: `https://i.imgur.com/exemplo.jpg`, `https://images.unsplash.com/...` ou URLs que terminem em `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`, `.avif`, `.bmp` ou `.svg`
+- Links publicos convertidos para imagem: Imgur, Google Drive, Dropbox e imagens em repositorios GitHub
 - Fragmento sonoro com preview: `https://www.youtube.com/watch?v=...`
 - Vídeo: `https://www.youtube.com/watch?v=...` ou `https://vimeo.com/...`
 - Texto/documento: links para páginas públicas que possam ser incorporadas em iframe
