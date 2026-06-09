@@ -193,7 +193,7 @@ export default function CanvasMap({
   return (
     <div className="w-full h-full relative flex flex-col overflow-hidden text-on-surface select-none">
       {/* Top filter overlay on map - Outside panning wrapper so it is fixed */}
-      <div className="absolute top-4 left-6 z-30 flex gap-2 max-w-full overflow-x-auto pb-1">
+      <div className="absolute top-3 left-3 right-3 sm:top-4 sm:left-6 sm:right-auto z-30 flex gap-2 max-w-full overflow-x-auto pb-1">
         {territories.map((ter) => (
           <button
             key={ter}
@@ -335,7 +335,7 @@ export default function CanvasMap({
                 transform: `translate(calc(-50% - ${offset.x}px), calc(-50% - ${offset.y}px))`
               }}
               onMouseDown={(e) => e.stopPropagation()} // allows text selection/interaction inside card without invoking drag
-              className="absolute z-40 w-fit min-w-[min(22rem,calc(100vw-2rem))] max-w-[min(64rem,calc(100vw-2rem))] max-h-[min(78vh,42rem)] overflow-y-auto glass-panel border border-[#dac2b8]/30 rounded-2xl shadow-[0_18px_60px_rgba(0,0,0,0.88),0_0_34px_rgba(255,181,150,0.12)] p-6 animate-in zoom-in-95 duration-200 select-text cursor-default space-y-4 bg-[#0a1120]/90 backdrop-blur-md"
+              className="absolute z-40 w-[calc(100vw-1.5rem)] sm:w-fit min-w-0 sm:min-w-[min(22rem,calc(100vw-2rem))] max-w-[min(64rem,calc(100vw-2rem))] max-h-[min(70vh,42rem)] md:max-h-[min(78vh,42rem)] overflow-y-auto glass-panel border border-[#dac2b8]/30 rounded-2xl shadow-[0_18px_60px_rgba(0,0,0,0.88),0_0_34px_rgba(255,181,150,0.12)] p-4 sm:p-6 animate-in zoom-in-95 duration-200 select-text cursor-default space-y-4 bg-[#0a1120]/90 backdrop-blur-md"
             >
               {/* Popover Header */}
               <div className="flex items-center justify-between pb-2.5 border-b border-[#dac2b8]/15 text-xs font-mono text-primary uppercase select-none">
@@ -451,7 +451,7 @@ export default function CanvasMap({
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-3 text-[10px] font-mono text-on-surface-variant border-t border-[#dac2b8]/10 pt-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[10px] font-mono text-on-surface-variant border-t border-[#dac2b8]/10 pt-3">
                 <div>
                   <span className="opacity-55 block uppercase font-bold text-[8px]">Origem/Autor</span>
                   <span className="text-on-surface block font-sans font-medium mt-0.5 break-words [overflow-wrap:anywhere]">{activeFragment.source}</span>
@@ -495,8 +495,8 @@ export default function CanvasMap({
         </div>
 
         {/* HUD control bar fixed overlay */}
-        <div className="absolute bottom-4 left-6 right-6 z-30 flex items-center justify-between pointer-events-none">
-          <div className="bg-[#0b1326]/85 border border-[#dac2b8]/15 text-on-surface-variant text-[10px] font-mono px-4 py-2.5 rounded-full flex items-center gap-2.5 backdrop-blur shadow-xl pointer-events-auto select-none">
+        <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-6 sm:right-6 z-30 flex items-center justify-between gap-2 pointer-events-none">
+          <div className="bg-[#0b1326]/85 border border-[#dac2b8]/15 text-on-surface-variant text-[10px] font-mono px-3 sm:px-4 py-2.5 rounded-full flex items-center gap-2.5 backdrop-blur shadow-xl pointer-events-auto select-none min-w-0 [&>span]:truncate">
             <Locate className="w-3.5 h-3.5 text-primary animate-pulse" />
             <span>Constelação • Arraste o fundo para navegar • Clique para detalhes</span>
           </div>
@@ -504,10 +504,10 @@ export default function CanvasMap({
           {(offset.x !== 0 || offset.y !== 0) && (
             <button
               onClick={() => setOffset({ x: 0, y: 0 })}
-              className="bg-[#0b1326]/85 border border-[#dac2b8]/15 hover:border-primary/40 text-primary text-[10px] font-semibold px-4 py-2.5 rounded-full flex items-center gap-2 backdrop-blur shadow-xl pointer-events-auto cursor-pointer hover:bg-primary/5 transition-all"
+              className="bg-[#0b1326]/85 border border-[#dac2b8]/15 hover:border-primary/40 text-primary text-[10px] font-semibold px-3 sm:px-4 py-2.5 rounded-full flex items-center gap-2 backdrop-blur shadow-xl pointer-events-auto cursor-pointer hover:bg-primary/5 transition-all shrink-0"
             >
               <MapIcon className="w-3.5 h-3.5" />
-              <span>Centralizar Vista</span>
+              <span className="hidden sm:inline">Centralizar Vista</span>
             </button>
           )}
         </div>

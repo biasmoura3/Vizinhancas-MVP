@@ -37,17 +37,17 @@ export default function HeaderBar({
   }, []);
 
   return (
-    <header className="w-full h-16 glass-panel border-b border-[#dac2b8]/15 px-6 flex items-center justify-between text-on-surface z-40 shrink-0 relative bg-surface-container-lowest/30 backdrop-blur-md">
+    <header className="w-full min-h-16 glass-panel border-b border-[#dac2b8]/15 px-3 sm:px-6 py-2 flex items-center justify-between gap-3 text-on-surface z-40 shrink-0 relative bg-surface-container-lowest/30 backdrop-blur-md">
       {/* Platform Brand */}
-      <div className="flex items-center gap-2 select-none">
-        <span className="material-symbols-outlined text-primary text-2xl animate-pulse">grain</span>
-        <h1 className="font-serif font-light text-2xl tracking-wide text-on-surface">
+      <div className="flex min-w-0 items-center gap-2 select-none">
+        <span className="material-symbols-outlined text-primary text-2xl animate-pulse shrink-0">grain</span>
+        <h1 className="font-serif font-light text-xl sm:text-2xl tracking-wide text-on-surface truncate">
           Vizinhanças
         </h1>
       </div>
 
       {/* Auxiliary Actions & Profiles */}
-      <div className="flex items-center gap-4">
+      <div className="flex min-w-0 items-center gap-2 sm:gap-4">
         {/* Real-time Clock */}
         <div className="hidden sm:flex flex-col items-end text-right font-mono text-[10px] opacity-75 mr-2">
           <span className="text-secondary font-semibold uppercase tracking-wider">Espaço-Tempo</span>
@@ -70,10 +70,10 @@ export default function HeaderBar({
           <button
             type="button"
             onClick={onAuthClick}
-            className="pl-3 border-l border-[#dac2b8]/15 flex items-center gap-2 text-xs font-semibold text-on-primary bg-primary hover:brightness-105 rounded-full px-4 py-2.5 transition-all cursor-pointer shadow-md"
+            className="pl-3 border-l border-[#dac2b8]/15 flex items-center gap-2 text-xs font-semibold text-on-primary bg-primary hover:brightness-105 rounded-full px-3 sm:px-4 py-2.5 transition-all cursor-pointer shadow-md"
           >
             <span className="material-symbols-outlined text-base leading-none">login</span>
-            <span>Entrar para contribuir</span>
+            <span className="hidden min-[360px]:inline">Entrar para contribuir</span>
           </button>
         ) : (
           <div className="pl-3 border-l border-[#dac2b8]/15 hidden sm:block text-right font-mono text-[10px] opacity-75 uppercase tracking-wider">

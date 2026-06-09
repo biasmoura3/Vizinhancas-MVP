@@ -25,24 +25,24 @@ export default function ManifestoTab() {
   ];
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-16 py-8 px-4 animate-in fade-in duration-500">
+    <div className="w-full max-w-4xl mx-auto space-y-10 sm:space-y-16 py-6 sm:py-8 px-4 animate-in fade-in duration-500">
       
       {/* Editorial Title */}
       <header className="text-center space-y-4 max-w-2xl mx-auto">
         <span className="font-mono text-xs uppercase tracking-[0.25em] text-primary">Nossos Ideais</span>
-        <h2 className="font-serif font-light text-5xl leading-tight text-on-surface">
+        <h2 className="font-serif font-light text-3xl sm:text-5xl leading-tight text-on-surface">
           A Força dos <span className="italic text-primary">Nossos Fragmentos</span>
         </h2>
         <div className="h-[2px] w-16 bg-primary/30 mx-auto mt-4" />
       </header>
 
       {/* Main Philosophy Text */}
-      <section className="glass-panel border border-[#dac2b8]/15 rounded-xl p-8 md:p-10 space-y-6 shadow-xl relative overflow-hidden">
+      <section className="glass-panel border border-[#dac2b8]/15 rounded-xl p-5 sm:p-8 md:p-10 space-y-6 shadow-xl relative overflow-hidden">
         <span className="absolute top-4 right-6 font-serif text-8xl text-primary/5 select-none font-semibold">§</span>
-        <p className="font-literata text-lg leading-relaxed text-on-surface-variant/90 indent-8 font-serif leading-8">
+        <p className="font-literata text-base sm:text-lg leading-relaxed text-on-surface-variant/90 sm:indent-8 font-serif sm:leading-8">
           Hoje em dia, passamos muito tempo conectados a redes distantes e feeds infinitos que não dizem nada sobre a nossa realidade. O projeto <strong>Vizinhanças</strong> nasce do desejo de criar um ponto de encontro verdadeiro. Queremos acolher de forma carinhosa os fragmentos de mundo do nosso povo.
         </p>
-        <p className="font-literata text-lg leading-relaxed text-on-surface-variant/90 indent-8 font-serif leading-8">
+        <p className="font-literata text-base sm:text-lg leading-relaxed text-on-surface-variant/90 sm:indent-8 font-serif sm:leading-8">
           Não queremos medir ou controlar nada. Queremos apenas valorizar a vida local. Quando você envia um fragmento sonoro ambiente, um poema ou um fragmento visual do seu quintal, você está ajudando a tecer uma grande colcha de retalhos com os fragmentos de todos. O nosso mapa interativo mostra, de forma simples e bonita, como esses fragmentos se aproximam e se conectam na Constelação.
         </p>
       </section>
@@ -59,7 +59,7 @@ export default function ManifestoTab() {
             return (
               <div 
                 key={i} 
-                className="glass-panel border border-[#dac2b8]/15 rounded-xl p-6 hover:border-[#dac2b8]/35 transition-all group flex gap-4"
+                className="glass-panel border border-[#dac2b8]/15 rounded-xl p-5 sm:p-6 hover:border-[#dac2b8]/35 transition-all group flex gap-4"
               >
                 <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:scale-105 transition-transform shrink-0">
                   <Icon className="w-5 h-5" />

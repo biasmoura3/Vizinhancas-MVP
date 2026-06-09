@@ -575,7 +575,7 @@ export default function App() {
   };
 
   return (
-    <div className="w-screen h-screen flex flex-col bg-background text-on-surface font-sans overflow-hidden antialiased relative">
+    <div className="w-screen h-screen min-w-0 flex flex-col bg-background text-on-surface font-sans overflow-hidden antialiased relative">
       
       {/* Background celestial grid */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-surface-container-high/15 via-background to-background pointer-events-none opacity-80" />
@@ -590,7 +590,7 @@ export default function App() {
       />
 
       {/* Main Structural Body */}
-      <div className="flex-1 w-full flex overflow-hidden z-10">
+      <div className="flex-1 min-h-0 w-full flex flex-col md:flex-row overflow-hidden z-10">
         
         {/* Left Drawer Menu Bar */}
         <Sidebar 
@@ -603,7 +603,7 @@ export default function App() {
         />
 
         {/* Content Panel Area */}
-        <main className="flex-1 h-full overflow-y-auto relative flex flex-col bg-surface-container-lowest/15">
+        <main className="order-1 md:order-2 flex-1 min-w-0 min-h-0 h-full overflow-y-auto relative flex flex-col bg-surface-container-lowest/15">
           
           {/* TAB 1: CONSTELLATION MAP (Nexo) */}
           {activeTab === 'nexo' && (
@@ -644,7 +644,7 @@ export default function App() {
 
           {/* TAB 4: CONFIGURATIONS (Configurações) */}
           {activeTab === 'settings' && (
-            <div className="p-8 space-y-6 max-w-2xl mx-auto animate-in fade-in duration-300">
+            <div className="w-full p-4 sm:p-6 md:p-8 space-y-6 max-w-2xl mx-auto animate-in fade-in duration-300">
               <div className="space-y-1 border-b border-[#dac2b8]/10 pb-4">
                 <h2 className="font-serif text-2xl text-on-surface">Configurações do Sistema</h2>
                 <p className="text-xs text-on-surface-variant leading-relaxed">
@@ -652,7 +652,7 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-6 space-y-6">
+              <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-4 sm:p-6 space-y-6">
                 <div className="space-y-3">
                   <h3 className="text-sm font-semibold text-on-surface">Conexao de dados</h3>
                   <p className="text-xs text-on-surface-variant leading-relaxed">
@@ -729,7 +729,7 @@ export default function App() {
 
           {/* TAB 5: HELP (Ajuda) */}
           {activeTab === 'ajuda' && (
-            <div className="p-8 space-y-6 max-w-3xl mx-auto animate-in fade-in duration-300">
+            <div className="w-full p-4 sm:p-6 md:p-8 space-y-6 max-w-3xl mx-auto animate-in fade-in duration-300">
               <div className="space-y-1 border-b border-[#dac2b8]/10 pb-4">
                 <h2 className="font-serif text-2xl text-on-surface">Ajuda</h2>
                 <p className="text-xs text-on-surface-variant leading-relaxed">
@@ -737,7 +737,7 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-6 space-y-5">
+              <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-4 sm:p-6 space-y-5">
                 <div className="space-y-2">
                   <span className="font-mono text-[10px] uppercase text-primary block font-semibold">Como funciona a plataforma</span>
                   <p className="text-xs text-on-surface-variant leading-relaxed">
@@ -782,7 +782,7 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-6 space-y-4">
+              <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-4 sm:p-6 space-y-4">
                 <div className="space-y-2">
                   <span className="font-mono text-[10px] uppercase text-primary block font-semibold">Fale com os Organizadores</span>
                   <p className="text-xs text-on-surface-variant leading-relaxed">
@@ -805,7 +805,7 @@ export default function App() {
       {/* FLOATING ACTION BUTTON */}
       <button 
         onClick={handleOpenProposalFlow}
-        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-primary hover:brightness-110 active:scale-95 text-on-primary flex items-center justify-center cursor-pointer shadow-2xl hover:rotate-90 transition-all z-30 font-semibold"
+        className="fixed bottom-24 right-4 md:bottom-6 md:right-6 w-14 h-14 rounded-full bg-primary hover:brightness-110 active:scale-95 text-on-primary flex items-center justify-center cursor-pointer shadow-2xl hover:rotate-90 transition-all z-30 font-semibold"
         title="Propor Novo Fragmento de Mundo"
       >
         <span className="material-symbols-outlined text-4xl leading-none select-none">add</span>

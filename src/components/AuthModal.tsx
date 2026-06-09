@@ -43,9 +43,9 @@ export default function AuthModal({
   const isSignUp = mode === 'signUp';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-[#040810]/75 backdrop-blur-sm">
-      <div className="w-full max-w-md glass-panel border border-[#dac2b8]/20 rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.72)] bg-[#0a1120]/95 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex items-start justify-between gap-4 px-6 py-5 border-b border-[#dac2b8]/10">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#040810]/75 backdrop-blur-sm overflow-y-auto">
+      <div className="w-full max-w-md max-h-[calc(100vh-2rem)] glass-panel border border-[#dac2b8]/20 rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.72)] bg-[#0a1120]/95 overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex items-start justify-between gap-4 px-4 sm:px-6 py-5 border-b border-[#dac2b8]/10">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary/15 border border-primary/25 text-primary flex items-center justify-center">
               <LogIn className="w-5 h-5" />
@@ -65,7 +65,7 @@ export default function AuthModal({
           </button>
         </div>
 
-        <form onSubmit={onSubmit} className="p-6 space-y-4">
+        <form onSubmit={onSubmit} className="p-4 sm:p-6 space-y-4">
           <div className="grid grid-cols-2 gap-2 rounded-full border border-[#dac2b8]/15 bg-surface-container-low/40 p-1">
             <button
               type="button"

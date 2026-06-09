@@ -51,7 +51,7 @@ export default function ZeloTab({
   if (!isAuthenticated) {
     return (
       <div className="w-full h-full flex items-center justify-center px-4 py-10 animate-in fade-in duration-300">
-        <div className="w-full max-w-xl border border-dashed border-[#dac2b8]/20 rounded-2xl p-10 text-center space-y-5 bg-[#0a1120]/45">
+        <div className="w-full max-w-xl border border-dashed border-[#dac2b8]/20 rounded-2xl p-6 sm:p-10 text-center space-y-5 bg-[#0a1120]/45">
           <div className="w-14 h-14 mx-auto rounded-full bg-primary/10 border border-primary/20 text-primary flex items-center justify-center">
             <Lock className="w-6 h-6" />
           </div>
@@ -75,11 +75,11 @@ export default function ZeloTab({
   }
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-6 px-4 space-y-10 animate-in fade-in duration-300">
+    <div className="w-full max-w-5xl mx-auto py-5 sm:py-6 px-4 space-y-8 sm:space-y-10 animate-in fade-in duration-300">
       
       {/* Header Panel */}
       <div className="space-y-2 border-b border-[#dac2b8]/10 pb-5">
-        <h2 className="font-serif text-3xl font-light text-on-surface">Documentação de Fragmentos</h2>
+        <h2 className="font-serif text-2xl sm:text-3xl font-light text-on-surface">Documentação de Fragmentos</h2>
         <p className="text-sm text-on-surface-variant leading-relaxed">
           Gerencie seus fragmentos registrados e mantenha por perto as referências comunitárias salvas para consulta posterior.
         </p>
@@ -110,10 +110,10 @@ export default function ZeloTab({
       </div>
 
       {/* Aesthetic sub-navigation for tabs inside document section */}
-      <div className="flex border-b border-[#dac2b8]/10 select-none">
+      <div className="flex border-b border-[#dac2b8]/10 select-none overflow-x-auto">
         <button
           onClick={() => setZeloSubTab('meus-fragmentos')}
-          className={`px-5 py-3 font-sans text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer relative flex items-center gap-2 ${
+          className={`px-4 sm:px-5 py-3 font-sans text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer relative flex items-center gap-2 whitespace-nowrap shrink-0 ${
             zeloSubTab === 'meus-fragmentos' 
               ? 'text-primary' 
               : 'text-on-surface-variant/60 hover:text-on-surface hover:bg-[#dac2b8]/5'
@@ -129,7 +129,7 @@ export default function ZeloTab({
         </button>
         <button
           onClick={() => setZeloSubTab('salvos')}
-          className={`px-5 py-3 font-sans text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer relative flex items-center gap-2 ${
+          className={`px-4 sm:px-5 py-3 font-sans text-xs uppercase tracking-wider font-semibold transition-all cursor-pointer relative flex items-center gap-2 whitespace-nowrap shrink-0 ${
             zeloSubTab === 'salvos' 
               ? 'text-primary' 
               : 'text-on-surface-variant/60 hover:text-on-surface hover:bg-[#dac2b8]/5'
@@ -160,12 +160,12 @@ export default function ZeloTab({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {userRegisteredFragments.length > 0 ? (
               userRegisteredFragments.map((f) => (
                 <div 
                   key={f.id}
-                  className="glass-panel border border-[#dac2b8]/20 rounded-2xl p-6 space-y-4 bg-[#0a1120]/60 flex flex-col justify-between"
+                  className="glass-panel border border-[#dac2b8]/20 rounded-2xl p-4 sm:p-6 space-y-4 bg-[#0a1120]/60 flex flex-col justify-between"
                 >
                   <div className="space-y-3.5">
                     <div className="flex min-w-0 items-start justify-between gap-2">
@@ -186,9 +186,9 @@ export default function ZeloTab({
                     
                   </div>
 
-                  <div className="pt-4 mt-2 border-t border-[#dac2b8]/10 flex items-center justify-between">
+                  <div className="pt-4 mt-2 border-t border-[#dac2b8]/10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <span className="font-mono text-[9px] text-on-surface-variant/40">Inserido em {new Date(f.createdAt).toLocaleDateString()}</span>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       {onOpenEditModal && (
                         <button 
                           onClick={() => onOpenEditModal(f)}
@@ -224,7 +224,7 @@ export default function ZeloTab({
                 </div>
               ))
             ) : (
-              <div className="md:col-span-2 border border-dashed border-[#dac2b8]/15 rounded-2xl p-12 text-center space-y-4">
+              <div className="md:col-span-2 border border-dashed border-[#dac2b8]/15 rounded-2xl p-6 sm:p-12 text-center space-y-4">
                 <Sprout className="w-10 h-10 text-emerald-400/40 mx-auto animate-pulse" />
                 <p className="font-serif text-lg text-on-surface">Seu acervo de fragmentos está vazio</p>
                 <p className="text-xs text-on-surface-variant/70 leading-relaxed max-w-sm mx-auto font-sans">
@@ -249,12 +249,12 @@ export default function ZeloTab({
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {savedFragments.length > 0 ? (
               savedFragments.map((f) => (
                 <div 
                   key={f.id}
-                  className="glass-panel border border-[#dac2b8]/15 rounded-2xl p-6 space-y-4 bg-[#0a1120]/40 flex flex-col justify-between"
+                  className="glass-panel border border-[#dac2b8]/15 rounded-2xl p-4 sm:p-6 space-y-4 bg-[#0a1120]/40 flex flex-col justify-between"
                 >
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-2">
@@ -307,7 +307,7 @@ export default function ZeloTab({
                 </div>
               ))
             ) : (
-              <div className="md:col-span-2 border border-dashed border-[#dac2b8]/15 rounded-2xl p-12 text-center space-y-4">
+              <div className="md:col-span-2 border border-dashed border-[#dac2b8]/15 rounded-2xl p-6 sm:p-12 text-center space-y-4">
                 <Bookmark className="w-10 h-10 text-on-surface-variant/20 mx-auto" />
                 <p className="font-serif text-lg text-on-surface">Nenhum fragmento salvo</p>
                 <p className="text-xs text-on-surface-variant/70 leading-relaxed max-w-sm mx-auto font-sans">

@@ -12,7 +12,7 @@ export default function FragmentDeletedToast({
   if (!fragmentTitle) return null;
 
   return (
-    <div className="fixed bottom-6 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 sm:left-auto sm:right-6 sm:w-full sm:translate-x-0 animate-in fade-in slide-in-from-bottom-3 duration-300">
+    <div className="fixed bottom-24 md:bottom-6 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 sm:left-auto sm:right-6 sm:w-full sm:translate-x-0 animate-in fade-in slide-in-from-bottom-3 duration-300">
       <div className="glass-panel border border-secondary/25 rounded-xl shadow-2xl bg-surface/90 p-4 flex items-start gap-3">
         <div className="w-10 h-10 rounded-full bg-secondary/15 border border-secondary/25 text-secondary flex items-center justify-center shrink-0">
           <CheckCircle2 className="w-5 h-5" />

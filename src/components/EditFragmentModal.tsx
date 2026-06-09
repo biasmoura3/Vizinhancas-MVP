@@ -104,7 +104,7 @@ export default function EditFragmentModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-surface/85 backdrop-blur-md overflow-y-auto" id="modal-overlay">
       {/* Container panel */}
-      <div className="relative w-full max-w-3xl glass-panel border border-[#dac2b8]/15 rounded-xl shadow-2xl flex flex-col my-8 overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+      <div className="relative w-full max-w-3xl max-h-[calc(100vh-2rem)] glass-panel border border-[#dac2b8]/15 rounded-xl shadow-2xl flex flex-col my-4 sm:my-8 overflow-hidden animate-in fade-in zoom-in-95 duration-300">
         
         {/* Close Button */}
         <button 
@@ -115,9 +115,9 @@ export default function EditFragmentModal({
         </button>
 
         {/* Modal Header */}
-        <header className="px-8 pt-8 pb-5 border-b border-outline-variant/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="font-serif text-3xl font-light text-on-surface tracking-wide">
+        <header className="px-4 sm:px-8 pt-6 sm:pt-8 pb-5 pr-16 border-b border-outline-variant/10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="min-w-0">
+            <h1 className="font-serif text-2xl sm:text-3xl font-light text-on-surface tracking-wide">
               Editar Fragmento
             </h1>
             <p className="font-mono text-[10px] text-primary tracking-[0.2em] uppercase opacity-90 mt-1 font-semibold">
@@ -126,7 +126,7 @@ export default function EditFragmentModal({
           </div>
 
           {/* Form format selector (Crucial feature so caretakers can filter) */}
-          <div className="flex items-center gap-1.5 p-1 bg-surface-container-low border border-outline-variant/10 rounded-full max-w-sm shrink-0">
+          <div className="flex items-center gap-1.5 p-1 bg-surface-container-low border border-outline-variant/10 rounded-full max-w-full overflow-x-auto shrink-0">
             {(['audio', 'poetic', 'visual'] as const).map((t) => (
               <button
                 key={t}
@@ -149,7 +149,7 @@ export default function EditFragmentModal({
 
         {/* Modal Body Form */}
         <form onSubmit={handleFormSubmit} className="flex-1 flex flex-col overflow-hidden">
-          <div className="overflow-y-auto p-8 space-y-6 max-h-[60vh]">
+          <div className="overflow-y-auto p-4 sm:p-8 space-y-6 max-h-[calc(100vh-14rem)] md:max-h-[60vh]">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
               
               {/* LEFT COLUMN: Metadata inputs */}
@@ -253,7 +253,7 @@ export default function EditFragmentModal({
                     </p>
                     <div className="space-y-3">
                       {mediaLinks.map((link, index) => (
-                        <div key={index} className="flex items-center gap-3">
+                        <div key={index} className="flex items-center gap-2 sm:gap-3">
                           <input
                             type="url"
                             value={link}
@@ -295,17 +295,17 @@ export default function EditFragmentModal({
           </div>
 
           {/* Modal Footer */}
-          <footer className="px-8 py-5 bg-surface-container-low/75 border-t border-outline-variant/10 flex items-center justify-end gap-3">
+          <footer className="px-4 sm:px-8 py-4 sm:py-5 bg-surface-container-low/75 border-t border-outline-variant/10 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3">
             <button 
               type="button"
               onClick={onClose}
-              className="px-6 py-3.5 bg-surface-container border border-[#dac2b8]/20 text-on-surface font-sans font-semibold flex items-center justify-center gap-2 hover:bg-surface-container-high active:scale-95 transition-all text-sm rounded-full overflow-hidden relative cursor-pointer"
+              className="w-full sm:w-auto px-6 py-3.5 bg-surface-container border border-[#dac2b8]/20 text-on-surface font-sans font-semibold flex items-center justify-center gap-2 hover:bg-surface-container-high active:scale-95 transition-all text-sm rounded-full overflow-hidden relative cursor-pointer"
             >
               Cancelar
             </button>
             <button 
               type="submit"
-              className="px-10 py-3.5 bg-primary text-[#360f00] font-sans font-semibold flex items-center justify-center gap-2 hover:brightness-105 active:scale-95 transition-all text-sm rounded-full overflow-hidden relative shadow-lg shadow-primary/15 cursor-pointer group"
+              className="w-full sm:w-auto px-10 py-3.5 bg-primary text-[#360f00] font-sans font-semibold flex items-center justify-center gap-2 hover:brightness-105 active:scale-95 transition-all text-sm rounded-full overflow-hidden relative shadow-lg shadow-primary/15 cursor-pointer group"
             >
               <Sprout className="w-4 h-4 shrink-0" />
               <span>Salvar Alterações</span>

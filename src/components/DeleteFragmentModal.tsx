@@ -18,7 +18,7 @@ export default function DeleteFragmentModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-surface/85 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-lg glass-panel border border-error/20 rounded-xl shadow-2xl flex flex-col my-8 overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+      <div className="relative w-full max-w-lg max-h-[calc(100vh-2rem)] glass-panel border border-error/20 rounded-xl shadow-2xl flex flex-col my-4 sm:my-8 overflow-hidden animate-in fade-in zoom-in-95 duration-300">
         <button
           onClick={onCancel}
           className="absolute top-5 right-5 text-on-surface-variant hover:text-primary transition-colors z-10 p-2 cursor-pointer bg-surface-container/60 hover:bg-surface-container rounded-full border border-outline-variant/10"
@@ -27,12 +27,12 @@ export default function DeleteFragmentModal({
           <X className="w-5 h-5" />
         </button>
 
-        <header className="px-8 pt-8 pb-5 border-b border-outline-variant/10 flex items-start gap-4">
+        <header className="px-4 sm:px-8 pt-6 sm:pt-8 pb-5 pr-16 border-b border-outline-variant/10 flex items-start gap-4">
           <div className="w-12 h-12 rounded-xl bg-error/15 border border-error/25 text-error flex items-center justify-center shrink-0">
             <AlertTriangle className="w-5 h-5" />
           </div>
-          <div className="pr-10">
-            <h1 className="font-serif text-3xl font-light text-on-surface tracking-wide">
+          <div className="min-w-0">
+            <h1 className="font-serif text-2xl sm:text-3xl font-light text-on-surface tracking-wide">
               Excluir Fragmento
             </h1>
             <p className="font-mono text-[10px] text-error tracking-[0.2em] uppercase opacity-90 mt-1 font-semibold">
@@ -41,7 +41,7 @@ export default function DeleteFragmentModal({
           </div>
         </header>
 
-        <div className="px-8 py-6 space-y-4">
+        <div className="px-4 sm:px-8 py-5 sm:py-6 space-y-4 overflow-y-auto">
           <p className="text-sm text-on-surface-variant leading-relaxed">
             Você está prestes a excluir o fragmento abaixo do seu acervo. Depois da confirmação, ele será removido da constelação local.
           </p>
@@ -59,18 +59,18 @@ export default function DeleteFragmentModal({
           </div>
         </div>
 
-        <footer className="px-8 py-5 bg-surface-container-low/75 border-t border-outline-variant/10 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3">
+        <footer className="px-4 sm:px-8 py-4 sm:py-5 bg-surface-container-low/75 border-t border-outline-variant/10 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3">
           <button
             type="button"
             onClick={onCancel}
-            className="px-6 py-3.5 bg-surface-container border border-[#dac2b8]/20 text-on-surface font-sans font-semibold flex items-center justify-center hover:bg-surface-container-high active:scale-95 transition-all text-sm rounded-full cursor-pointer"
+            className="w-full sm:w-auto px-6 py-3.5 bg-surface-container border border-[#dac2b8]/20 text-on-surface font-sans font-semibold flex items-center justify-center hover:bg-surface-container-high active:scale-95 transition-all text-sm rounded-full cursor-pointer"
           >
             Manter Fragmento
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="px-6 py-3.5 bg-error/15 border border-error/30 text-error hover:bg-error/25 font-sans font-semibold flex items-center justify-center gap-2 active:scale-95 transition-all text-sm rounded-full cursor-pointer shadow-lg shadow-error/10"
+            className="w-full sm:w-auto px-6 py-3.5 bg-error/15 border border-error/30 text-error hover:bg-error/25 font-sans font-semibold flex items-center justify-center gap-2 active:scale-95 transition-all text-sm rounded-full cursor-pointer shadow-lg shadow-error/10"
           >
             <Trash2 className="w-4 h-4 shrink-0" />
             <span>Excluir Definitivamente</span>
