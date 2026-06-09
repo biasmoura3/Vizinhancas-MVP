@@ -19,7 +19,7 @@ const spaceTimeFormatter = new Intl.DateTimeFormat('pt-BR', {
 
 export default function HeaderBar({
   currentTerritory,
-  displayName = 'Ouvinte Atento',
+  displayName,
   authLabel,
   isAuthenticated = true,
   onAuthClick,
@@ -54,7 +54,7 @@ export default function HeaderBar({
           <span>{time || '15:10:00 GMT-3'}</span>
         </div>
 
-        {isAuthenticated ? (
+        {isAuthenticated && displayName ? (
           <div className="flex items-center gap-2.5 pl-3 border-l border-[#dac2b8]/15">
             <button className="w-9 h-9 rounded-full bg-gradient-to-tr from-primary to-secondary p-[1px] cursor-pointer transition-transform hover:scale-105 active:scale-95 shadow-md">
               <div className="w-full h-full rounded-full bg-[#0b1326] flex items-center justify-center text-xs text-primary font-mono font-bold uppercase">
@@ -66,7 +66,7 @@ export default function HeaderBar({
               <span className="text-[10px] opacity-60 font-mono text-on-surface-variant uppercase tracking-wider">{authLabel ?? currentTerritory}</span>
             </div>
           </div>
-        ) : (
+        ) : onAuthClick ? (
           <button
             type="button"
             onClick={onAuthClick}
@@ -75,6 +75,10 @@ export default function HeaderBar({
             <span className="material-symbols-outlined text-base leading-none">login</span>
             <span>Entrar para contribuir</span>
           </button>
+        ) : (
+          <div className="pl-3 border-l border-[#dac2b8]/15 hidden sm:block text-right font-mono text-[10px] opacity-75 uppercase tracking-wider">
+            {authLabel}
+          </div>
         )}
       </div>
     </header>

@@ -58,7 +58,9 @@ export default function App() {
   const [dataStatus, setDataStatus] = useState(isSupabaseConfigured ? 'Conectando ao armazenamento online...' : 'Modo local');
 
   const isRemoteMode = isSupabaseConfigured && Boolean(supabase);
-  const displayName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || 'Ouvinte Atento';
+  const isUserAuthenticated = Boolean(user);
+  const canContribute = !isRemoteMode || isUserAuthenticated;
+  const displayName = user?.user_metadata?.display_name || user?.email?.split('@')[0];
   const getAuthRedirectUrl = () => `${window.location.origin}${window.location.pathname}`;
 
   const normalizeTerritoryName = (value: string) => value.trim().replace(/\s+/g, ' ');
@@ -563,8 +565,8 @@ export default function App() {
         currentTerritory={currentTerritory}
         displayName={displayName}
         authLabel={isRemoteMode ? (user ? 'Sessao ativa' : 'Entrar para contribuir') : 'Modo local'}
-        isAuthenticated={!isRemoteMode || Boolean(user)}
-        onAuthClick={openAuthModal}
+        isAuthenticated={isUserAuthenticated}
+        onAuthClick={isRemoteMode ? openAuthModal : undefined}
       />
 
       {/* Main Structural Body */}
@@ -577,6 +579,7 @@ export default function App() {
           onOpenModal={handleOpenProposalFlow}
           currentTerritory={currentTerritory}
           displayName={displayName}
+          isAuthenticated={isUserAuthenticated}
         />
 
         {/* Content Panel Area */}
@@ -609,7 +612,7 @@ export default function App() {
               onToggleSaveFragment={handleToggleSaveFragment}
               onOpenEditModal={handleOpenEditModal}
               onDeleteFragment={handleDeleteFragment}
-              isAuthenticated={!isRemoteMode || Boolean(user)}
+              isAuthenticated={canContribute}
               onRequireAuth={openAuthModal}
             />
           )}

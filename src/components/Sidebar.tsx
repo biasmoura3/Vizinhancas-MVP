@@ -14,6 +14,7 @@ interface SidebarProps {
   onOpenModal: () => void;
   currentTerritory: string;
   displayName?: string;
+  isAuthenticated?: boolean;
 }
 
 export default function Sidebar({ 
@@ -21,7 +22,8 @@ export default function Sidebar({
   setActiveTab, 
   onOpenModal, 
   currentTerritory,
-  displayName = 'Ouvinte Atento'
+  displayName,
+  isAuthenticated = false
 }: SidebarProps) {
   
   const steps = [
@@ -48,7 +50,7 @@ export default function Sidebar({
   return (
     <aside className="w-80 h-full flex flex-col glass-panel border-r border-[#dac2b8]/15 text-on-surface overflow-hidden shrink-0">
       {/* Caretaker / Resident Profile Header */}
-      <div className="px-6 py-8 border-b border-[#dac2b8]/10">
+      <div className={isAuthenticated && displayName ? 'px-6 py-8 border-b border-[#dac2b8]/10' : 'hidden'}>
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-primary shrink-0">
             <span className="material-symbols-outlined font-light text-2xl" style={{ fontVariationSettings: "'FILL' 1, 'wght' 200" }}>hearing</span>
