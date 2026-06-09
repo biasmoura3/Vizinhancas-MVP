@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Territory, WorldFragment } from '../types';
 import {
   Sprout,
-  Map,
+  Map as MapIcon,
   Volume2,
   FileText,
   Image as ImageIcon,
@@ -143,7 +143,7 @@ export default function CanvasMap({
 
   // Find currently active details info
   const activeFragment = fragments.find(f => f.id === selectedId) || null;
-  const fragmentById = new Map(fragments.map((fragment) => [fragment.id, fragment]));
+  const fragmentById = new globalThis.Map(fragments.map((fragment) => [fragment.id, fragment]));
   const isVisibleByFilter = (fragment: WorldFragment) => filterTerritory === 'todos' || fragment.territory === filterTerritory;
   const visibleConnectionLines = fragments.flatMap((fragment) => {
     if (!isVisibleByFilter(fragment)) return [];
@@ -506,7 +506,7 @@ export default function CanvasMap({
               onClick={() => setOffset({ x: 0, y: 0 })}
               className="bg-[#0b1326]/85 border border-[#dac2b8]/15 hover:border-primary/40 text-primary text-[10px] font-semibold px-4 py-2.5 rounded-full flex items-center gap-2 backdrop-blur shadow-xl pointer-events-auto cursor-pointer hover:bg-primary/5 transition-all"
             >
-              <Map className="w-3.5 h-3.5" />
+              <MapIcon className="w-3.5 h-3.5" />
               <span>Centralizar Vista</span>
             </button>
           )}
