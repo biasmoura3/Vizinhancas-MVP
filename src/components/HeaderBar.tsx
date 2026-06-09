@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { HelpCircle } from 'lucide-react';
 
 interface HeaderBarProps {
   currentTerritory: string;
@@ -6,6 +7,8 @@ interface HeaderBarProps {
   authLabel?: string;
   isAuthenticated?: boolean;
   onAuthClick?: () => void;
+  onHelpClick?: () => void;
+  isHelpActive?: boolean;
 }
 
 const spaceTimeFormatter = new Intl.DateTimeFormat('pt-BR', {
@@ -23,6 +26,8 @@ export default function HeaderBar({
   authLabel,
   isAuthenticated = true,
   onAuthClick,
+  onHelpClick,
+  isHelpActive = false,
 }: HeaderBarProps) {
   const [time, setTime] = useState<string>('');
 
@@ -79,6 +84,22 @@ export default function HeaderBar({
           <div className="pl-3 border-l border-[#dac2b8]/15 hidden sm:block text-right font-mono text-[10px] opacity-75 uppercase tracking-wider">
             {authLabel}
           </div>
+        )}
+
+        {onHelpClick && (
+          <button
+            type="button"
+            onClick={onHelpClick}
+            className={`w-9 h-9 rounded-full border flex items-center justify-center transition-all cursor-pointer shrink-0 ${
+              isHelpActive
+                ? 'bg-primary text-on-primary border-primary shadow-md shadow-primary/20'
+                : 'bg-surface-container/35 border-[#dac2b8]/20 text-on-surface-variant hover:border-primary/40 hover:text-primary hover:bg-surface-container/60'
+            }`}
+            title="Ajuda"
+            aria-label="Ajuda"
+          >
+            <HelpCircle className="w-4 h-4" />
+          </button>
         )}
       </div>
     </header>

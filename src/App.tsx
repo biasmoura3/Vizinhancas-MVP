@@ -587,6 +587,8 @@ export default function App() {
         authLabel={isRemoteMode ? (user ? 'Sessao ativa' : 'Entrar para contribuir') : 'Modo local'}
         isAuthenticated={isUserAuthenticated}
         onAuthClick={isRemoteMode ? openAuthModal : undefined}
+        onHelpClick={() => setActiveTab('ajuda')}
+        isHelpActive={activeTab === 'ajuda'}
       />
 
       {/* Main Structural Body */}
@@ -596,7 +598,6 @@ export default function App() {
         <Sidebar 
           activeTab={activeTab} 
           setActiveTab={setActiveTab} 
-          onOpenModal={handleOpenProposalFlow}
           currentTerritory={currentTerritory}
           displayName={displayName}
           isAuthenticated={isUserAuthenticated}
