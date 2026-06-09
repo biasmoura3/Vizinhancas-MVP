@@ -1,5 +1,16 @@
 ﻿import { WorldFragment, LoreDocument } from './types';
 
+export const DEFAULT_FRAGMENT_CONNECTIONS: Record<string, string[]> = {
+  'alti-1': ['poet-2', 'memb-3'],
+  'poet-2': ['alti-1'],
+  'memb-3': ['alti-1'],
+  'mang-4': [],
+  'flor-5': ['linc-7'],
+  'vale-6': [],
+  'linc-7': ['flor-5'],
+  'vento-8': [],
+};
+
 export const INITIAL_FRAGMENTS: WorldFragment[] = [
   {
     id: 'alti-1',

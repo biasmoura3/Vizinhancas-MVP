@@ -1,5 +1,5 @@
 import { User } from '@supabase/supabase-js';
-import { INITIAL_FRAGMENTS, TERRITORIES } from '../data';
+import { DEFAULT_FRAGMENT_CONNECTIONS, INITIAL_FRAGMENTS, TERRITORIES } from '../data';
 import { FragmentType, Territory, WorldFragment } from '../types';
 import { ensureFixedMapPositions } from '../utils/constellationLayout';
 import { supabase } from '../lib/supabase';
@@ -38,6 +38,14 @@ const toTerritory = (row: TerritoryRow): Territory => ({
   createdAt: row.created_at,
 });
 
+const hasDefaultConnectionProfile = (id: string) => (
+  Object.prototype.hasOwnProperty.call(DEFAULT_FRAGMENT_CONNECTIONS, id)
+);
+
+const getDefaultConnectedFragmentIds = (id: string) => (
+  DEFAULT_FRAGMENT_CONNECTIONS[id] ?? []
+);
+
 const toFragment = (row: FragmentRow, user: User | null): WorldFragment => ({
   id: row.id,
   title: row.title,
@@ -50,8 +58,10 @@ const toFragment = (row: FragmentRow, user: User | null): WorldFragment => ({
     : undefined,
   imageUrl: row.image_url ?? undefined,
   mediaLinks: (row.media_links ?? []).slice(0, 3),
-  isOpenToConnections: row.is_open_to_connections ?? false,
-  connectedFragmentIds: (row.connected_fragment_ids ?? []).slice(0, 5),
+  isOpenToConnections: (row.is_open_to_connections ?? false) || hasDefaultConnectionProfile(row.id),
+  connectedFragmentIds: (row.connected_fragment_ids?.length
+    ? row.connected_fragment_ids
+    : getDefaultConnectedFragmentIds(row.id)).slice(0, 5),
   createdAt: row.created_at,
   updatedAt: row.updated_at,
   authorId: row.author_id,
