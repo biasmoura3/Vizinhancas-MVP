@@ -163,7 +163,7 @@ export default function EditFragmentModal({
 
                 <div className="space-y-2">
                   <label className="font-mono text-[10px] uppercase text-on-surface-variant/80 tracking-wider block font-semibold">
-                    Origem ou Autor do Fragmento
+                    Origem/Autor do Fragmento
                   </label>
                   <input 
                     type="text"
@@ -176,14 +176,14 @@ export default function EditFragmentModal({
 
                 <div className="space-y-2">
                   <label className="font-mono text-[10px] uppercase text-on-surface-variant/80 tracking-wider block font-semibold">
-                    Bairro ou Região
+                    Região
                   </label>
                   <input 
                     type="text"
                     value={territory}
                     onChange={(e) => setTerritory(e.target.value)}
                     className="w-full bg-transparent border-0 border-b border-[#dac2b8]/30 focus:border-primary focus:ring-0 text-base font-sans text-on-surface py-2 px-0 transition-all placeholder:text-on-surface-variant/30"
-                    placeholder="Bairro ou setor"
+                    placeholder="Região ou setor"
                   />
                 </div>
 

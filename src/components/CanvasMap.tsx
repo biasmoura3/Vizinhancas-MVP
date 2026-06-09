@@ -453,7 +453,7 @@ export default function CanvasMap({
 
               <div className="grid grid-cols-2 gap-3 text-[10px] font-mono text-on-surface-variant border-t border-[#dac2b8]/10 pt-3">
                 <div>
-                  <span className="opacity-55 block uppercase font-bold text-[8px]">Origem</span>
+                  <span className="opacity-55 block uppercase font-bold text-[8px]">Origem/Autor</span>
                   <span className="text-on-surface block font-sans font-medium mt-0.5">{activeFragment.source}</span>
                 </div>
                 <div>

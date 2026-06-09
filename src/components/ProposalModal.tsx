@@ -170,7 +170,7 @@ export default function ProposalModal({
 
                 <div className="space-y-2">
                   <label className="font-mono text-[10px] uppercase text-on-surface-variant/80 tracking-wider block font-semibold">
-                    Origem ou Autor do Fragmento
+                    Origem/Autor do Fragmento
                   </label>
                   <input 
                     type="text"
@@ -183,7 +183,7 @@ export default function ProposalModal({
 
                 <div className="space-y-2">
                   <label className="font-mono text-[10px] uppercase text-on-surface-variant/80 tracking-wider block font-semibold">
-                    Bairro ou Região
+                    Região
                   </label>
                   <input 
                     type="text"

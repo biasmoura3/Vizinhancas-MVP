@@ -172,7 +172,7 @@ export default function ZeloTab({
                       <span className="font-mono text-[8px] uppercase tracking-wider bg-[#10b981]/15 text-emerald-400 border border-emerald-500/25 px-2.5 py-0.5 rounded-full font-semibold">
                         {f.type === 'audio' ? 'Fragmento Sonoro' : f.type === 'visual' ? 'Fragmento Visual' : 'Fragmento Textual'}
                       </span>
-                      <span className="text-[9px] font-mono text-on-surface-variant/40 shrink-0 select-text">Bairro: {f.territory}</span>
+                      <span className="text-[9px] font-mono text-on-surface-variant/40 shrink-0 select-text">Região: {f.territory}</span>
                     </div>
 
                     <div>
@@ -282,7 +282,7 @@ export default function ZeloTab({
 
                     <div>
                       <h4 className="font-serif text-lg font-light text-on-surface">{f.title}</h4>
-                      <p className="text-[10px] font-mono text-on-surface-variant/40">Origem: {f.source}</p>
+                      <p className="text-[10px] font-mono text-on-surface-variant/40">Origem/Autor: {f.source}</p>
                     </div>
 
                     <p className="text-xs text-on-surface-variant leading-relaxed select-text font-sans">
