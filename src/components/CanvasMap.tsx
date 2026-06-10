@@ -201,7 +201,7 @@ export default function CanvasMap({
             className={`px-3 py-1.5 rounded-full text-xs font-semibold capitalize font-mono transition-all shrink-0 cursor-pointer border ${
               filterTerritory === ter
                 ? 'bg-secondary text-on-secondary border-secondary/50 shadow-md'
-                : 'bg-surface-container/85 border-outline/20 hover:border-secondary/45 text-on-surface-variant'
+                : 'bg-surface-container/85 border-[#dac2b8]/15 hover:border-[#dac2b8]/40 text-on-surface-variant'
             }`}
           >
             {ter === 'todos' ? 'Todos' : ter}
@@ -219,7 +219,7 @@ export default function CanvasMap({
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleMouseUp}
-        className={`flex-1 w-full relative bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-surface-container-low/20 via-background to-surface-container-lowest overflow-hidden select-none transition-colors duration-200 ${
+        className={`flex-1 w-full relative bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-surface-container-low/20 via-[#0b1326] to-[#040810] overflow-hidden select-none transition-colors duration-200 ${
           isDragging ? 'cursor-grabbing bg-slate-950/20' : 'cursor-grab'
         }`}
       >
@@ -238,7 +238,7 @@ export default function CanvasMap({
                 y1={`${line.from.y}%`}
                 x2={`${line.to.x}%`}
                 y2={`${line.to.y}%`}
-                className={line.isActive ? 'stroke-primary/60' : 'stroke-outline/25'}
+                className={line.isActive ? 'stroke-primary/60' : 'stroke-[#dac2b8]/18'}
                 strokeWidth={line.isActive ? 1.4 : 0.8}
                 strokeLinecap="round"
               />
@@ -284,20 +284,20 @@ export default function CanvasMap({
                     onMouseLeave={() => setHoveredNodeId(null)}
                     className={`w-3.5 h-3.5 rounded-full transition-all duration-300 cursor-pointer border flex items-center justify-center relative ${
                       isSelected
-                        ? 'bg-primary border-primary scale-125 shadow-[0_0_15px_#ffc6ad]'
+                        ? 'bg-primary border-[#ffb596] scale-125 shadow-[0_0_15px_#ffb596]'
                         : isHovered
-                          ? 'bg-primary border-primary/80 scale-110 shadow-[0_0_10px_rgba(255,198,173,0.5)]'
+                          ? 'bg-[#ffb596] border-[#ffb596]/80 scale-110 shadow-[0_0_10px_rgba(255,181,150,0.5)]'
                           : frag.type === 'audio'
-                            ? 'bg-tertiary border-tertiary/30'
+                            ? 'bg-blue-400 border-blue-400/30'
                             : frag.type === 'visual'
-                              ? 'bg-primary border-primary/30'
-                              : 'bg-secondary border-secondary/30'
+                              ? 'bg-amber-400 border-amber-400/30'
+                              : 'bg-emerald-400 border-emerald-400/30'
                     }`}
                     style={{
                       boxShadow: isSelected
-                        ? '0 0 15px #ffc6ad, inset 0 0 4px rgba(255,255,255,0.8)'
+                        ? '0 0 15px #ffb596, inset 0 0 4px rgba(255,255,255,0.8)'
                         : isHovered
-                          ? '0 0 8px rgba(255,198,173,0.5)'
+                          ? '0 0 8px rgba(255,181,150,0.5)'
                           : 'none'
                     }}
                   />
@@ -312,7 +312,7 @@ export default function CanvasMap({
                       isSelected
                         ? 'text-primary font-semibold'
                         : isHovered
-                          ? 'text-primary'
+                          ? 'text-[#ffb596]'
                           : 'text-on-surface-variant/80'
                     }`}
                     style={{
@@ -335,14 +335,14 @@ export default function CanvasMap({
                 transform: `translate(calc(-50% - ${offset.x}px), calc(-50% - ${offset.y}px))`
               }}
               onMouseDown={(e) => e.stopPropagation()} // allows text selection/interaction inside card without invoking drag
-              className="absolute z-40 w-[calc(100vw-1.5rem)] sm:w-fit min-w-0 sm:min-w-[min(22rem,calc(100vw-2rem))] max-w-[min(64rem,calc(100vw-2rem))] max-h-[min(70vh,42rem)] md:max-h-[min(78vh,42rem)] overflow-y-auto glass-panel border border-outline/35 rounded-2xl shadow-[0_18px_60px_rgba(0,0,0,0.88),0_0_34px_rgba(255,198,173,0.12)] p-4 sm:p-6 animate-in zoom-in-95 duration-200 select-text cursor-default space-y-4 bg-background/90 backdrop-blur-md"
+              className="absolute z-40 w-[calc(100vw-1.5rem)] sm:w-fit min-w-0 sm:min-w-[min(22rem,calc(100vw-2rem))] max-w-[min(64rem,calc(100vw-2rem))] max-h-[min(70vh,42rem)] md:max-h-[min(78vh,42rem)] overflow-y-auto glass-panel border border-[#dac2b8]/30 rounded-2xl shadow-[0_18px_60px_rgba(0,0,0,0.88),0_0_34px_rgba(255,181,150,0.12)] p-4 sm:p-6 animate-in zoom-in-95 duration-200 select-text cursor-default space-y-4 bg-[#0a1120]/90 backdrop-blur-md"
             >
               {/* Popover Header */}
-              <div className="flex items-center justify-between pb-2.5 border-b border-outline/20 text-xs font-mono text-primary uppercase select-none">
+              <div className="flex items-center justify-between pb-2.5 border-b border-[#dac2b8]/15 text-xs font-mono text-primary uppercase select-none">
                 <span className="flex min-w-0 items-center gap-1.5 font-semibold">
-                  {activeFragment.type === 'audio' && <Volume2 className="w-3.5 h-3.5 text-tertiary animate-pulse" />}
-                  {activeFragment.type === 'poetic' && <FileText className="w-3.5 h-3.5 text-secondary" />}
-                  {activeFragment.type === 'visual' && <ImageIcon className="w-3.5 h-3.5 text-primary" />}
+                  {activeFragment.type === 'audio' && <Volume2 className="w-3.5 h-3.5 text-blue-400 animate-pulse" />}
+                  {activeFragment.type === 'poetic' && <FileText className="w-3.5 h-3.5 text-emerald-400" />}
+                  {activeFragment.type === 'visual' && <ImageIcon className="w-3.5 h-3.5 text-amber-400" />}
                   {activeFragment.type === 'audio' && <span>Fragmento Sonoro</span>}
                   {activeFragment.type === 'poetic' && <span>Fragmento Textual</span>}
                   {activeFragment.type === 'visual' && <span>Fragmento Visual</span>}
@@ -357,11 +357,11 @@ export default function CanvasMap({
                       title={savedFragmentIds.includes(activeFragment.id) ? "Remover dos salvos" : "Salvar de outras comunidades"}
                       className={`w-7 h-7 flex items-center justify-center rounded-full transition-all cursor-pointer ${
                         savedFragmentIds.includes(activeFragment.id)
-                          ? 'bg-secondary/40 text-primary border border-primary/45'
-                          : 'bg-surface-container/20 hover:bg-secondary/10 text-on-surface-variant hover:text-primary border border-transparent'
+                          ? 'bg-secondary/40 text-[#ffb596] border border-[#ffb596]/45'
+                          : 'bg-surface-container/20 hover:bg-[#dac2b8]/15 text-on-surface-variant hover:text-primary border border-transparent'
                       }`}
                     >
-                      <Bookmark className={`w-3.5 h-3.5 ${savedFragmentIds.includes(activeFragment.id) ? 'fill-primary' : ''}`} />
+                      <Bookmark className={`w-3.5 h-3.5 ${savedFragmentIds.includes(activeFragment.id) ? 'fill-[#ffb596]' : ''}`} />
                     </button>
                   )}
                   <button
@@ -378,9 +378,9 @@ export default function CanvasMap({
 
               {/* Media preview frame */}
               {activePreviewUrl && (
-                <div className="relative w-full h-44 rounded-lg overflow-hidden border border-outline/15 group">
+                <div className="relative w-full h-44 rounded-lg overflow-hidden border border-[#dac2b8]/10 group">
                   <FragmentViewer url={activePreviewUrl} alt={activeFragment.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-65 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a1120] to-transparent opacity-65 pointer-events-none" />
                 </div>
               )}
 
@@ -389,7 +389,7 @@ export default function CanvasMap({
                   {activeMediaLinks.map((link, index) => (
                     <div
                       key={`${link}-${index}`}
-                      className="relative min-w-0 rounded-lg overflow-hidden border border-outline/15 bg-surface-container-low/25"
+                      className="relative min-w-0 rounded-lg overflow-hidden border border-[#dac2b8]/10 bg-surface-container-low/25"
                     >
                       <FragmentViewer
                         url={link}
@@ -427,7 +427,7 @@ export default function CanvasMap({
               )}
 
               {activeConnectedFragments.length > 0 && (
-                <div className="border-t border-outline/15 pt-3 space-y-2">
+                <div className="border-t border-[#dac2b8]/10 pt-3 space-y-2">
                   <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase text-on-surface-variant/65 font-semibold select-none">
                     <Link2 className="w-3.5 h-3.5 text-primary" />
                     <span>Conexoes</span>
@@ -451,7 +451,7 @@ export default function CanvasMap({
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[10px] font-mono text-on-surface-variant border-t border-outline/15 pt-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[10px] font-mono text-on-surface-variant border-t border-[#dac2b8]/10 pt-3">
                 <div>
                   <span className="opacity-55 block uppercase font-bold text-[8px]">Origem/Autor</span>
                   <span className="text-on-surface block font-sans font-medium mt-0.5 break-words [overflow-wrap:anywhere]">{activeFragment.source}</span>
@@ -463,7 +463,7 @@ export default function CanvasMap({
               </div>
 
               {activeFragment.isUserCreated !== true ? (
-                <div className="border-t border-outline/15 pt-3">
+                <div className="border-t border-[#dac2b8]/10 pt-3">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -471,8 +471,8 @@ export default function CanvasMap({
                     }}
                     className={`w-full py-2.5 px-3 rounded-xl font-sans text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer transition-all border ${
                       savedFragmentIds.includes(activeFragment.id)
-                        ? 'bg-secondary/15 text-primary border-secondary/30 hover:bg-secondary/25'
-                        : 'bg-surface-container-high/40 hover:bg-surface-container-high text-on-surface border-outline/20 hover:border-secondary/40'
+                        ? 'bg-secondary/15 text-[#ffb596] border-secondary/30 hover:bg-secondary/25'
+                        : 'bg-surface-container-high/40 hover:bg-surface-container-high text-on-surface border-[#dac2b8]/15 hover:border-[#dac2b8]/35'
                     }`}
                   >
                     <Bookmark className={`w-3.5 h-3.5 ${savedFragmentIds.includes(activeFragment.id) ? 'fill-current' : ''}`} />
@@ -484,7 +484,7 @@ export default function CanvasMap({
                   </button>
                 </div>
               ) : (
-                <div className="border-t border-outline/15 pt-3 text-[10px] font-mono text-secondary flex items-center gap-1.5 justify-center py-1.5 bg-secondary/5 rounded-xl border border-secondary/20 select-none">
+                <div className="border-t border-[#dac2b8]/10 pt-3 text-[10px] font-mono text-emerald-400 flex items-center gap-1.5 justify-center py-1.5 bg-[#10b981]/5 rounded-xl border border-emerald-500/15 select-none">
                   <Sprout className="w-3.5 h-3.5 animate-pulse" />
                   <span className="font-sans font-medium">Seu fragmento registrado!</span>
                 </div>
@@ -496,7 +496,7 @@ export default function CanvasMap({
 
         {/* HUD control bar fixed overlay */}
         <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-6 sm:right-6 z-30 flex items-center justify-between gap-2 pointer-events-none">
-          <div className="bg-background/85 border border-outline/20 text-on-surface-variant text-[10px] font-mono px-3 sm:px-4 py-2.5 rounded-full flex items-center gap-2.5 backdrop-blur shadow-xl pointer-events-auto select-none min-w-0 [&>span]:truncate">
+          <div className="bg-[#0b1326]/85 border border-[#dac2b8]/15 text-on-surface-variant text-[10px] font-mono px-3 sm:px-4 py-2.5 rounded-full flex items-center gap-2.5 backdrop-blur shadow-xl pointer-events-auto select-none min-w-0 [&>span]:truncate">
             <Locate className="w-3.5 h-3.5 text-primary animate-pulse" />
             <span>Constelação • Arraste o fundo para navegar • Clique para detalhes</span>
           </div>
@@ -504,7 +504,7 @@ export default function CanvasMap({
           {(offset.x !== 0 || offset.y !== 0) && (
             <button
               onClick={() => setOffset({ x: 0, y: 0 })}
-              className="bg-background/85 border border-outline/20 hover:border-primary/40 text-primary text-[10px] font-semibold px-3 sm:px-4 py-2.5 rounded-full flex items-center gap-2 backdrop-blur shadow-xl pointer-events-auto cursor-pointer hover:bg-primary/5 transition-all shrink-0"
+              className="bg-[#0b1326]/85 border border-[#dac2b8]/15 hover:border-primary/40 text-primary text-[10px] font-semibold px-3 sm:px-4 py-2.5 rounded-full flex items-center gap-2 backdrop-blur shadow-xl pointer-events-auto cursor-pointer hover:bg-primary/5 transition-all shrink-0"
             >
               <MapIcon className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Centralizar Vista</span>

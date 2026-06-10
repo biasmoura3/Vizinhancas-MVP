@@ -646,14 +646,14 @@ export default function App() {
           {/* TAB 4: CONFIGURATIONS (Configurações) */}
           {activeTab === 'settings' && (
             <div className="w-full p-4 sm:p-6 md:p-8 space-y-6 max-w-2xl mx-auto animate-in fade-in duration-300">
-              <div className="space-y-1 border-b border-outline/15 pb-4">
+              <div className="space-y-1 border-b border-[#dac2b8]/10 pb-4">
                 <h2 className="font-serif text-2xl text-on-surface">Configurações do Sistema</h2>
                 <p className="text-xs text-on-surface-variant leading-relaxed">
                   Ajustes simples para o funcionamento da plataforma e dos dados locais.
                 </p>
               </div>
 
-              <div className="glass-panel border border-outline/20 rounded-xl p-4 sm:p-6 space-y-6">
+              <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-4 sm:p-6 space-y-6">
                 <div className="space-y-3">
                   <h3 className="text-sm font-semibold text-on-surface">Conexao de dados</h3>
                   <p className="text-xs text-on-surface-variant leading-relaxed">
@@ -665,7 +665,7 @@ export default function App() {
                         <span className="text-xs text-on-surface-variant font-mono">{user.email}</span>
                         <button
                           onClick={handleSignOut}
-                          className="px-4 py-2 bg-surface-container border border-outline/25 text-on-surface hover:bg-surface-container-high rounded-full text-xs font-semibold max-w-sm transition-colors cursor-pointer"
+                          className="px-4 py-2 bg-surface-container border border-[#dac2b8]/20 text-on-surface hover:bg-surface-container-high rounded-full text-xs font-semibold max-w-sm transition-colors cursor-pointer"
                         >
                           Sair
                         </button>
@@ -698,7 +698,7 @@ export default function App() {
                   )}
                 </div>
 
-                <div className="pt-4 border-t border-outline/15 space-y-2">
+                <div className="pt-4 border-t border-[#dac2b8]/10 space-y-2">
                   <h3 className="text-sm font-semibold text-on-surface">Territórios Carregados</h3>
                   <p className="text-xs text-on-surface-variant leading-relaxed">
                     {territories.length} territórios disponíveis para a constelação e seus filtros.
@@ -718,7 +718,7 @@ export default function App() {
                   </button>
                 </div>
 
-                <div className="pt-4 border-t border-outline/15 space-y-2 text-xs">
+                <div className="pt-4 border-t border-[#dac2b8]/10 space-y-2 text-xs">
                   <span className="font-semibold block text-on-surface">Sobre o Uso dos Fragmentos</span>
                   <p className="text-on-surface-variant/70 leading-relaxed font-sans">
                     Todos os fragmentos de mundo coletados na plataforma <strong>Vizinhanças</strong> são de propriedade comunitária dos próprios moradores. É proibida a cópia ou uso comercial desse acervo de fragmentos.
@@ -731,14 +731,14 @@ export default function App() {
           {/* TAB 5: HELP (Ajuda) */}
           {activeTab === 'ajuda' && (
             <div className="w-full p-4 sm:p-6 md:p-8 space-y-6 max-w-3xl mx-auto animate-in fade-in duration-300">
-              <div className="space-y-1 border-b border-outline/15 pb-4">
+              <div className="space-y-1 border-b border-[#dac2b8]/10 pb-4">
                 <h2 className="font-serif text-2xl text-on-surface">Ajuda</h2>
                 <p className="text-xs text-on-surface-variant leading-relaxed">
                   Um guia rapido para entrar na plataforma, navegar pela constelacao e cuidar dos seus fragmentos.
                 </p>
               </div>
 
-              <div className="glass-panel border border-outline/20 rounded-xl p-4 sm:p-6 space-y-5">
+              <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-4 sm:p-6 space-y-5">
                 <div className="space-y-2">
                   <span className="font-mono text-[10px] uppercase text-primary block font-semibold">Como funciona a plataforma</span>
                   <p className="text-xs text-on-surface-variant leading-relaxed">
@@ -765,14 +765,14 @@ export default function App() {
                       text: 'Consulte a documentacao, leia o manifesto e acompanhe as orientacoes de zelo para manter o espaco coletivo organizado.',
                     },
                   ].map((item) => (
-                    <div key={item.title} className="rounded-lg border border-outline/15 bg-surface-container-low/45 p-4 space-y-2">
+                    <div key={item.title} className="rounded-lg border border-[#dac2b8]/10 bg-surface-container-low/45 p-4 space-y-2">
                       <h3 className="text-sm font-semibold text-on-surface">{item.title}</h3>
                       <p className="text-xs text-on-surface-variant/75 leading-relaxed">{item.text}</p>
                     </div>
                   ))}
                 </div>
 
-                <div className="pt-4 border-t border-outline/15 space-y-3">
+                <div className="pt-4 border-t border-[#dac2b8]/10 space-y-3">
                   <span className="font-mono text-[10px] uppercase text-primary block font-semibold">Primeiros passos</span>
                   <ol className="space-y-2 text-xs text-on-surface-variant leading-relaxed list-decimal list-inside">
                     <li>Comece pela Constelacao para ver como os fragmentos estao distribuidos no mapa.</li>
@@ -783,7 +783,7 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="glass-panel border border-outline/20 rounded-xl p-4 sm:p-6 space-y-4">
+              <div className="glass-panel border border-[#dac2b8]/15 rounded-xl p-4 sm:p-6 space-y-4">
                 <div className="space-y-2">
                   <span className="font-mono text-[10px] uppercase text-primary block font-semibold">Fale com os Organizadores</span>
                   <p className="text-xs text-on-surface-variant leading-relaxed">
@@ -791,7 +791,7 @@ export default function App() {
                   </p>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-outline/15 text-xs font-mono space-y-1 text-on-surface-variant/60">
+                <div className="mt-4 pt-4 border-t border-[#dac2b8]/10 text-xs font-mono space-y-1 text-on-surface-variant/60">
                   <p>Localização: Setor 7G de Vizinhanças</p>
                   <p>E-mail de Contato: biasoura04@gmail.com</p>
                   <p>Status do Sistema: ● Online e Estável</p>

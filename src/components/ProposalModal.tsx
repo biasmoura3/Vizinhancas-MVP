@@ -112,7 +112,7 @@ export default function ProposalModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-surface/85 backdrop-blur-md overflow-y-auto" id="modal-overlay">
       {/* Container panel */}
-      <div className="relative w-full max-w-3xl max-h-[calc(100vh-2rem)] glass-panel border border-outline/20 rounded-xl shadow-2xl flex flex-col my-4 sm:my-8 overflow-hidden animate-in fade-in zoom-in-95 duration-300">
+      <div className="relative w-full max-w-3xl max-h-[calc(100vh-2rem)] glass-panel border border-[#dac2b8]/15 rounded-xl shadow-2xl flex flex-col my-4 sm:my-8 overflow-hidden animate-in fade-in zoom-in-95 duration-300">
         
         {/* Close Button */}
         <button 
@@ -175,7 +175,7 @@ export default function ProposalModal({
                     maxLength={50}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full bg-transparent border-0 border-b border-outline/35 focus:border-primary focus:ring-0 text-lg font-sans text-on-surface py-2 px-0 transition-all placeholder:text-on-surface-variant/30"
+                    className="w-full bg-transparent border-0 border-b border-[#dac2b8]/30 focus:border-primary focus:ring-0 text-lg font-sans text-on-surface py-2 px-0 transition-all placeholder:text-on-surface-variant/30"
                     placeholder="Qual o nome deste fragmento?"
                   />
                 </div>
@@ -188,7 +188,7 @@ export default function ProposalModal({
                     type="text"
                     value={source}
                     onChange={(e) => setSource(e.target.value)}
-                    className="w-full bg-transparent border-0 border-b border-outline/35 focus:border-primary focus:ring-0 text-base font-sans text-on-surface py-2 px-0 transition-all placeholder:text-on-surface-variant/30"
+                    className="w-full bg-transparent border-0 border-b border-[#dac2b8]/30 focus:border-primary focus:ring-0 text-base font-sans text-on-surface py-2 px-0 transition-all placeholder:text-on-surface-variant/30"
                     placeholder="Quem registrou ou de onde ele provém?"
                   />
                 </div>
@@ -202,7 +202,7 @@ export default function ProposalModal({
                     value={territory}
                     list="proposal-territories"
                     onChange={(e) => setTerritory(e.target.value)}
-                    className="w-full bg-transparent border-0 border-b border-outline/35 focus:border-primary focus:ring-0 text-base font-sans text-on-surface py-2 px-0 transition-all placeholder:text-on-surface-variant/30"
+                    className="w-full bg-transparent border-0 border-b border-[#dac2b8]/30 focus:border-primary focus:ring-0 text-base font-sans text-on-surface py-2 px-0 transition-all placeholder:text-on-surface-variant/30"
                     placeholder="Escolha um territorio ou escreva um novo"
                   />
                   <datalist id="proposal-territories">
@@ -217,12 +217,12 @@ export default function ProposalModal({
                   </p>
                 </div>
 
-                <label className="flex items-start gap-3 rounded-lg border border-outline/20 bg-surface-container-low/35 p-3 cursor-pointer">
+                <label className="flex items-start gap-3 rounded-lg border border-[#dac2b8]/15 bg-surface-container-low/35 p-3 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={isOpenToConnections}
                     onChange={(e) => setIsOpenToConnections(e.target.checked)}
-                    className="mt-0.5 h-4 w-4 rounded border-outline/35 bg-transparent text-primary focus:ring-primary/30"
+                    className="mt-0.5 h-4 w-4 rounded border-[#dac2b8]/30 bg-transparent text-primary focus:ring-primary/30"
                   />
                   <span className="space-y-1">
                     <span className="block text-xs font-semibold text-on-surface">Aberto a conexoes da comunidade</span>
@@ -256,7 +256,7 @@ export default function ProposalModal({
                     maxLength={300}
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    className="w-full bg-surface-container-low/40 rounded-lg border border-outline/20 focus:border-primary focus:ring-1 focus:ring-primary/10 text-sm font-sans text-on-surface p-4 transition-all placeholder:italic placeholder:text-on-surface-variant/30 leading-relaxed"
+                    className="w-full bg-surface-container-low/40 rounded-lg border border-[#dac2b8]/15 focus:border-[#ffb596] focus:ring-1 focus:ring-[#ffb596]/10 text-sm font-sans text-on-surface p-4 transition-all placeholder:italic placeholder:text-on-surface-variant/30 leading-relaxed"
                     placeholder="Descreva as percepções e elementos deste fragmento de mundo..."
                   />
                 </div>
@@ -277,7 +277,7 @@ export default function ProposalModal({
                             value={link}
                             onChange={(e) => handleUpdateMediaLink(index, e.target.value)}
                             placeholder={`${mediaFieldPlaceholder} ${index + 1}`}
-                            className="flex-1 bg-surface-container-low/60 rounded-lg border border-outline/25 px-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
+                            className="flex-1 bg-surface-container-low/60 rounded-lg border border-[#dac2b8]/20 px-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
                           />
                           {mediaLinks.length > 1 && (
                             <button
@@ -316,7 +316,7 @@ export default function ProposalModal({
           <footer className="px-4 sm:px-8 py-4 sm:py-5 bg-surface-container-low/75 border-t border-outline-variant/10 flex items-center justify-end">
             <button 
               type="submit"
-              className="w-full sm:w-auto px-10 py-3.5 bg-primary text-on-primary font-sans font-semibold flex items-center justify-center gap-2 hover:brightness-105 active:scale-95 transition-all text-sm rounded-full overflow-hidden relative shadow-lg shadow-primary/15 cursor-pointer group"
+              className="w-full sm:w-auto px-10 py-3.5 bg-primary text-[#360f00] font-sans font-semibold flex items-center justify-center gap-2 hover:brightness-105 active:scale-95 transition-all text-sm rounded-full overflow-hidden relative shadow-lg shadow-primary/15 cursor-pointer group"
             >
               <Sprout className="w-4 h-4 shrink-0" />
               <span>Publicar na Constelação</span>

@@ -42,7 +42,7 @@ export default function HeaderBar({
   }, []);
 
   return (
-    <header className="w-full min-h-16 glass-panel border-b border-outline/20 px-3 sm:px-6 py-2 flex items-center justify-between gap-3 text-on-surface z-40 shrink-0 relative bg-surface-container-lowest/30 backdrop-blur-md">
+    <header className="w-full min-h-16 glass-panel border-b border-[#dac2b8]/15 px-3 sm:px-6 py-2 flex items-center justify-between gap-3 text-on-surface z-40 shrink-0 relative bg-surface-container-lowest/30 backdrop-blur-md">
       {/* Platform Brand */}
       <div className="flex min-w-0 items-center gap-2 select-none">
         <span className="material-symbols-outlined text-primary text-2xl animate-pulse shrink-0">grain</span>
@@ -60,9 +60,9 @@ export default function HeaderBar({
         </div>
 
         {isAuthenticated && displayName ? (
-          <div className="flex items-center gap-2.5 pl-3 border-l border-outline/20">
+          <div className="flex items-center gap-2.5 pl-3 border-l border-[#dac2b8]/15">
             <button className="w-9 h-9 rounded-full bg-gradient-to-tr from-primary to-secondary p-[1px] cursor-pointer transition-transform hover:scale-105 active:scale-95 shadow-md">
-              <div className="w-full h-full rounded-full bg-background flex items-center justify-center text-xs text-primary font-mono font-bold uppercase">
+              <div className="w-full h-full rounded-full bg-[#0b1326] flex items-center justify-center text-xs text-primary font-mono font-bold uppercase">
                 {displayName.slice(0, 2)}
               </div>
             </button>
@@ -75,13 +75,13 @@ export default function HeaderBar({
           <button
             type="button"
             onClick={onAuthClick}
-            className="pl-3 border-l border-outline/20 flex items-center gap-2 text-xs font-semibold text-on-primary bg-primary hover:brightness-105 rounded-full px-3 sm:px-4 py-2.5 transition-all cursor-pointer shadow-md"
+            className="pl-3 border-l border-[#dac2b8]/15 flex items-center gap-2 text-xs font-semibold text-on-primary bg-primary hover:brightness-105 rounded-full px-3 sm:px-4 py-2.5 transition-all cursor-pointer shadow-md"
           >
             <span className="material-symbols-outlined text-base leading-none">login</span>
             <span className="hidden min-[360px]:inline">Entrar para contribuir</span>
           </button>
         ) : (
-          <div className="pl-3 border-l border-outline/20 hidden sm:block text-right font-mono text-[10px] opacity-75 uppercase tracking-wider">
+          <div className="pl-3 border-l border-[#dac2b8]/15 hidden sm:block text-right font-mono text-[10px] opacity-75 uppercase tracking-wider">
             {authLabel}
           </div>
         )}
@@ -93,7 +93,7 @@ export default function HeaderBar({
             className={`w-9 h-9 rounded-full border flex items-center justify-center transition-all cursor-pointer shrink-0 ${
               isHelpActive
                 ? 'bg-primary text-on-primary border-primary shadow-md shadow-primary/20'
-                : 'bg-surface-container/35 border-outline/25 text-on-surface-variant hover:border-primary/40 hover:text-primary hover:bg-surface-container/60'
+                : 'bg-surface-container/35 border-[#dac2b8]/20 text-on-surface-variant hover:border-primary/40 hover:text-primary hover:bg-surface-container/60'
             }`}
             title="Ajuda"
             aria-label="Ajuda"

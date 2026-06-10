@@ -49,7 +49,7 @@ export default function FragmentConnectionsField({
           value={candidateId}
           onChange={(event) => setCandidateId(event.target.value)}
           disabled={selectedIds.length >= MAX_CONNECTIONS}
-          className="min-w-0 flex-1 bg-transparent border-0 border-b border-outline/35 focus:border-primary focus:ring-0 text-base font-sans text-on-surface py-2 px-0 transition-all disabled:opacity-45"
+          className="min-w-0 flex-1 bg-transparent border-0 border-b border-[#dac2b8]/30 focus:border-primary focus:ring-0 text-base font-sans text-on-surface py-2 px-0 transition-all disabled:opacity-45"
         >
           <option value="">Escolha um fragmento aberto a conexoes</option>
           {availableFragments.map((fragment) => (
@@ -84,7 +84,7 @@ export default function FragmentConnectionsField({
           {selectedFragments.map((fragment) => (
             <div
               key={fragment.id}
-              className="flex items-center justify-between gap-3 rounded-lg border border-outline/20 bg-surface-container-low/45 px-3 py-2"
+              className="flex items-center justify-between gap-3 rounded-lg border border-[#dac2b8]/15 bg-surface-container-low/45 px-3 py-2"
             >
               <div className="flex items-center gap-2 min-w-0">
                 <Link2 className="w-3.5 h-3.5 text-primary shrink-0" />

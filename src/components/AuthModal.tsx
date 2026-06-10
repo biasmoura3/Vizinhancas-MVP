@@ -43,9 +43,9 @@ export default function AuthModal({
   const isSignUp = mode === 'signUp';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-container-lowest/75 backdrop-blur-sm overflow-y-auto">
-      <div className="w-full max-w-md max-h-[calc(100vh-2rem)] glass-panel border border-outline/25 rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.72)] bg-background/95 overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
-        <div className="flex items-start justify-between gap-4 px-4 sm:px-6 py-5 border-b border-outline/15">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#040810]/75 backdrop-blur-sm overflow-y-auto">
+      <div className="w-full max-w-md max-h-[calc(100vh-2rem)] glass-panel border border-[#dac2b8]/20 rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.72)] bg-[#0a1120]/95 overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
+        <div className="flex items-start justify-between gap-4 px-4 sm:px-6 py-5 border-b border-[#dac2b8]/10">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary/15 border border-primary/25 text-primary flex items-center justify-center">
               <LogIn className="w-5 h-5" />
@@ -58,7 +58,7 @@ export default function AuthModal({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full border border-transparent hover:border-outline/25 hover:bg-surface-container/50 text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-all cursor-pointer"
+            className="w-8 h-8 rounded-full border border-transparent hover:border-[#dac2b8]/20 hover:bg-surface-container/50 text-on-surface-variant hover:text-on-surface flex items-center justify-center transition-all cursor-pointer"
             aria-label="Fechar entrada"
           >
             <X className="w-4 h-4" />
@@ -66,7 +66,7 @@ export default function AuthModal({
         </div>
 
         <form onSubmit={onSubmit} className="p-4 sm:p-6 space-y-4">
-          <div className="grid grid-cols-2 gap-2 rounded-full border border-outline/20 bg-surface-container-low/40 p-1">
+          <div className="grid grid-cols-2 gap-2 rounded-full border border-[#dac2b8]/15 bg-surface-container-low/40 p-1">
             <button
               type="button"
               onClick={() => onModeChange('signUp')}
@@ -93,7 +93,7 @@ export default function AuthModal({
                   value={name}
                   onChange={(event) => onNameChange(event.target.value)}
                   placeholder="Seu nome"
-                  className="w-full bg-surface-container-low/70 rounded-full border border-outline/25 pl-11 pr-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
+                  className="w-full bg-surface-container-low/70 rounded-full border border-[#dac2b8]/20 pl-11 pr-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
                   autoComplete="name"
                   autoFocus
                   required={isSignUp}
@@ -111,7 +111,7 @@ export default function AuthModal({
                 value={email}
                 onChange={(event) => onEmailChange(event.target.value)}
                 placeholder="seu-email@exemplo.com"
-                className="w-full bg-surface-container-low/70 rounded-full border border-outline/25 pl-11 pr-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
+                className="w-full bg-surface-container-low/70 rounded-full border border-[#dac2b8]/20 pl-11 pr-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
                 autoComplete="email"
                 autoFocus={!isSignUp}
                 required
@@ -128,7 +128,7 @@ export default function AuthModal({
                 value={password}
                 onChange={(event) => onPasswordChange(event.target.value)}
                 placeholder="Sua senha"
-                className="w-full bg-surface-container-low/70 rounded-full border border-outline/25 pl-11 pr-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
+                className="w-full bg-surface-container-low/70 rounded-full border border-[#dac2b8]/20 pl-11 pr-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary/20 outline-none transition-all"
                 autoComplete={isSignUp ? 'new-password' : 'current-password'}
                 minLength={6}
                 required
@@ -160,7 +160,7 @@ export default function AuthModal({
             type="button"
             onClick={onResendConfirmation}
             disabled={isSubmitting || !email.trim()}
-            className="w-full py-2.5 border border-outline/25 text-on-surface-variant hover:text-on-surface hover:bg-surface-container/45 rounded-full text-xs font-semibold transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-2.5 border border-[#dac2b8]/20 text-on-surface-variant hover:text-on-surface hover:bg-surface-container/45 rounded-full text-xs font-semibold transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Reenviar confirmacao
           </button>
