@@ -587,8 +587,6 @@ export default function App() {
         authLabel={isRemoteMode ? (user ? 'Sessao ativa' : 'Entrar para contribuir') : 'Modo local'}
         isAuthenticated={isUserAuthenticated}
         onAuthClick={isRemoteMode ? openAuthModal : undefined}
-        onHelpClick={() => setActiveTab('ajuda')}
-        isHelpActive={activeTab === 'ajuda'}
       />
 
       {/* Main Structural Body */}
@@ -601,6 +599,7 @@ export default function App() {
           currentTerritory={currentTerritory}
           displayName={displayName}
           isAuthenticated={isUserAuthenticated}
+          onOpenProposal={handleOpenProposalFlow}
         />
 
         {/* Content Panel Area */}
@@ -806,7 +805,7 @@ export default function App() {
       {/* FLOATING ACTION BUTTON */}
       <button 
         onClick={handleOpenProposalFlow}
-        className="fixed bottom-24 right-4 md:bottom-6 md:right-6 w-14 h-14 rounded-full bg-primary hover:brightness-110 active:scale-95 text-on-primary flex items-center justify-center cursor-pointer shadow-2xl hover:rotate-90 transition-all z-30 font-semibold"
+        className="fixed bottom-24 right-4 md:hidden w-14 h-14 rounded-full bg-primary hover:brightness-110 active:scale-95 text-on-primary flex items-center justify-center cursor-pointer shadow-2xl hover:rotate-90 transition-all z-30 font-semibold"
         title="Propor Novo Fragmento de Mundo"
       >
         <span className="material-symbols-outlined text-4xl leading-none select-none">add</span>
